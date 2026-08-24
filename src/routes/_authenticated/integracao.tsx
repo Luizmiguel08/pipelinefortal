@@ -29,6 +29,14 @@ function IntegracaoPage() {
   const queryClient = useQueryClient();
   const fetchStatus = useServerFn(getIntegrationStatus);
   const runSync = useServerFn(syncNow);
+  const runTest = useServerFn(testC2SConnection);
+
+  const test = useMutation({
+    mutationFn: () => runTest(),
+    onSuccess: (r) => toast.success(`Conexão OK — ${r.contatos} contatos encontrados no C2S`),
+    onError: (e: Error) => toast.error(e.message),
+  });
+
 
   const { data } = useQuery({ queryKey: ["c2s-status"], queryFn: () => fetchStatus() });
 
