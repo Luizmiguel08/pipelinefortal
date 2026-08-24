@@ -3,7 +3,7 @@ import type { BoardLead } from "@/lib/crm.functions";
 
 type Props = {
   lead: BoardLead;
-  corretorNome?: string;
+  corretorNome?: string | undefined;
   showCorretor: boolean;
   onOpen: (lead: BoardLead) => void;
   onDragStart: (lead: BoardLead) => void;
