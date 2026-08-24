@@ -37,16 +37,31 @@ export const getBoard = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<Board> => {
     const { supabase, userId } = context;
 
-    const [{ data: roles }, { data: profile }, { data: corretores }, { data: leads }] = await Promise.all([
+    // O PostgREST devolve no máximo 1000 linhas por requisição: paginamos para trazer todos os leads.
+    const carregarLeads = async () => {
+      const pagina = 1000;
+      const todos: BoardLead[] = [];
+      for (let inicio = 0; ; inicio += pagina) {
+        const { data, error } = await supabase
+          .from("leads")
+          .select(
+            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id",
+          )
+          .order("updated_at", { ascending: false })
+          .range(inicio, inicio + pagina - 1);
+        if (error) throw new Error(error.message);
+        const lote = (data ?? []) as BoardLead[];
+        todos.push(...lote);
+        if (lote.length < pagina) break;
+      }
+      return todos;
+    };
+
+    const [{ data: roles }, { data: profile }, { data: corretores }, leads] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("profiles").select("nome").eq("id", userId).maybeSingle(),
       supabase.from("corretores").select("id, nome, email, c2s_agent_id, user_id").order("nome"),
-      supabase
-        .from("leads")
-        .select(
-          "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id",
-        )
-        .order("updated_at", { ascending: false }),
+      carregarLeads(),
     ]);
 
     const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
