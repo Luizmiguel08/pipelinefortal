@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -37,7 +37,28 @@ function PipelinePage() {
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
 
-  const { data, isLoading } = useQuery({ queryKey: ["board"], queryFn: () => fetchBoard() });
+  const { data, isLoading } = useQuery({
+    queryKey: ["board"],
+    queryFn: () => fetchBoard(),
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
+
+  // Atualização em tempo real: qualquer lead novo/alterado no banco recarrega o funil.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const channel = supabase
+      .channel("leads-tempo-real")
+      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 1500);
+      })
+      .subscribe();
+    return () => {
+      if (timer) clearTimeout(timer);
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
   const [busca, setBusca] = useState("");

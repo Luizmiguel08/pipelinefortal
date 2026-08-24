@@ -47,6 +47,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
   }
 
   const novos: Record<string, unknown>[] = [];
+  const atualizados: Record<string, unknown>[] = [];
 
   for (const contato of contatos) {
     let corretorId: string | null = null;
@@ -95,17 +96,21 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
     // O lead nunca volta de etapa: mantemos a fase mais avançada entre C2S e painel.
     const atual = existente.stage;
     const proxima = rank(contato.stage) > rank(atual) ? contato.stage : atual;
-    await supabaseAdmin
-      .from("leads")
-      .update({ ...base, stage: proxima })
-      .eq("id", existente.id);
+    atualizados.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: proxima });
     result.atualizados += 1;
     if (proxima !== atual) result.movidos += 1;
   }
 
-  for (let i = 0; i < novos.length; i += 100) {
-    await supabaseAdmin.from("leads").insert(novos.slice(i, i + 100) as never);
-  }
+  // Gravação em lote (upsert por c2s_contact_id) para a rodada terminar em segundos.
+  const gravar = async (linhas: Record<string, unknown>[]) => {
+    for (let i = 0; i < linhas.length; i += 200) {
+      await supabaseAdmin
+        .from("leads")
+        .upsert(linhas.slice(i, i + 200) as never, { onConflict: "c2s_contact_id" });
+    }
+  };
+  await gravar(novos);
+  await gravar(atualizados);
 
   return result;
 }
@@ -138,8 +143,24 @@ export async function runC2SSync(origem: string = "manual", desde?: string): Pro
     });
   };
 
+  // Modo incremental: sem data informada, buscamos só o que mudou desde a última
+  // sincronização bem-sucedida (com 30 min de folga), deixando cada rodada bem rápida.
+  let janela = desde;
+  if (!janela) {
+    const { data: ultima } = await supabaseAdmin
+      .from("sync_runs")
+      .select("started_at")
+      .eq("status", "sucesso")
+      .order("started_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (ultima?.started_at) {
+      janela = new Date(Date.parse(ultima.started_at) - 10 * 60 * 1000).toISOString();
+    }
+  }
+
   try {
-    await executarSync(supabaseAdmin, result, desde);
+    await executarSync(supabaseAdmin, result, janela);
   } catch (e) {
     await registrar("erro", e instanceof Error ? e.message : String(e));
     throw e;

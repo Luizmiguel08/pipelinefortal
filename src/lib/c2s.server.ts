@@ -149,9 +149,15 @@ async function fetchPage(root: string, token: string, page: number): Promise<Rec
 function contactDate(rawItem: Record<string, unknown>): number {
   const attrs = (rawItem["attributes"] as Record<string, unknown> | undefined) ?? {};
   const raw: Record<string, unknown> = { ...attrs, ...rawItem };
-  const d = pick(raw, ["created_at", "updated_at", "last_activity_date"]);
-  const t = d ? Date.parse(String(d)) : NaN;
-  return Number.isFinite(t) ? t : Date.now();
+  // Usamos a data mais recente entre criação, atualização e última interação:
+  // assim um contato antigo que mudou de etapa continua entrando na sincronização.
+  let maior = NaN;
+  for (const campo of ["created_at", "updated_at", "last_activity_date"]) {
+    const d = raw[campo];
+    const t = d ? Date.parse(String(d)) : NaN;
+    if (Number.isFinite(t) && (!Number.isFinite(maior) || t > maior)) maior = t;
+  }
+  return Number.isFinite(maior) ? maior : Date.now();
 }
 
 export async function fetchC2SContacts(options: FetchContactsOptions = {}): Promise<C2SContact[]> {
