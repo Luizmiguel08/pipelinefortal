@@ -71,18 +71,64 @@ function IntegracaoPage() {
           </span>
           <Button
             className="ml-auto"
-            disabled={!data?.isGestor || sync.isPending}
+            disabled={!data?.isGestor || !data?.configurado || sync.isPending}
             onClick={() => sync.mutate()}
           >
             {sync.isPending ? "Sincronizando..." : "Sincronizar agora"}
           </Button>
         </div>
-        {!data?.configurado && (
-          <p className="mt-4 text-sm text-muted-foreground">
-            Informe a URL base da API do C2S e o token de acesso para ativar a sincronização automática.
-          </p>
-        )}
       </div>
+
+      <div className="panel mt-4 p-5">
+        <h2 className="text-sm font-semibold">Credenciais da API do C2S</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          A URL base e o token ficam guardados criptografados no cofre de segredos do backend. Eles
+          nunca são exibidos por completo, nunca trafegam para o navegador e só são lidos pelo
+          servidor no momento da sincronização.
+        </p>
+
+        <dl className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div className="rounded-lg border border-border p-3">
+            <dt className="text-xs uppercase tracking-wide text-muted-foreground">
+              C2S_API_BASE_URL
+            </dt>
+            <dd className="mt-1 truncate font-mono text-sm">
+              {data?.baseUrlHost ?? "não informada"}
+            </dd>
+          </div>
+          <div className="rounded-lg border border-border p-3">
+            <dt className="text-xs uppercase tracking-wide text-muted-foreground">C2S_API_TOKEN</dt>
+            <dd className="mt-1 truncate font-mono text-sm">
+              {data?.tokenMascarado ?? "não informado"}
+            </dd>
+          </div>
+        </dl>
+
+        <ol className="mt-4 space-y-1 text-sm text-muted-foreground">
+          <li>1. No C2S, acesse Configurações → Integrações/API e gere um token de acesso.</li>
+          <li>
+            2. Peça no chat da Lovable para informar as credenciais do C2S: abre um formulário
+            seguro onde você cola a URL base e o token direto no cofre.
+          </li>
+          <li>3. Volte aqui, use “Testar conexão” e depois “Sincronizar agora”.</li>
+        </ol>
+
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Button
+            variant="secondary"
+            disabled={!data?.isGestor || test.isPending}
+            onClick={() => test.mutate()}
+          >
+            {test.isPending ? "Testando..." : "Testar conexão"}
+          </Button>
+          {!data?.isGestor && (
+            <span className="text-xs text-muted-foreground">
+              Somente gestores podem alterar ou testar as credenciais.
+            </span>
+          )}
+        </div>
+      </div>
+
 
       <div className="panel mt-4 p-5">
         <h2 className="text-sm font-semibold">Como os leads se movem sozinhos</h2>
