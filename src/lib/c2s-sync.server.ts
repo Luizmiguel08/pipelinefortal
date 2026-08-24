@@ -17,8 +17,8 @@ type AdminClient = Awaited<
   typeof import("@/integrations/supabase/client.server")
 >["supabaseAdmin"];
 
-async function executarSync(supabaseAdmin: AdminClient, result: SyncResult) {
-  const contatos = await fetchC2SContacts();
+async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desde?: string) {
+  const contatos = await fetchC2SContacts(desde ? { desde } : {});
   result.total = contatos.length;
 
   const { data: corretores } = await supabaseAdmin
@@ -30,6 +30,21 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult) {
   const byEmail = new Map(
     (corretores ?? []).filter((c) => c.email).map((c) => [c.email!.toLowerCase(), c.id]),
   );
+
+  // Carrega de uma vez os leads já existentes para evitar uma consulta por contato.
+  const existentes = new Map<string, { id: string; stage: StageId }>();
+  const ids = contatos.map((c) => c.c2s_contact_id);
+  for (let i = 0; i < ids.length; i += 200) {
+    const { data } = await supabaseAdmin
+      .from("leads")
+      .select("id, stage, c2s_contact_id")
+      .in("c2s_contact_id", ids.slice(i, i + 200));
+    for (const l of data ?? []) {
+      if (l.c2s_contact_id) existentes.set(l.c2s_contact_id, { id: l.id, stage: l.stage as StageId });
+    }
+  }
+
+  const novos: Record<string, unknown>[] = [];
 
   for (const contato of contatos) {
     let corretorId: string | null = null;
@@ -55,11 +70,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult) {
       }
     }
 
-    const { data: existente } = await supabaseAdmin
-      .from("leads")
-      .select("id, stage")
-      .eq("c2s_contact_id", contato.c2s_contact_id)
-      .maybeSingle();
+    const existente = existentes.get(contato.c2s_contact_id);
 
     const base = {
       nome: contato.nome,
@@ -74,17 +85,13 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult) {
     };
 
     if (!existente) {
-      await supabaseAdmin.from("leads").insert({
-        ...base,
-        c2s_contact_id: contato.c2s_contact_id,
-        stage: contato.stage,
-      });
+      novos.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: contato.stage });
       result.criados += 1;
       continue;
     }
 
     // O lead nunca volta de etapa: mantemos a fase mais avançada entre C2S e painel.
-    const atual = existente.stage as StageId;
+    const atual = existente.stage;
     const proxima = rank(contato.stage) > rank(atual) ? contato.stage : atual;
     await supabaseAdmin
       .from("leads")
@@ -94,8 +101,13 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult) {
     if (proxima !== atual) result.movidos += 1;
   }
 
+  for (let i = 0; i < novos.length; i += 100) {
+    await supabaseAdmin.from("leads").insert(novos.slice(i, i + 100) as never);
+  }
+
   return result;
 }
+
 
 export async function runC2SSync(origem: string = "manual"): Promise<SyncResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
