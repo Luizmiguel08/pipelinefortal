@@ -18,7 +18,9 @@ type AdminClient = Awaited<
 >["supabaseAdmin"];
 
 async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desde?: string) {
-  const contatos = await fetchC2SContacts(desde ? { desde } : {});
+  const contatos = await fetchC2SContacts(
+    desde ? { desde, maxPaginas: 600 } : {},
+  );
   result.total = contatos.length;
 
   const { data: corretores } = await supabaseAdmin

@@ -17,9 +17,17 @@ export const Route = createFileRoute("/api/public/hooks/c2s-sync")({
           });
         }
 
+        let desde: string | undefined;
+        try {
+          const body = (await request.clone().json()) as { desde?: string } | null;
+          if (body?.desde) desde = body.desde;
+        } catch {
+          desde = undefined;
+        }
+
         try {
           const { runC2SSync } = await import("@/lib/c2s-sync.server");
-          const result = await runC2SSync("automatico");
+          const result = await runC2SSync(desde ? "historico" : "automatico", desde);
           return Response.json({ ok: true, ...result });
         } catch (error) {
           console.error("Falha na sincronização C2S", error);
