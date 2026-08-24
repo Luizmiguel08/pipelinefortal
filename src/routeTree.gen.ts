@@ -10,33 +10,86 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedIntegracaoRouteImport } from './routes/_authenticated/integracao'
+import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
+import { Route as ApiPublicHooksC2sSyncRouteImport } from './routes/api/public/hooks/c2s-sync'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIntegracaoRoute = AuthenticatedIntegracaoRouteImport.update({
+  id: '/integracao',
+  path: '/integracao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
+  id: '/pipeline',
+  path: '/pipeline',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const ApiPublicHooksC2sSyncRoute = ApiPublicHooksC2sSyncRouteImport.update({
+  id: '/api/public/hooks/c2s-sync',
+  path: '/api/public/hooks/c2s-sync',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/integracao': typeof AuthenticatedIntegracaoRoute
+  '/pipeline': typeof AuthenticatedPipelineRoute
+  '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
+  '/integracao': typeof AuthenticatedIntegracaoRoute
+  '/pipeline': typeof AuthenticatedPipelineRoute
+  '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/integracao': typeof AuthenticatedIntegracaoRoute
+  '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
+  '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    '/' | '/auth' | '/integracao' | '/pipeline' | '/api/public/hooks/c2s-sync'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/auth' | '/integracao' | '/pipeline' | '/api/public/hooks/c2s-sync'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/integracao'
+    | '/_authenticated/pipeline'
+    | '/api/public/hooks/c2s-sync'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ApiPublicHooksC2sSyncRoute: typeof ApiPublicHooksC2sSyncRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +101,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/integracao': {
+      id: '/_authenticated/integracao'
+      path: '/integracao'
+      fullPath: '/integracao'
+      preLoaderRoute: typeof AuthenticatedIntegracaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/pipeline': {
+      id: '/_authenticated/pipeline'
+      path: '/pipeline'
+      fullPath: '/pipeline'
+      preLoaderRoute: typeof AuthenticatedPipelineRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/api/public/hooks/c2s-sync': {
+      id: '/api/public/hooks/c2s-sync'
+      path: '/api/public/hooks/c2s-sync'
+      fullPath: '/api/public/hooks/c2s-sync'
+      preLoaderRoute: typeof ApiPublicHooksC2sSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedIntegracaoRoute: typeof AuthenticatedIntegracaoRoute
+  AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedIntegracaoRoute: AuthenticatedIntegracaoRoute,
+  AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ApiPublicHooksC2sSyncRoute: ApiPublicHooksC2sSyncRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
