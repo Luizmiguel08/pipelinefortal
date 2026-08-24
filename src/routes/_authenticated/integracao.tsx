@@ -30,6 +30,8 @@ function IntegracaoPage() {
   const fetchStatus = useServerFn(getIntegrationStatus);
   const runSync = useServerFn(syncNow);
   const runTest = useServerFn(testC2SConnection);
+  const fetchHistory = useServerFn(getSyncHistory);
+
 
   const test = useMutation({
     mutationFn: () => runTest(),
