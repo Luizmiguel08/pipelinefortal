@@ -3,7 +3,13 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { getIntegrationStatus, syncNow, testC2SConnection } from "@/lib/crm.functions";
+import {
+  getIntegrationStatus,
+  getSyncHistory,
+  syncNow,
+  testC2SConnection,
+} from "@/lib/crm.functions";
+
 import { STAGES } from "@/lib/stages";
 
 export const Route = createFileRoute("/_authenticated/integracao")({
@@ -30,6 +36,8 @@ function IntegracaoPage() {
   const fetchStatus = useServerFn(getIntegrationStatus);
   const runSync = useServerFn(syncNow);
   const runTest = useServerFn(testC2SConnection);
+  const fetchHistory = useServerFn(getSyncHistory);
+
 
   const test = useMutation({
     mutationFn: () => runTest(),
@@ -39,16 +47,25 @@ function IntegracaoPage() {
 
 
   const { data } = useQuery({ queryKey: ["c2s-status"], queryFn: () => fetchStatus() });
+  const { data: history } = useQuery({
+    queryKey: ["c2s-history"],
+    queryFn: () => fetchHistory(),
+  });
+
 
   const sync = useMutation({
     mutationFn: () => runSync(),
-    onSuccess: (r) => {
-      toast.success(`Sincronizado: ${r.criados} novos, ${r.atualizados} atualizados, ${r.movidos} movidos`);
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["board"] });
       queryClient.invalidateQueries({ queryKey: ["c2s-status"] });
+      queryClient.invalidateQueries({ queryKey: ["c2s-history"] });
+    },
+    onSuccess: (r) => {
+      toast.success(`Sincronizado: ${r.criados} novos, ${r.atualizados} atualizados, ${r.movidos} movidos`);
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-10">
@@ -135,6 +152,74 @@ function IntegracaoPage() {
             </span>
           )}
         </div>
+      </div>
+
+      <div className="panel mt-4 p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-sm font-semibold">Histórico de sincronizações</h2>
+          <span className="text-xs text-muted-foreground">Últimas 20 execuções</span>
+        </div>
+
+        {!history?.isGestor ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Somente gestores visualizam o histórico de sincronizações.
+          </p>
+        ) : history.execucoes.length === 0 ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Nenhuma sincronização executada até agora.
+          </p>
+        ) : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <th className="pb-2 pr-4 font-medium">Data/hora</th>
+                  <th className="pb-2 pr-4 font-medium">Status</th>
+                  <th className="pb-2 pr-4 font-medium">Origem</th>
+                  <th className="pb-2 pr-4 font-medium">Contatos</th>
+                  <th className="pb-2 pr-4 font-medium">Novos</th>
+                  <th className="pb-2 pr-4 font-medium">Atualizados</th>
+                  <th className="pb-2 pr-4 font-medium">Movidos</th>
+                  <th className="pb-2 font-medium">Duração</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.execucoes.map((e) => (
+                  <tr key={e.id} className="border-t border-border align-top">
+                    <td className="py-2 pr-4 whitespace-nowrap">
+                      {new Date(e.startedAt).toLocaleString("pt-BR")}
+                    </td>
+                    <td className="py-2 pr-4">
+                      <span
+                        className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                        style={{
+                          backgroundColor:
+                            e.status === "sucesso"
+                              ? "var(--stage-fechamento)"
+                              : "var(--destructive)",
+                          color: "var(--primary-foreground)",
+                        }}
+                      >
+                        {e.status === "sucesso" ? "Sucesso" : "Erro"}
+                      </span>
+                      {e.erro && (
+                        <p className="mt-1 max-w-xs text-xs text-muted-foreground">{e.erro}</p>
+                      )}
+                    </td>
+                    <td className="py-2 pr-4 capitalize">{e.origem}</td>
+                    <td className="py-2 pr-4">{e.total}</td>
+                    <td className="py-2 pr-4">{e.criados}</td>
+                    <td className="py-2 pr-4">{e.atualizados}</td>
+                    <td className="py-2 pr-4">{e.movidos}</td>
+                    <td className="py-2 whitespace-nowrap">
+                      {e.duracaoMs != null ? `${(e.duracaoMs / 1000).toFixed(1)}s` : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
 

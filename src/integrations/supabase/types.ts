@@ -171,6 +171,54 @@ export type Database = {
         }
         Relationships: []
       }
+      sync_runs: {
+        Row: {
+          atualizados: number
+          corretores_criados: number
+          created_at: string
+          criados: number
+          duracao_ms: number | null
+          erro: string | null
+          finished_at: string | null
+          id: string
+          movidos: number
+          origem: string
+          started_at: string
+          status: string
+          total: number
+        }
+        Insert: {
+          atualizados?: number
+          corretores_criados?: number
+          created_at?: string
+          criados?: number
+          duracao_ms?: number | null
+          erro?: string | null
+          finished_at?: string | null
+          id?: string
+          movidos?: number
+          origem?: string
+          started_at?: string
+          status?: string
+          total?: number
+        }
+        Update: {
+          atualizados?: number
+          corretores_criados?: number
+          created_at?: string
+          criados?: number
+          duracao_ms?: number | null
+          erro?: string | null
+          finished_at?: string | null
+          id?: string
+          movidos?: number
+          origem?: string
+          started_at?: string
+          status?: string
+          total?: number
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
