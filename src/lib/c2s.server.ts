@@ -113,7 +113,7 @@ export function normalizeContact(rawItem: Record<string, unknown>): C2SContact |
     valor,
     origem:
       (pick(raw, ["lead_source.name", "channel.name", "source", "origem", "midia"]) as string) ?? "C2S",
-    stage: done ? "fechamento" : mapStage(statusRaw),
+    stage,
     ultima_interacao:
       (pick(raw, [
         "last_activity_date",
