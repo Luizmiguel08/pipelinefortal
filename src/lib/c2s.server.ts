@@ -113,3 +113,84 @@ export async function fetchC2SContacts(): Promise<C2SContact[]> {
     .map(normalizeContact)
     .filter((c): c is C2SContact => c !== null);
 }
+
+export type C2SSeller = {
+  c2s_agent_id: string;
+  nome: string;
+  email: string | null;
+  telefone: string | null;
+  ativo: boolean;
+};
+
+function normalizeSeller(raw: Record<string, unknown>): C2SSeller | null {
+  const id = pick(raw, ["id", "uuid", "seller_id", "user_id", "agent_id", "codigo"]);
+  if (id === undefined) return null;
+  // Preferimos o apelido/nome de exibição usado no próprio C2S.
+  const nome = pick(raw, [
+    "nickname",
+    "apelido",
+    "display_name",
+    "nome_exibicao",
+    "short_name",
+    "name",
+    "nome",
+    "full_name",
+    "user.name",
+  ]);
+  const ativo = pick(raw, ["active", "ativo", "is_active", "enabled", "status"]);
+  return {
+    c2s_agent_id: String(id),
+    nome: String(nome ?? `Corretor ${id}`).trim(),
+    email: (pick(raw, ["email", "e_mail", "user.email"]) as string) ?? null,
+    telefone: (pick(raw, ["phone", "telefone", "celular", "whatsapp"]) as string) ?? null,
+    ativo:
+      ativo === undefined
+        ? true
+        : typeof ativo === "boolean"
+          ? ativo
+          : !/^(0|false|inactive|inativo|disabled|blocked)$/i.test(String(ativo)),
+  };
+}
+
+/** Busca os corretores (sellers) cadastrados no C2S. */
+export async function fetchC2SSellers(): Promise<C2SSeller[]> {
+  const baseUrl = process.env["C2S_API_BASE_URL"];
+  const token = process.env["C2S_API_TOKEN"];
+  if (!baseUrl || !token) {
+    throw new Error(
+      "Integração C2S não configurada: informe a URL da API e o token de acesso nas configurações.",
+    );
+  }
+  const root = baseUrl.replace(/\/$/, "");
+  const caminhos = ["/sellers", "/users", "/agents", "/brokers"];
+  let ultimoErro = "";
+
+  for (const caminho of caminhos) {
+    const response = await fetch(`${root}${caminho}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+    });
+    if (!response.ok) {
+      ultimoErro = `${caminho} → ${response.status} ${(await response.text()).slice(0, 200)}`;
+      continue;
+    }
+    const payload = (await response.json()) as unknown;
+    const p = payload as Record<string, unknown>;
+    const list: unknown[] = Array.isArray(payload)
+      ? payload
+      : ((p?.["data"] as unknown[]) ??
+        (p?.["sellers"] as unknown[]) ??
+        (p?.["users"] as unknown[]) ??
+        (p?.["results"] as unknown[]) ??
+        []);
+    const sellers = list
+      .filter((i): i is Record<string, unknown> => !!i && typeof i === "object")
+      .map(normalizeSeller)
+      .filter((s): s is C2SSeller => s !== null);
+    if (sellers.length) return sellers;
+    ultimoErro = `${caminho} → resposta sem corretores`;
+  }
+
+  throw new Error(
+    `Não foi possível listar os corretores no C2S. Verifique se o token tem permissão de leitura de usuários. Detalhe: ${ultimoErro}`,
+  );
+}

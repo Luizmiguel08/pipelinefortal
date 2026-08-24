@@ -217,3 +217,60 @@ export const syncNow = createServerFn({ method: "POST" })
     const { runC2SSync } = await import("./c2s-sync.server");
     return await runC2SSync();
   });
+
+export const importC2SCorretores = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isGestor } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "gestor",
+    });
+    if (!isGestor) throw new Error("Apenas gestores podem importar corretores do C2S.");
+
+    const { fetchC2SSellers } = await import("./c2s.server");
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+
+    const sellers = await fetchC2SSellers();
+    const { data: existentes } = await supabaseAdmin
+      .from("corretores")
+      .select("id, nome, email, c2s_agent_id");
+
+    const porAgent = new Map(
+      (existentes ?? []).filter((c) => c.c2s_agent_id).map((c) => [c.c2s_agent_id!, c]),
+    );
+    const porEmail = new Map(
+      (existentes ?? []).filter((c) => c.email).map((c) => [c.email!.toLowerCase(), c]),
+    );
+
+    let criados = 0;
+    let atualizados = 0;
+
+    for (const s of sellers) {
+      const atual =
+        porAgent.get(s.c2s_agent_id) ?? (s.email ? porEmail.get(s.email.toLowerCase()) : undefined);
+      if (atual) {
+        await supabaseAdmin
+          .from("corretores")
+          .update({
+            nome: s.nome,
+            email: s.email ?? atual.email,
+            telefone: s.telefone,
+            c2s_agent_id: s.c2s_agent_id,
+            ativo: s.ativo,
+          })
+          .eq("id", atual.id);
+        atualizados += 1;
+      } else {
+        await supabaseAdmin.from("corretores").insert({
+          nome: s.nome,
+          email: s.email,
+          telefone: s.telefone,
+          c2s_agent_id: s.c2s_agent_id,
+          ativo: s.ativo,
+        });
+        criados += 1;
+      }
+    }
+
+    return { ok: true as const, total: sellers.length, criados, atualizados };
+  });
