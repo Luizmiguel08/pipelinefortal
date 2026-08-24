@@ -49,35 +49,77 @@ function toNumber(value: unknown): number {
 /** Traduz o status/etapa do C2S para as colunas do pipeline. */
 export function mapStage(raw: unknown): StageId {
   const value = String(raw ?? "").toLowerCase();
-  if (/fechad|ganho|vendid|assinad|conclu/.test(value)) return "fechamento";
-  if (/document|dossi|cr[eé]dito|an[aá]lise/.test(value)) return "documentacao";
-  if (/negocia|propost|contra.?propost|valores/.test(value)) return "negociacao";
-  if (/atendiment|respond|contato|em.?andamento|qualific/.test(value)) return "atendimento";
+  if (/fechad|ganho|vendid|assinad|conclu|done|won|closed|sold/.test(value)) return "fechamento";
+  if (/document|dossi|cr[eé]dito|an[aá]lise|proposal_sent|contract/.test(value)) return "documentacao";
+  if (/negocia|propost|contra.?propost|valores|negotiation|proposal/.test(value)) return "negociacao";
+  if (/atendiment|respond|contato|em.?andamento|qualific|attendance|contacted|in_service|replied/.test(value))
+    return "atendimento";
   return "novo";
 }
 
-export function normalizeContact(raw: Record<string, unknown>): C2SContact | null {
+
+export function normalizeContact(rawItem: Record<string, unknown>): C2SContact | null {
+  // A API do C2S devolve { id, attributes: { customer, seller, product, lead_status ... } }.
+  const attrs = (rawItem["attributes"] as Record<string, unknown> | undefined) ?? {};
+  const raw: Record<string, unknown> = { ...attrs, ...rawItem };
+
   const id = pick(raw, ["id", "contact_id", "uuid", "codigo", "contact.id"]);
   if (id === undefined) return null;
-  const nome = pick(raw, ["name", "nome", "contact_name", "cliente", "contact.name"]);
+  const nome = pick(raw, ["customer.name", "name", "nome", "contact_name", "cliente", "contact.name"]);
+  const agentId = pick(raw, ["seller.id", "agent_id", "broker_id", "user_id", "corretor_id", "agent.id"]);
+  const done = pick(raw, ["done_details.done"]) === true;
+  const statusRaw =
+    pick(raw, [
+      "lead_status.alias",
+      "lead_status.name",
+      "funnel_status.status",
+      "stage",
+      "status",
+      "funnel_stage",
+      "etapa",
+      "situacao",
+    ]) ?? "";
+
   return {
     c2s_contact_id: String(id),
     nome: String(nome ?? "Contato sem nome"),
-    telefone: (pick(raw, ["phone", "telefone", "celular", "whatsapp", "contact.phone"]) as string) ?? null,
-    email: (pick(raw, ["email", "e_mail", "contact.email"]) as string) ?? null,
-    imovel: (pick(raw, ["property", "imovel", "empreendimento", "interest", "property.title"]) as string) ?? null,
-    valor: toNumber(pick(raw, ["value", "valor", "price", "preco", "property_value", "property.price"])),
-    origem: (pick(raw, ["source", "origem", "channel", "midia"]) as string) ?? "C2S",
-    stage: mapStage(pick(raw, ["stage", "status", "funnel_stage", "etapa", "situacao"])),
+    telefone:
+      (pick(raw, ["customer.phone_global", "customer.phone", "phone", "telefone", "celular", "whatsapp"]) as string) ??
+      null,
+    email: (pick(raw, ["customer.email", "email", "e_mail", "contact.email"]) as string) ?? null,
+    imovel:
+      (pick(raw, [
+        "product.description",
+        "product.prop_ref",
+        "description",
+        "property",
+        "imovel",
+        "empreendimento",
+        "interest",
+        "property.title",
+      ]) as string) ?? null,
+    valor: toNumber(
+      pick(raw, ["product.price_float", "product.price", "value", "valor", "price", "preco", "property_value"]),
+    ),
+    origem:
+      (pick(raw, ["lead_source.name", "channel.name", "source", "origem", "midia"]) as string) ?? "C2S",
+    stage: done ? "fechamento" : mapStage(statusRaw),
     ultima_interacao:
-      (pick(raw, ["last_interaction_at", "updated_at", "last_message_at", "atualizado_em"]) as string) ?? null,
-    c2s_agent_id: (pick(raw, ["agent_id", "broker_id", "user_id", "corretor_id", "agent.id"]) as string)
-      ? String(pick(raw, ["agent_id", "broker_id", "user_id", "corretor_id", "agent.id"]))
+      (pick(raw, [
+        "last_activity_date",
+        "updated_at",
+        "last_interaction_at",
+        "last_message_at",
+        "atualizado_em",
+      ]) as string) ?? null,
+    c2s_agent_id: agentId ? String(agentId) : null,
+    corretor_nome: ((pick(raw, ["seller.name", "agent_name", "broker_name", "corretor"]) as string) ?? null)
+      ? String(pick(raw, ["seller.name", "agent_name", "broker_name", "corretor"])).trim()
       : null,
-    corretor_nome: (pick(raw, ["agent_name", "broker_name", "corretor", "agent.name"]) as string) ?? null,
-    corretor_email: (pick(raw, ["agent_email", "broker_email", "agent.email"]) as string) ?? null,
+    corretor_email: (pick(raw, ["seller.email", "agent_email", "broker_email"]) as string) ?? null,
   };
 }
+
 
 export async function fetchC2SContacts(): Promise<C2SContact[]> {
   const baseUrl = process.env["C2S_API_BASE_URL"];
