@@ -43,6 +43,8 @@ function PipelinePage() {
     queryFn: () => fetchBoard(),
     refetchInterval: 60_000,
     refetchOnWindowFocus: true,
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
   });
 
   // Atualização em tempo real: qualquer lead novo/alterado no banco recarrega o funil.
@@ -52,7 +54,7 @@ function PipelinePage() {
       .channel("leads-tempo-real")
       .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () => {
         if (timer) clearTimeout(timer);
-        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 1500);
+        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 5000);
       })
       .subscribe();
     return () => {
@@ -60,6 +62,7 @@ function PipelinePage() {
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
+
 
   // Enquanto o gestor está com o funil aberto, buscamos novidades no C2S a cada minuto.
   const isGestor = data?.isGestor ?? false;
@@ -84,16 +87,37 @@ function PipelinePage() {
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
+  const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
 
+  // Busca com debounce: digitar não re-renderiza milhares de cards a cada tecla.
+  useEffect(() => {
+    const id = setTimeout(() => setBusca(buscaInput), 250);
+    return () => clearTimeout(id);
+  }, [buscaInput]);
+
   const moveMutation = useMutation({
     mutationFn: (vars: { id: string; stage: StageId }) => move({ data: vars }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["board"] }),
-    onError: (e: Error) => toast.error(e.message),
+    // Atualização otimista: o card muda de coluna na hora, sem esperar o servidor.
+    onMutate: async (vars) => {
+      await queryClient.cancelQueries({ queryKey: ["board"] });
+      const anterior = queryClient.getQueryData<Board>(["board"]);
+      queryClient.setQueryData<Board>(["board"], (old) =>
+        old
+          ? { ...old, leads: old.leads.map((l) => (l.id === vars.id ? { ...l, stage: vars.stage } : l)) }
+          : old,
+      );
+      return { anterior };
+    },
+    onError: (e: Error, _vars, ctx) => {
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      toast.error(e.message);
+    },
   });
+
 
   const saveMutation = useMutation({
     mutationFn: (values: LeadFormValues) =>
@@ -237,8 +261,10 @@ function PipelinePage() {
         ) : (
           <div className="scroll-slim mt-5 flex gap-4 overflow-x-auto pb-6">
             {STAGES.map((stage) => {
-              const leadsColuna = leadsFiltrados.filter((l) => l.stage === stage.id);
+              const leadsColuna = colunas[stage.id];
               const totalColuna = leadsColuna.reduce((acc, l) => acc + l.valor, 0);
+              const limite = visiveis[stage.id] ?? PAGINA_COLUNA;
+              const mostrados = leadsColuna.slice(0, limite);
               return (
                 <section
                   key={stage.id}
@@ -261,19 +287,27 @@ function PipelinePage() {
                   </p>
 
                   <div className="scroll-slim mt-3 flex max-h-[62vh] flex-col gap-2 overflow-y-auto pr-0.5">
-                    {leadsColuna.map((lead) => (
+                    {mostrados.map((lead) => (
                       <LeadCard
                         key={lead.id}
                         lead={lead}
                         corretorNome={lead.corretor_id ? nomePorCorretor.get(lead.corretor_id) : undefined}
                         showCorretor={corretorFiltro === "todos"}
                         onDragStart={setDragging}
-                        onOpen={(l) => {
-                          setLeadAtual(l);
-                          setDialogOpen(true);
-                        }}
+                        onOpen={abrirLead}
                       />
                     ))}
+                    {leadsColuna.length > mostrados.length && (
+                      <Button
+                        variant="secondary"
+                        className="h-8 text-xs"
+                        onClick={() =>
+                          setVisiveis((v) => ({ ...v, [stage.id]: (v[stage.id] ?? PAGINA_COLUNA) + PAGINA_COLUNA }))
+                        }
+                      >
+                        Carregar mais ({leadsColuna.length - mostrados.length} restantes)
+                      </Button>
+                    )}
                     {leadsColuna.length === 0 && (
                       <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
                         Arraste um lead para cá
@@ -284,6 +318,7 @@ function PipelinePage() {
               );
             })}
           </div>
+
         )}
       </main>
 

@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { formatBRL, relativeTime } from "@/lib/stages";
 import type { BoardLead } from "@/lib/crm.functions";
 
@@ -9,7 +10,7 @@ type Props = {
   onDragStart: (lead: BoardLead) => void;
 };
 
-export function LeadCard({ lead, corretorNome, showCorretor, onOpen, onDragStart }: Props) {
+function LeadCardBase({ lead, corretorNome, showCorretor, onOpen, onDragStart }: Props) {
   return (
     <article
       draggable
@@ -34,3 +35,6 @@ export function LeadCard({ lead, corretorNome, showCorretor, onOpen, onDragStart
     </article>
   );
 }
+
+export const LeadCard = memo(LeadCardBase);
+
