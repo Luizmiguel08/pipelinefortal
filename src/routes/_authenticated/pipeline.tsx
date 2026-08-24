@@ -132,6 +132,7 @@ function PipelinePage() {
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
             >
               <option value="todos">Todos os corretores</option>
+              {meuCorretorId && <option value="meus">Somente meus leads</option>}
               {corretores.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.nome}
@@ -139,6 +140,7 @@ function PipelinePage() {
               ))}
             </select>
           )}
+
           <Button
             onClick={() => {
               setLeadAtual(null);
