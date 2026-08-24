@@ -39,6 +39,11 @@ function IntegracaoPage() {
 
 
   const { data } = useQuery({ queryKey: ["c2s-status"], queryFn: () => fetchStatus() });
+  const { data: history } = useQuery({
+    queryKey: ["c2s-history"],
+    queryFn: () => fetchHistory(),
+  });
+
 
   const sync = useMutation({
     mutationFn: () => runSync(),
