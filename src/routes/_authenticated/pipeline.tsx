@@ -261,8 +261,10 @@ function PipelinePage() {
         ) : (
           <div className="scroll-slim mt-5 flex gap-4 overflow-x-auto pb-6">
             {STAGES.map((stage) => {
-              const leadsColuna = leadsFiltrados.filter((l) => l.stage === stage.id);
+              const leadsColuna = colunas[stage.id];
               const totalColuna = leadsColuna.reduce((acc, l) => acc + l.valor, 0);
+              const limite = visiveis[stage.id] ?? PAGINA_COLUNA;
+              const mostrados = leadsColuna.slice(0, limite);
               return (
                 <section
                   key={stage.id}
@@ -285,19 +287,27 @@ function PipelinePage() {
                   </p>
 
                   <div className="scroll-slim mt-3 flex max-h-[62vh] flex-col gap-2 overflow-y-auto pr-0.5">
-                    {leadsColuna.map((lead) => (
+                    {mostrados.map((lead) => (
                       <LeadCard
                         key={lead.id}
                         lead={lead}
                         corretorNome={lead.corretor_id ? nomePorCorretor.get(lead.corretor_id) : undefined}
                         showCorretor={corretorFiltro === "todos"}
                         onDragStart={setDragging}
-                        onOpen={(l) => {
-                          setLeadAtual(l);
-                          setDialogOpen(true);
-                        }}
+                        onOpen={abrirLead}
                       />
                     ))}
+                    {leadsColuna.length > mostrados.length && (
+                      <Button
+                        variant="secondary"
+                        className="h-8 text-xs"
+                        onClick={() =>
+                          setVisiveis((v) => ({ ...v, [stage.id]: (v[stage.id] ?? PAGINA_COLUNA) + PAGINA_COLUNA }))
+                        }
+                      >
+                        Carregar mais ({leadsColuna.length - mostrados.length} restantes)
+                      </Button>
+                    )}
                     {leadsColuna.length === 0 && (
                       <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
                         Arraste um lead para cá
@@ -308,6 +318,7 @@ function PipelinePage() {
               );
             })}
           </div>
+
         )}
       </main>
 
