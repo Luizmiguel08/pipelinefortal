@@ -13,50 +13,23 @@ function rank(stage: StageId) {
   return STAGE_IDS.indexOf(stage);
 }
 
-export async function runC2SSync(origem: string = "manual"): Promise<SyncResult> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  const startedAt = new Date();
+type AdminClient = Awaited<
+  typeof import("@/integrations/supabase/client.server")
+>["supabaseAdmin"];
 
-  const registrar = async (
-    status: "sucesso" | "erro",
-    r: SyncResult,
-    erro?: string,
-  ) => {
-    await supabaseAdmin.from("sync_runs").insert({
-      started_at: startedAt.toISOString(),
-      finished_at: new Date().toISOString(),
-      duracao_ms: Date.now() - startedAt.getTime(),
-      status,
-      origem,
-      total: r.total,
-      criados: r.criados,
-      atualizados: r.atualizados,
-      movidos: r.movidos,
-      corretores_criados: r.corretoresCriados,
-      erro: erro ?? null,
-    });
-  };
+async function executarSync(supabaseAdmin: AdminClient, result: SyncResult) {
+  const contatos = await fetchC2SContacts();
+  result.total = contatos.length;
 
-  const result: SyncResult = {
-    criados: 0,
-    atualizados: 0,
-    movidos: 0,
-    corretoresCriados: 0,
-    total: 0,
-  };
-
-  try {
-    return await executarSync(supabaseAdmin, result);
-  } catch (e) {
-    await registrar("erro", result, e instanceof Error ? e.message : String(e));
-    throw e;
-  } finally {
-    if (!("erroRegistrado" in result)) {
-      // noop: sucesso registrado abaixo
-    }
-  }
-}
-
+  const { data: corretores } = await supabaseAdmin
+    .from("corretores")
+    .select("id, c2s_agent_id, email, nome");
+  const byAgent = new Map(
+    (corretores ?? []).filter((c) => c.c2s_agent_id).map((c) => [c.c2s_agent_id!, c.id]),
+  );
+  const byEmail = new Map(
+    (corretores ?? []).filter((c) => c.email).map((c) => [c.email!.toLowerCase(), c.id]),
+  );
 
   for (const contato of contatos) {
     let corretorId: string | null = null;
@@ -121,5 +94,43 @@ export async function runC2SSync(origem: string = "manual"): Promise<SyncResult>
     if (proxima !== atual) result.movidos += 1;
   }
 
+  return result;
+}
+
+export async function runC2SSync(origem: string = "manual"): Promise<SyncResult> {
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const startedAt = new Date();
+  const result: SyncResult = {
+    criados: 0,
+    atualizados: 0,
+    movidos: 0,
+    corretoresCriados: 0,
+    total: 0,
+  };
+
+  const registrar = async (status: "sucesso" | "erro", erro?: string) => {
+    await supabaseAdmin.from("sync_runs").insert({
+      started_at: startedAt.toISOString(),
+      finished_at: new Date().toISOString(),
+      duracao_ms: Date.now() - startedAt.getTime(),
+      status,
+      origem,
+      total: result.total,
+      criados: result.criados,
+      atualizados: result.atualizados,
+      movidos: result.movidos,
+      corretores_criados: result.corretoresCriados,
+      erro: erro ?? null,
+    });
+  };
+
+  try {
+    await executarSync(supabaseAdmin, result);
+  } catch (e) {
+    await registrar("erro", e instanceof Error ? e.message : String(e));
+    throw e;
+  }
+
+  await registrar("sucesso");
   return result;
 }
