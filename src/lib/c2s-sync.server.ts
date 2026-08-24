@@ -109,7 +109,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
 }
 
 
-export async function runC2SSync(origem: string = "manual"): Promise<SyncResult> {
+export async function runC2SSync(origem: string = "manual", desde?: string): Promise<SyncResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const startedAt = new Date();
   const result: SyncResult = {
