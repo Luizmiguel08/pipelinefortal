@@ -8,6 +8,7 @@ import {
   getSyncHistory,
   syncNow,
   testC2SConnection,
+  importC2SCorretores,
 } from "@/lib/crm.functions";
 
 import { STAGES } from "@/lib/stages";
@@ -37,6 +38,17 @@ function IntegracaoPage() {
   const runSync = useServerFn(syncNow);
   const runTest = useServerFn(testC2SConnection);
   const fetchHistory = useServerFn(getSyncHistory);
+  const runImportCorretores = useServerFn(importC2SCorretores);
+
+  const importar = useMutation({
+    mutationFn: () => runImportCorretores(),
+    onSettled: () => queryClient.invalidateQueries({ queryKey: ["board"] }),
+    onSuccess: (r) =>
+      toast.success(
+        `${r.total} corretores do C2S sincronizados (${r.criados} novos, ${r.atualizados} atualizados)`,
+      ),
+    onError: (e: Error) => toast.error(e.message),
+  });
 
 
   const test = useMutation({
@@ -145,6 +157,13 @@ function IntegracaoPage() {
             onClick={() => test.mutate()}
           >
             {test.isPending ? "Testando..." : "Testar conexão"}
+          </Button>
+          <Button
+            variant="secondary"
+            disabled={!data?.isGestor || !data?.configurado || importar.isPending}
+            onClick={() => importar.mutate()}
+          >
+            {importar.isPending ? "Importando..." : "Importar corretores do C2S"}
           </Button>
           {!data?.isGestor && (
             <span className="text-xs text-muted-foreground">
