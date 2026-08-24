@@ -121,7 +121,40 @@ export function normalizeContact(rawItem: Record<string, unknown>): C2SContact |
 }
 
 
-export async function fetchC2SContacts(): Promise<C2SContact[]> {
+export type FetchContactsOptions = {
+  /** Só traz contatos criados/atualizados a partir desta data (ISO). Padrão: últimos 7 dias. */
+  desde?: string;
+  /** Limite de segurança de páginas (25 contatos por página). */
+  maxPaginas?: number;
+};
+
+async function fetchPage(root: string, token: string, page: number): Promise<Record<string, unknown>[]> {
+  const response = await fetch(`${root}/contacts?page=${page}`, {
+    headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
+  });
+  if (!response.ok) {
+    throw new Error(`O C2S respondeu com erro ${response.status}. Verifique a URL e o token.`);
+  }
+  const payload = (await response.json()) as unknown;
+  const p = payload as Record<string, unknown>;
+  const list: unknown[] = Array.isArray(payload)
+    ? payload
+    : ((p?.["data"] as unknown[]) ??
+      (p?.["contacts"] as unknown[]) ??
+      (p?.["results"] as unknown[]) ??
+      []);
+  return list.filter((item): item is Record<string, unknown> => !!item && typeof item === "object");
+}
+
+function contactDate(rawItem: Record<string, unknown>): number {
+  const attrs = (rawItem["attributes"] as Record<string, unknown> | undefined) ?? {};
+  const raw: Record<string, unknown> = { ...attrs, ...rawItem };
+  const d = pick(raw, ["created_at", "updated_at", "last_activity_date"]);
+  const t = d ? Date.parse(String(d)) : NaN;
+  return Number.isFinite(t) ? t : Date.now();
+}
+
+export async function fetchC2SContacts(options: FetchContactsOptions = {}): Promise<C2SContact[]> {
   const baseUrl = process.env["C2S_API_BASE_URL"];
   const token = process.env["C2S_API_TOKEN"];
   if (!baseUrl || !token) {
@@ -130,31 +163,41 @@ export async function fetchC2SContacts(): Promise<C2SContact[]> {
     );
   }
 
-  const url = `${baseUrl.replace(/\/$/, "")}/contacts`;
-  const response = await fetch(url, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/json",
-    },
-  });
+  const root = baseUrl.replace(/\/$/, "");
+  const corte = options.desde
+    ? Date.parse(options.desde)
+    : Date.now() - 7 * 24 * 60 * 60 * 1000;
+  const maxPaginas = options.maxPaginas ?? 80;
 
-  if (!response.ok) {
-    throw new Error(`O C2S respondeu com erro ${response.status}. Verifique a URL e o token.`);
+  const itens: Record<string, unknown>[] = [];
+  const vistos = new Set<string>();
+
+  for (let page = 1; page <= maxPaginas; page++) {
+    const lista = await fetchPage(root, token, page);
+    if (!lista.length) break;
+
+    let novosNaPagina = 0;
+    let alcancouCorte = false;
+    for (const item of lista) {
+      const id = String(item["id"] ?? "");
+      if (id && vistos.has(id)) continue;
+      if (contactDate(item) < corte) {
+        alcancouCorte = true;
+        continue;
+      }
+      if (id) vistos.add(id);
+      itens.push(item);
+      novosNaPagina += 1;
+    }
+    // A API devolve do mais recente para o mais antigo: parar ao cruzar a data de corte.
+    if (alcancouCorte || novosNaPagina === 0) break;
   }
 
-  const payload = (await response.json()) as unknown;
-  const list: unknown[] = Array.isArray(payload)
-    ? payload
-    : ((payload as Record<string, unknown>)?.["data"] as unknown[]) ??
-      ((payload as Record<string, unknown>)?.["contacts"] as unknown[]) ??
-      ((payload as Record<string, unknown>)?.["results"] as unknown[]) ??
-      [];
-
-  return list
-    .filter((item): item is Record<string, unknown> => !!item && typeof item === "object")
+  return itens
     .map(normalizeContact)
     .filter((c): c is C2SContact => c !== null);
 }
+
 
 export type C2SSeller = {
   c2s_agent_id: string;
