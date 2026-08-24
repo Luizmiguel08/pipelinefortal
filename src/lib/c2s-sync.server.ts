@@ -18,8 +18,11 @@ type AdminClient = Awaited<
 >["supabaseAdmin"];
 
 async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desde?: string) {
+  // Janelas curtas (sincronização de minuto a minuto) leem poucas páginas para
+  // terminar em segundos; janelas longas (carga histórica) varrem tudo.
+  const recente = desde ? Date.now() - Date.parse(desde) < 3 * 60 * 60 * 1000 : false;
   const contatos = await fetchC2SContacts(
-    desde ? { desde, maxPaginas: 600 } : {},
+    desde ? { desde, maxPaginas: recente ? 12 : 600 } : {},
   );
   result.total = contatos.length;
 
