@@ -3,7 +3,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
-import { getIntegrationStatus, syncNow } from "@/lib/crm.functions";
+import { getIntegrationStatus, syncNow, testC2SConnection } from "@/lib/crm.functions";
 import { STAGES } from "@/lib/stages";
 
 export const Route = createFileRoute("/_authenticated/integracao")({
