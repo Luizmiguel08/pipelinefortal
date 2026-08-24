@@ -137,6 +137,74 @@ function IntegracaoPage() {
         </div>
       </div>
 
+      <div className="panel mt-4 p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-sm font-semibold">Histórico de sincronizações</h2>
+          <span className="text-xs text-muted-foreground">Últimas 20 execuções</span>
+        </div>
+
+        {!history?.isGestor ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Somente gestores visualizam o histórico de sincronizações.
+          </p>
+        ) : history.execucoes.length === 0 ? (
+          <p className="mt-3 text-sm text-muted-foreground">
+            Nenhuma sincronização executada até agora.
+          </p>
+        ) : (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <th className="pb-2 pr-4 font-medium">Data/hora</th>
+                  <th className="pb-2 pr-4 font-medium">Status</th>
+                  <th className="pb-2 pr-4 font-medium">Origem</th>
+                  <th className="pb-2 pr-4 font-medium">Contatos</th>
+                  <th className="pb-2 pr-4 font-medium">Novos</th>
+                  <th className="pb-2 pr-4 font-medium">Atualizados</th>
+                  <th className="pb-2 pr-4 font-medium">Movidos</th>
+                  <th className="pb-2 font-medium">Duração</th>
+                </tr>
+              </thead>
+              <tbody>
+                {history.execucoes.map((e) => (
+                  <tr key={e.id} className="border-t border-border align-top">
+                    <td className="py-2 pr-4 whitespace-nowrap">
+                      {new Date(e.startedAt).toLocaleString("pt-BR")}
+                    </td>
+                    <td className="py-2 pr-4">
+                      <span
+                        className="rounded-full px-2 py-0.5 text-xs font-semibold"
+                        style={{
+                          backgroundColor:
+                            e.status === "sucesso"
+                              ? "var(--stage-fechamento)"
+                              : "var(--destructive)",
+                          color: "var(--primary-foreground)",
+                        }}
+                      >
+                        {e.status === "sucesso" ? "Sucesso" : "Erro"}
+                      </span>
+                      {e.erro && (
+                        <p className="mt-1 max-w-xs text-xs text-muted-foreground">{e.erro}</p>
+                      )}
+                    </td>
+                    <td className="py-2 pr-4 capitalize">{e.origem}</td>
+                    <td className="py-2 pr-4">{e.total}</td>
+                    <td className="py-2 pr-4">{e.criados}</td>
+                    <td className="py-2 pr-4">{e.atualizados}</td>
+                    <td className="py-2 pr-4">{e.movidos}</td>
+                    <td className="py-2 whitespace-nowrap">
+                      {e.duracaoMs != null ? `${(e.duracaoMs / 1000).toFixed(1)}s` : "—"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
 
       <div className="panel mt-4 p-5">
         <h2 className="text-sm font-semibold">Como os leads se movem sozinhos</h2>
