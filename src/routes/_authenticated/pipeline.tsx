@@ -43,6 +43,8 @@ function PipelinePage() {
     queryFn: () => fetchBoard(),
     refetchInterval: 60_000,
     refetchOnWindowFocus: true,
+    staleTime: 30_000,
+    placeholderData: (prev) => prev,
   });
 
   // Atualização em tempo real: qualquer lead novo/alterado no banco recarrega o funil.
@@ -52,7 +54,7 @@ function PipelinePage() {
       .channel("leads-tempo-real")
       .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () => {
         if (timer) clearTimeout(timer);
-        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 1500);
+        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 5000);
       })
       .subscribe();
     return () => {
@@ -60,6 +62,7 @@ function PipelinePage() {
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
+
 
   // Enquanto o gestor está com o funil aberto, buscamos novidades no C2S a cada minuto.
   const isGestor = data?.isGestor ?? false;
