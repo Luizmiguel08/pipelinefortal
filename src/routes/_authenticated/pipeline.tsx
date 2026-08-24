@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, syncNow, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
 
 export const Route = createFileRoute("/_authenticated/pipeline")({
@@ -36,6 +36,7 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
+  const sync = useServerFn(syncNow);
 
   const { data, isLoading } = useQuery({
     queryKey: ["board"],
