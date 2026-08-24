@@ -90,18 +90,23 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
       last_synced_at: new Date().toISOString(),
     };
 
+    // Regra do time: Negociação exige proposta com valor (R$) preenchido.
+    const semValor = !(contato.valor > 0);
+    const ajustar = (s: StageId): StageId => (s === "negociacao" && semValor ? "atendimento" : s);
+
     if (!existente) {
-      novos.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: contato.stage });
+      novos.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: ajustar(contato.stage) });
       result.criados += 1;
       continue;
     }
 
     // O lead nunca volta de etapa: mantemos a fase mais avançada entre C2S e painel.
     const atual = existente.stage;
-    const proxima = rank(contato.stage) > rank(atual) ? contato.stage : atual;
+    const proxima = ajustar(rank(contato.stage) > rank(atual) ? contato.stage : atual);
     atualizados.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: proxima });
     result.atualizados += 1;
     if (proxima !== atual) result.movidos += 1;
+
   }
 
   // Gravação em lote (upsert por c2s_contact_id) para a rodada terminar em segundos.
