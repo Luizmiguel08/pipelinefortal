@@ -35,3 +35,6 @@ function LeadCardBase({ lead, corretorNome, showCorretor, onOpen, onDragStart }:
     </article>
   );
 }
+
+export const LeadCard = memo(LeadCardBase);
+
