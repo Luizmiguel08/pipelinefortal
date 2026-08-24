@@ -164,6 +164,42 @@ export const testC2SConnection = createServerFn({ method: "POST" })
     return { ok: true as const, contatos: contatos.length };
   });
 
+export const getSyncHistory = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isGestor } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "gestor",
+    });
+    if (!isGestor) return { isGestor: false, execucoes: [] };
+
+    const { data, error } = await context.supabase
+      .from("sync_runs")
+      .select(
+        "id, started_at, finished_at, duracao_ms, status, origem, total, criados, atualizados, movidos, corretores_criados, erro",
+      )
+      .order("started_at", { ascending: false })
+      .limit(20);
+    if (error) throw new Error(error.message);
+
+    return {
+      isGestor: true,
+      execucoes: (data ?? []).map((r) => ({
+        id: r.id,
+        startedAt: r.started_at,
+        duracaoMs: r.duracao_ms,
+        status: r.status,
+        origem: r.origem,
+        total: r.total,
+        criados: r.criados,
+        atualizados: r.atualizados,
+        movidos: r.movidos,
+        corretoresCriados: r.corretores_criados,
+        erro: r.erro,
+      })),
+    };
+  });
+
 
 export const syncNow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
