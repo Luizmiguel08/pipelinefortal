@@ -55,13 +55,17 @@ function IntegracaoPage() {
 
   const sync = useMutation({
     mutationFn: () => runSync(),
-    onSuccess: (r) => {
-      toast.success(`Sincronizado: ${r.criados} novos, ${r.atualizados} atualizados, ${r.movidos} movidos`);
+    onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["board"] });
       queryClient.invalidateQueries({ queryKey: ["c2s-status"] });
+      queryClient.invalidateQueries({ queryKey: ["c2s-history"] });
+    },
+    onSuccess: (r) => {
+      toast.success(`Sincronizado: ${r.criados} novos, ${r.atualizados} atualizados, ${r.movidos} movidos`);
     },
     onError: (e: Error) => toast.error(e.message),
   });
+
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-10">
