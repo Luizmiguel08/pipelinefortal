@@ -131,12 +131,39 @@ export const getIntegrationStatus = createServerFn({ method: "GET" })
       .limit(1)
       .maybeSingle();
 
+    const baseUrl = process.env["C2S_API_BASE_URL"] ?? "";
+    let host: string | null = null;
+    try {
+      host = baseUrl ? new URL(baseUrl).host : null;
+    } catch {
+      host = null;
+    }
+
     return {
       isGestor: !!isGestor,
-      configurado: !!process.env["C2S_API_BASE_URL"] && !!process.env["C2S_API_TOKEN"],
+      configurado: !!baseUrl && !!process.env["C2S_API_TOKEN"],
+      baseUrlHost: host,
+      tokenMascarado: process.env["C2S_API_TOKEN"] ? "••••••••••••" : null,
       ultimaSincronizacao: ultimo?.last_synced_at ?? null,
     };
   });
+
+export const testC2SConnection = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { data: isGestor } = await context.supabase.rpc("has_role", {
+      _user_id: context.userId,
+      _role: "gestor",
+    });
+    if (!isGestor) throw new Error("Apenas gestores podem testar a conexão.");
+    if (!process.env["C2S_API_BASE_URL"] || !process.env["C2S_API_TOKEN"]) {
+      throw new Error("Credenciais do C2S ainda não foram informadas.");
+    }
+    const { fetchC2SContacts } = await import("./c2s.server");
+    const contatos = await fetchC2SContacts();
+    return { ok: true as const, contatos: contatos.length };
+  });
+
 
 export const syncNow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
