@@ -137,7 +137,7 @@ export async function runC2SSync(origem: string = "manual", desde?: string): Pro
   };
 
   try {
-    await executarSync(supabaseAdmin, result);
+    await executarSync(supabaseAdmin, result, desde);
   } catch (e) {
     await registrar("erro", e instanceof Error ? e.message : String(e));
     throw e;
