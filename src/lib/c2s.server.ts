@@ -110,9 +110,7 @@ export function normalizeContact(rawItem: Record<string, unknown>): C2SContact |
         "interest",
         "property.title",
       ]) as string) ?? null,
-    valor: toNumber(
-      pick(raw, ["product.price_float", "product.price", "value", "valor", "price", "preco", "property_value"]),
-    ),
+    valor,
     origem:
       (pick(raw, ["lead_source.name", "channel.name", "source", "origem", "midia"]) as string) ?? "C2S",
     stage: done ? "fechamento" : mapStage(statusRaw),
