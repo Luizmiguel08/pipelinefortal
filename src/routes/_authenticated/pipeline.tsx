@@ -60,6 +60,28 @@ function PipelinePage() {
     };
   }, [queryClient]);
 
+  // Enquanto o gestor está com o funil aberto, buscamos novidades no C2S a cada minuto.
+  const isGestor = data?.isGestor ?? false;
+  useEffect(() => {
+    if (!isGestor) return;
+    let rodando = false;
+    const disparar = async () => {
+      if (rodando || document.hidden) return;
+      rodando = true;
+      try {
+        await sync();
+      } catch {
+        // silencioso: o histórico em Integração mostra eventuais falhas
+      } finally {
+        rodando = false;
+      }
+    };
+    void disparar();
+    const id = setInterval(() => void disparar(), 60_000);
+    return () => clearInterval(id);
+  }, [isGestor, sync]);
+
+
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
