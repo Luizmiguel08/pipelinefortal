@@ -75,16 +75,17 @@ export const saveLead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator(
     (input: {
-      id?: string;
+      id?: string | undefined;
       nome: string;
-      telefone?: string;
-      email?: string;
-      imovel?: string;
+      telefone?: string | undefined;
+      email?: string | undefined;
+      imovel?: string | undefined;
       valor: number;
       stage: StageId;
       corretor_id: string | null;
-      observacoes?: string;
+      observacoes?: string | undefined;
     }) => {
+
       if (!input?.nome?.trim()) throw new Error("Informe o nome do cliente");
       if (!STAGE_IDS.includes(input.stage)) throw new Error("Etapa inválida");
       return input;
