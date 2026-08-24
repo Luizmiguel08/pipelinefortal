@@ -49,12 +49,14 @@ function toNumber(value: unknown): number {
 /** Traduz o status/etapa do C2S para as colunas do pipeline. */
 export function mapStage(raw: unknown): StageId {
   const value = String(raw ?? "").toLowerCase();
-  if (/fechad|ganho|vendid|assinad|conclu/.test(value)) return "fechamento";
-  if (/document|dossi|cr[eé]dito|an[aá]lise/.test(value)) return "documentacao";
-  if (/negocia|propost|contra.?propost|valores/.test(value)) return "negociacao";
-  if (/atendiment|respond|contato|em.?andamento|qualific/.test(value)) return "atendimento";
+  if (/fechad|ganho|vendid|assinad|conclu|done|won|closed|sold/.test(value)) return "fechamento";
+  if (/document|dossi|cr[eé]dito|an[aá]lise|proposal_sent|contract/.test(value)) return "documentacao";
+  if (/negocia|propost|contra.?propost|valores|negotiation|proposal/.test(value)) return "negociacao";
+  if (/atendiment|respond|contato|em.?andamento|qualific|attendance|contacted|in_service|replied/.test(value))
+    return "atendimento";
   return "novo";
 }
+
 
 export function normalizeContact(rawItem: Record<string, unknown>): C2SContact | null {
   // A API do C2S devolve { id, attributes: { customer, seller, product, lead_status ... } }.
