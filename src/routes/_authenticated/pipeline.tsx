@@ -87,16 +87,37 @@ function PipelinePage() {
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
+  const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
 
+  // Busca com debounce: digitar não re-renderiza milhares de cards a cada tecla.
+  useEffect(() => {
+    const id = setTimeout(() => setBusca(buscaInput), 250);
+    return () => clearTimeout(id);
+  }, [buscaInput]);
+
   const moveMutation = useMutation({
     mutationFn: (vars: { id: string; stage: StageId }) => move({ data: vars }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["board"] }),
-    onError: (e: Error) => toast.error(e.message),
+    // Atualização otimista: o card muda de coluna na hora, sem esperar o servidor.
+    onMutate: async (vars) => {
+      await queryClient.cancelQueries({ queryKey: ["board"] });
+      const anterior = queryClient.getQueryData<Board>(["board"]);
+      queryClient.setQueryData<Board>(["board"], (old) =>
+        old
+          ? { ...old, leads: old.leads.map((l) => (l.id === vars.id ? { ...l, stage: vars.stage } : l)) }
+          : old,
+      );
+      return { anterior };
+    },
+    onError: (e: Error, _vars, ctx) => {
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      toast.error(e.message);
+    },
   });
+
 
   const saveMutation = useMutation({
     mutationFn: (values: LeadFormValues) =>
