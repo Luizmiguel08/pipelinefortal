@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, syncNow, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
 
 export const Route = createFileRoute("/_authenticated/pipeline")({
@@ -36,8 +36,52 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
+  const sync = useServerFn(syncNow);
 
-  const { data, isLoading } = useQuery({ queryKey: ["board"], queryFn: () => fetchBoard() });
+  const { data, isLoading } = useQuery({
+    queryKey: ["board"],
+    queryFn: () => fetchBoard(),
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+  });
+
+  // Atualização em tempo real: qualquer lead novo/alterado no banco recarrega o funil.
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const channel = supabase
+      .channel("leads-tempo-real")
+      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 1500);
+      })
+      .subscribe();
+    return () => {
+      if (timer) clearTimeout(timer);
+      supabase.removeChannel(channel);
+    };
+  }, [queryClient]);
+
+  // Enquanto o gestor está com o funil aberto, buscamos novidades no C2S a cada minuto.
+  const isGestor = data?.isGestor ?? false;
+  useEffect(() => {
+    if (!isGestor) return;
+    let rodando = false;
+    const disparar = async () => {
+      if (rodando || document.hidden) return;
+      rodando = true;
+      try {
+        await sync();
+      } catch {
+        // silencioso: o histórico em Integração mostra eventuais falhas
+      } finally {
+        rodando = false;
+      }
+    };
+    void disparar();
+    const id = setInterval(() => void disparar(), 60_000);
+    return () => clearInterval(id);
+  }, [isGestor, sync]);
+
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
   const [busca, setBusca] = useState("");
