@@ -80,6 +80,18 @@ export function normalizeContact(rawItem: Record<string, unknown>): C2SContact |
       "situacao",
     ]) ?? "";
 
+  const valor = toNumber(
+    pick(raw, ["product.price_float", "product.price", "value", "valor", "price", "preco", "property_value"]),
+  );
+  const respondido = Boolean(pick(raw, ["replied_at"])) || Boolean(pick(raw, ["done_details.replied_at"]));
+
+  // Regra do time: "Em negociação" no C2S só vira Negociação aqui quando existe
+  // proposta com valor (R$) preenchido; sem valor o lead fica em Atendimento.
+  // E todo lead que já teve resposta sai de "Novo" para "Atendimento".
+  let stage = done ? ("fechamento" as StageId) : mapStage(statusRaw);
+  if (stage === "negociacao" && !(valor > 0)) stage = "atendimento";
+  if (stage === "novo" && respondido) stage = "atendimento";
+
   return {
     c2s_contact_id: String(id),
     nome: String(nome ?? "Contato sem nome"),
