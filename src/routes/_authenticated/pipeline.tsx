@@ -80,14 +80,19 @@ function PipelinePage() {
     [corretores],
   );
 
+  const meuCorretorId = data?.meuCorretorId ?? null;
+
   const leadsFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
     return (data?.leads ?? []).filter((l) => {
-      if (corretorFiltro !== "todos" && l.corretor_id !== corretorFiltro) return false;
+      if (corretorFiltro === "meus" && l.corretor_id !== meuCorretorId) return false;
+      if (corretorFiltro !== "todos" && corretorFiltro !== "meus" && l.corretor_id !== corretorFiltro)
+        return false;
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
-  }, [data?.leads, corretorFiltro, busca]);
+  }, [data?.leads, corretorFiltro, busca, meuCorretorId]);
+
 
   const totalGeral = leadsFiltrados.reduce((acc, l) => acc + l.valor, 0);
   const emAndamento = leadsFiltrados
@@ -127,6 +132,7 @@ function PipelinePage() {
               className="h-9 rounded-md border border-input bg-background px-3 text-sm"
             >
               <option value="todos">Todos os corretores</option>
+              {meuCorretorId && <option value="meus">Somente meus leads</option>}
               {corretores.map((c) => (
                 <option key={c.id} value={c.id}>
                   {c.nome}
@@ -134,6 +140,7 @@ function PipelinePage() {
               ))}
             </select>
           )}
+
           <Button
             onClick={() => {
               setLeadAtual(null);

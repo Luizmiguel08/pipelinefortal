@@ -27,6 +27,7 @@ export type BoardCorretor = {
 export type Board = {
   isGestor: boolean;
   nome: string;
+  meuCorretorId: string | null;
   corretores: BoardCorretor[];
   leads: BoardLead[];
 };
@@ -39,7 +40,7 @@ export const getBoard = createServerFn({ method: "GET" })
     const [{ data: roles }, { data: profile }, { data: corretores }, { data: leads }] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("profiles").select("nome").eq("id", userId).maybeSingle(),
-      supabase.from("corretores").select("id, nome, email, c2s_agent_id").order("nome"),
+      supabase.from("corretores").select("id, nome, email, c2s_agent_id, user_id").order("nome"),
       supabase
         .from("leads")
         .select(
@@ -48,13 +49,17 @@ export const getBoard = createServerFn({ method: "GET" })
         .order("updated_at", { ascending: false }),
     ]);
 
+    const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
+
     return {
       isGestor: (roles ?? []).some((r) => r.role === "gestor"),
       nome: profile?.nome ?? "",
-      corretores: (corretores ?? []) as BoardCorretor[],
+      meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
+      corretores: lista.map(({ user_id: _u, ...c }) => c),
       leads: ((leads ?? []) as BoardLead[]).map((l) => ({ ...l, valor: Number(l.valor) })),
     };
   });
+
 
 export const moveLead = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
