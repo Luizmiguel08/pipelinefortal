@@ -15,6 +15,7 @@ import {
   STAGES,
   formatBRL,
   indicadoresPreenchidos,
+  podeMoverPara,
   resolverEtapa,
   stageLabel,
   type StageId,
@@ -36,6 +37,8 @@ export type LeadFormValues = {
   finalidade: "moradia" | "investimento" | null;
   estagio_imovel: "pronto" | "planta" | null;
   documentacao_ok: boolean;
+  visita_em: string | null;
+  visita_realizada: boolean;
   /** Salva exatamente na etapa escolhida, ignorando a automação por indicadores. */
   forcar_stage?: boolean;
 };
@@ -53,7 +56,18 @@ const empty: LeadFormValues = {
   finalidade: null,
   estagio_imovel: null,
   documentacao_ok: false,
+  visita_em: null,
+  visita_realizada: false,
 };
+
+/** timestamp ISO -> valor aceito por <input type="datetime-local"> (hora local). */
+function paraInputLocal(iso: string | null) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
 
 const ATALHOS_VALOR = [200_000, 300_000, 500_000, 800_000, 1_000_000];
 const ATALHOS_ENTRADA = [20_000, 50_000, 100_000, 200_000];
@@ -159,6 +173,8 @@ export function LeadDialog({
             finalidade: lead.finalidade ?? null,
             estagio_imovel: lead.estagio_imovel ?? null,
             documentacao_ok: Boolean(lead.documentacao_ok),
+            visita_em: lead.visita_em ?? null,
+            visita_realizada: Boolean(lead.visita_realizada),
           }
         : { ...empty, corretor_id: defaultCorretorId },
     );
@@ -166,6 +182,7 @@ export function LeadDialog({
 
   const etapaFinal = useMemo(() => resolverEtapa(values, values.stage), [values]);
   const qualificado = indicadoresPreenchidos(values);
+  const travado = !podeMoverPara(etapaFinal, values);
   const set = (patch: Partial<LeadFormValues>) => setValues((v) => ({ ...v, ...patch }));
 
   return (
@@ -248,6 +265,34 @@ export function LeadDialog({
                   </Chip>
                 ))}
               </div>
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-border bg-background p-3">
+              <Label htmlFor="lead-visita">Visita ao imóvel</Label>
+              <Input
+                id="lead-visita"
+                type="datetime-local"
+                value={paraInputLocal(values.visita_em)}
+                onChange={(e) =>
+                  set({
+                    visita_em: e.target.value ? new Date(e.target.value).toISOString() : null,
+                    ...(e.target.value ? {} : { visita_realizada: false }),
+                  })
+                }
+              />
+              <label htmlFor="lead-visita-ok" className="flex items-center gap-2 text-sm">
+                <input
+                  id="lead-visita-ok"
+                  type="checkbox"
+                  className="h-4 w-4 accent-[hsl(var(--primary))]"
+                  checked={values.visita_realizada}
+                  onChange={(e) => set({ visita_realizada: e.target.checked })}
+                />
+                Visita realizada
+              </label>
+              <p className="text-xs text-muted-foreground">
+                Ao agendar, o lead vai para a coluna Visita agendada.
+              </p>
             </div>
 
             <label
@@ -383,11 +428,16 @@ export function LeadDialog({
           >
             Número incorreto · Lista fria
           </Button>
-          <div className="flex gap-2">
+          <div className="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
+            {travado && (
+              <span className="text-xs text-destructive">
+                Preencha um indicador para avançar este lead.
+              </span>
+            )}
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
-          <Button onClick={() => onSave(values)} disabled={saving}>
+          <Button onClick={() => onSave(values)} disabled={saving || travado}>
             {saving ? "Salvando..." : `Salvar · ${stageLabel(etapaFinal)}`}
           </Button>
           </div>

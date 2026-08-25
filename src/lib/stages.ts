@@ -1,6 +1,7 @@
 export const STAGES = [
   { id: "novo", label: "Lead novo", hint: "Responder em até 5 min", color: "var(--stage-novo)" },
   { id: "atendimento", label: "Em atendimento", hint: "Avanço em até 1 dia", color: "var(--stage-atendimento)" },
+  { id: "visita", label: "Visita agendada", hint: "Agendamento e visita ao imóvel", color: "var(--stage-visita)" },
   { id: "dia1", label: "Dia 1", hint: "Sem retorno há 1 dia", color: "var(--stage-dia1)" },
   { id: "dia2", label: "Dia 2", hint: "Sem retorno há 2 dias", color: "var(--stage-dia2)" },
   { id: "dia3", label: "Dia 3", hint: "Sem retorno há 3 dias", color: "var(--stage-dia3)" },
@@ -91,7 +92,12 @@ export type Qualificacao = {
   finalidade?: string | null | undefined;
   estagio_imovel?: string | null | undefined;
   documentacao_ok?: boolean | null | undefined;
+  visita_em?: string | null | undefined;
+  visita_realizada?: boolean | null | undefined;
 };
+
+/** Etapas frias: o lead ainda não teve tratativa registrada. */
+export const ETAPAS_FRIAS: StageId[] = ["novo", "dia1", "dia2", "dia3", "lista_fria"];
 
 /** Indicadores preenchidos = o corretor já qualificou o lead. */
 export function indicadoresPreenchidos(q: Qualificacao) {
@@ -100,9 +106,24 @@ export function indicadoresPreenchidos(q: Qualificacao) {
     Number(q.entrada) > 0 ||
     !!q.finalidade ||
     !!q.estagio_imovel ||
-    !!q.documentacao_ok
+    !!q.documentacao_ok ||
+    !!q.visita_em ||
+    !!q.visita_realizada
   );
 }
+
+/**
+ * Trava do funil: só é possível tirar o lead das etapas frias quando ao menos um
+ * indicador da tratativa foi preenchido (valor, entrada, finalidade, imóvel,
+ * visita ou documentação).
+ */
+export function podeMoverPara(stage: StageId, q: Qualificacao) {
+  if (ETAPAS_FRIAS.includes(stage)) return true;
+  return indicadoresPreenchidos(q);
+}
+
+export const MENSAGEM_TRAVA =
+  "Preencha ao menos um indicador (valor, entrada, finalidade, pronto/planta, visita ou documentação) para avançar o lead.";
 
 /**
  * Etapa resultante ao salvar o lead:
@@ -113,7 +134,10 @@ export function indicadoresPreenchidos(q: Qualificacao) {
 export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
   if (q.documentacao_ok && stage !== "documentacao" && stage !== "fechamento") return "documentacao";
   if (!q.documentacao_ok && stage === "documentacao") return "negociacao";
-  const frias: StageId[] = ["novo", "dia1", "dia2", "dia3", "lista_fria"];
+  const frias = ETAPAS_FRIAS;
+  // Visita agendada (ou já realizada) tem prioridade sobre "Em atendimento".
+  if ((q.visita_em || q.visita_realizada) && (frias.includes(stage) || stage === "atendimento"))
+    return "visita";
   if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
   return stage;
 }

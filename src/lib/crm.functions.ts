@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { STAGE_IDS, resolverEtapa, type StageId } from "./stages";
+import { MENSAGEM_TRAVA, STAGE_IDS, podeMoverPara, resolverEtapa, type StageId } from "./stages";
 
 export type BoardLead = {
   id: string;
@@ -21,6 +21,8 @@ export type BoardLead = {
   finalidade: "moradia" | "investimento" | null;
   estagio_imovel: "pronto" | "planta" | null;
   documentacao_ok: boolean;
+  visita_em: string | null;
+  visita_realizada: boolean;
   stage_since: string | null;
 };
 
@@ -52,7 +54,7 @@ export const getBoard = createServerFn({ method: "GET" })
         const { data, error } = await supabase
           .from("leads")
           .select(
-            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, stage_since",
+            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, visita_em, visita_realizada, stage_since",
           )
           .order("updated_at", { ascending: false })
           .range(inicio, inicio + pagina - 1);
@@ -83,6 +85,7 @@ export const getBoard = createServerFn({ method: "GET" })
         valor: Number(l.valor),
         entrada: Number(l.entrada ?? 0),
         documentacao_ok: Boolean(l.documentacao_ok),
+        visita_realizada: Boolean(l.visita_realizada),
       })),
     };
   });
@@ -95,6 +98,15 @@ export const moveLead = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data, context }) => {
+    // Trava do funil: o lead só sai das etapas frias com algum indicador preenchido.
+    const { data: atual, error: erroLead } = await context.supabase
+      .from("leads")
+      .select("valor, entrada, finalidade, estagio_imovel, documentacao_ok, visita_em, visita_realizada")
+      .eq("id", data.id)
+      .maybeSingle();
+    if (erroLead) throw new Error(erroLead.message);
+    if (atual && !podeMoverPara(data.stage, atual)) throw new Error(MENSAGEM_TRAVA);
+
     const { error } = await context.supabase
       .from("leads")
       .update({ stage: data.stage, ultima_interacao: new Date().toISOString() })
@@ -120,6 +132,8 @@ export const saveLead = createServerFn({ method: "POST" })
       finalidade?: "moradia" | "investimento" | null | undefined;
       estagio_imovel?: "pronto" | "planta" | null | undefined;
       documentacao_ok?: boolean | undefined;
+      visita_em?: string | null | undefined;
+      visita_realizada?: boolean | undefined;
       forcar_stage?: boolean | undefined;
     }) => {
 
@@ -142,6 +156,8 @@ export const saveLead = createServerFn({ method: "POST" })
       finalidade: data.finalidade ?? null,
       estagio_imovel: data.estagio_imovel ?? null,
       documentacao_ok: Boolean(data.documentacao_ok),
+      visita_em: data.visita_em || null,
+      visita_realizada: Boolean(data.visita_realizada),
       // Documentação move para a coluna correspondente; qualquer indicador tira o lead das colunas frias.
       // forcar_stage respeita a etapa enviada (ex.: número incorreto -> lista fria).
       stage: data.forcar_stage
@@ -153,10 +169,14 @@ export const saveLead = createServerFn({ method: "POST" })
               finalidade: data.finalidade,
               estagio_imovel: data.estagio_imovel,
               documentacao_ok: data.documentacao_ok,
+              visita_em: data.visita_em,
+              visita_realizada: data.visita_realizada,
             },
             data.stage,
           ),
     };
+    if (!podeMoverPara(payload.stage as StageId, payload)) throw new Error(MENSAGEM_TRAVA);
+
     if (data.id) {
       const { error } = await context.supabase.from("leads").update(payload).eq("id", data.id);
       if (error) throw new Error(error.message);

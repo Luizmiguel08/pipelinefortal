@@ -35,7 +35,12 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
 
       {lead.imovel && <p className="mt-1 text-xs text-muted-foreground">{lead.imovel}</p>}
 
-      {(lead.entrada > 0 || lead.finalidade || lead.estagio_imovel || lead.documentacao_ok) && (
+      {(lead.entrada > 0 ||
+        lead.finalidade ||
+        lead.estagio_imovel ||
+        lead.documentacao_ok ||
+        lead.visita_em ||
+        lead.visita_realizada) && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
           {lead.entrada > 0 && (
             <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
@@ -50,6 +55,16 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
           {lead.estagio_imovel && (
             <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
               {lead.estagio_imovel === "pronto" ? "Pronto" : "Na planta"}
+            </span>
+          )}
+          {lead.visita_em && !lead.visita_realizada && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
+              Visita {new Date(lead.visita_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}
+            </span>
+          )}
+          {lead.visita_realizada && (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary">
+              Visita realizada
             </span>
           )}
           {lead.documentacao_ok && (
