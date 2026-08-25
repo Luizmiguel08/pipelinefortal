@@ -161,17 +161,29 @@ function PipelinePage() {
     });
   }, [data?.leads, corretorFiltro, busca, meuCorretorId]);
 
+  // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
+  const colunas = useMemo(() => {
+    const mapa = Object.fromEntries(STAGES.map((s) => [s.id, [] as BoardLead[]])) as Record<StageId, BoardLead[]>;
+    for (const lead of leadsFiltrados) mapa[lead.stage]?.push(lead);
+    return mapa;
+  }, [leadsFiltrados]);
 
   const totalGeral = leadsFiltrados.reduce((acc, l) => acc + l.valor, 0);
   const emAndamento = leadsFiltrados
     .filter((l) => l.stage !== "fechamento")
     .reduce((acc, l) => acc + l.valor, 0);
 
+  const abrirLead = useCallback((l: BoardLead) => {
+    setLeadAtual(l);
+    setDialogOpen(true);
+  }, []);
+
   function handleDrop(stage: StageId) {
     if (!dragging || dragging.stage === stage) return setDragging(null);
     moveMutation.mutate({ id: dragging.id, stage });
     setDragging(null);
   }
+
 
   async function sair() {
     await supabase.auth.signOut();
