@@ -57,7 +57,7 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, ligacoes, onOpe
           {tarde ? "✓" : "○"} Tarde
         </span>
         {atendeu ? (
-          <span className="ml-auto rounded-full bg-stage-fechamento/20 px-2 py-0.5 font-medium text-[--color-stage-fechamento]">
+          <span className="ml-auto rounded-full bg-primary/15 px-2 py-0.5 font-medium text-primary">
             Atendeu
           </span>
         ) : (
