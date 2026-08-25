@@ -134,7 +134,6 @@ export const saveLead = createServerFn({ method: "POST" })
       email: data.email ?? null,
       imovel: data.imovel ?? null,
       valor: Number(data.valor) || 0,
-      stage: data.stage,
       corretor_id: data.corretor_id,
       observacoes: data.observacoes ?? null,
       entrada: Number(data.entrada) || 0,
