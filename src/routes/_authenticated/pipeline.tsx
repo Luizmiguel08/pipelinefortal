@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
-import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
+import { STAGES, formatBRL, formatCompactBRL, resolverEtapa, type StageId } from "@/lib/stages";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -204,12 +204,7 @@ function PipelinePage() {
       if (!values.id) return { anterior: undefined };
       await queryClient.cancelQueries({ queryKey: ["board"] });
       const anterior = queryClient.getQueryData<Board>(["board"]);
-      const stageFinal: StageId =
-        values.documentacao_ok && values.stage !== "documentacao" && values.stage !== "fechamento"
-          ? "documentacao"
-          : !values.documentacao_ok && values.stage === "documentacao"
-            ? "negociacao"
-          : values.stage;
+      const stageFinal: StageId = resolverEtapa(values, values.stage);
       queryClient.setQueryData<Board>(["board"], (old) =>
         old
           ? {

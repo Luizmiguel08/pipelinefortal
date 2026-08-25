@@ -84,3 +84,36 @@ export function relativeTime(iso: string | null) {
   const days = Math.round(hours / 24);
   return `há ${days}d`;
 }
+
+export type Qualificacao = {
+  valor?: number | null;
+  entrada?: number | null;
+  finalidade?: string | null;
+  estagio_imovel?: string | null;
+  documentacao_ok?: boolean | null;
+};
+
+/** Indicadores preenchidos = o corretor já qualificou o lead. */
+export function indicadoresPreenchidos(q: Qualificacao) {
+  return (
+    Number(q.valor) > 0 ||
+    Number(q.entrada) > 0 ||
+    !!q.finalidade ||
+    !!q.estagio_imovel ||
+    !!q.documentacao_ok
+  );
+}
+
+/**
+ * Etapa resultante ao salvar o lead:
+ * - documentação marcada -> Documentação (exceto se já está em Fechamento)
+ * - documentação desmarcada estando em Documentação -> Negociação
+ * - qualquer indicador preenchido com o lead ainda parado em etapas frias -> Em atendimento
+ */
+export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
+  if (q.documentacao_ok && stage !== "documentacao" && stage !== "fechamento") return "documentacao";
+  if (!q.documentacao_ok && stage === "documentacao") return "negociacao";
+  const frias: StageId[] = ["novo", "dia1", "dia2", "dia3", "lista_fria"];
+  if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
+  return stage;
+}
