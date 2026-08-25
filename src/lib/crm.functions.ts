@@ -120,6 +120,7 @@ export const saveLead = createServerFn({ method: "POST" })
       finalidade?: "moradia" | "investimento" | null | undefined;
       estagio_imovel?: "pronto" | "planta" | null | undefined;
       documentacao_ok?: boolean | undefined;
+      forcar_stage?: boolean | undefined;
     }) => {
 
 
