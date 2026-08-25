@@ -23,6 +23,9 @@ export type BoardLead = {
   documentacao_ok: boolean;
   visita_em: string | null;
   visita_realizada: boolean;
+  visita_status: "agendado" | "realizado" | "desmarcado" | null;
+  visita_motivo: string | null;
+  visita_projeto: string | null;
   stage_since: string | null;
 };
 
