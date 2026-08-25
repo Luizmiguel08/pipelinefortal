@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, syncNow, type Board, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
@@ -40,7 +40,6 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
-  const sync = useServerFn(syncNow);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
