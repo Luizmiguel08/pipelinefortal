@@ -188,8 +188,8 @@ function PipelinePage() {
             <h1 className="text-lg font-semibold">Pipeline de leads</h1>
           </div>
           <Input
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
+            value={buscaInput}
+            onChange={(e) => setBuscaInput(e.target.value)}
             placeholder="Buscar cliente ou imóvel"
             className="h-9 w-56"
           />
