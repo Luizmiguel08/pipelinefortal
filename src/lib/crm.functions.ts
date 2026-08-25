@@ -15,6 +15,7 @@ export type BoardLead = {
   observacoes: string | null;
   ultima_interacao: string | null;
   c2s_contact_id: string | null;
+  created_at: string | null;
 };
 
 export type BoardCorretor = {
