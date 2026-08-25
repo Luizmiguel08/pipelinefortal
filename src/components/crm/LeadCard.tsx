@@ -1,19 +1,25 @@
 import { memo } from "react";
 import { alertaSLA, formatBRL, formatRestante, relativeTime } from "@/lib/stages";
 import type { BoardLead } from "@/lib/crm.functions";
+import type { ResumoLigacoes } from "@/lib/calls.functions";
 
 type Props = {
   lead: BoardLead;
   corretorNome?: string | undefined;
   showCorretor: boolean;
   agora: number;
+  ligacoes?: ResumoLigacoes | undefined;
   onOpen: (lead: BoardLead) => void;
   onDragStart: (lead: BoardLead) => void;
 };
 
-function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragStart }: Props) {
+function LeadCardBase({ lead, corretorNome, showCorretor, agora, ligacoes, onOpen, onDragStart }: Props) {
   const sla = alertaSLA(lead.stage, lead.stage_since, lead.ultima_interacao, agora);
   const emAlerta = sla?.alerta ?? false;
+  const manha = (ligacoes?.manha ?? 0) > 0;
+  const tarde = (ligacoes?.tarde ?? 0) > 0;
+  const atendeu = ligacoes?.atendeu ?? false;
+  const metaLigacoes = !atendeu && (!manha || !tarde);
   return (
     <article
       draggable
@@ -32,7 +38,39 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
           ⚠ {formatRestante(sla.restanteMs)} nesta etapa
         </p>
       )}
+
+      {/* Meta de contato: 2 ligações por dia (manhã e tarde) até o cliente atender. */}
+      <div className="mt-2 flex items-center gap-1.5 text-[11px]">
+        <span className="text-muted-foreground">☎ hoje</span>
+        <span
+          className={`rounded-full px-2 py-0.5 font-medium ${
+            manha ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+          }`}
+        >
+          {manha ? "✓" : "○"} Manhã
+        </span>
+        <span
+          className={`rounded-full px-2 py-0.5 font-medium ${
+            tarde ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"
+          }`}
+        >
+          {tarde ? "✓" : "○"} Tarde
+        </span>
+        {atendeu ? (
+          <span className="ml-auto rounded-full bg-stage-fechamento/20 px-2 py-0.5 font-medium text-[--color-stage-fechamento]">
+            Atendeu
+          </span>
+        ) : (
+          metaLigacoes && (
+            <span className="ml-auto font-semibold text-destructive">
+              {2 - (manha ? 1 : 0) - (tarde ? 1 : 0)} ligação(ões)
+            </span>
+          )
+        )}
+      </div>
+
       {lead.imovel && <p className="mt-1 text-xs text-muted-foreground">{lead.imovel}</p>}
+
       {(lead.entrada > 0 || lead.finalidade || lead.estagio_imovel || lead.documentacao_ok) && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
           {lead.entrada > 0 && (
