@@ -77,7 +77,12 @@ export const getBoard = createServerFn({ method: "GET" })
       nome: profile?.nome ?? "",
       meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
       corretores: lista.map(({ user_id: _u, ...c }) => c),
-      leads: ((leads ?? []) as BoardLead[]).map((l) => ({ ...l, valor: Number(l.valor) })),
+      leads: ((leads ?? []) as BoardLead[]).map((l) => ({
+        ...l,
+        valor: Number(l.valor),
+        entrada: Number(l.entrada ?? 0),
+        documentacao_ok: Boolean(l.documentacao_ok),
+      })),
     };
   });
 
