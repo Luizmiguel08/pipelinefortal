@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -8,8 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, syncNow, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, syncNow, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
+
+// Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
+const PAGINA_COLUNA = 25;
 
 export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => ({
