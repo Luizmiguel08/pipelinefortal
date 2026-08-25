@@ -16,6 +16,7 @@ import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authentica
 import { Route as AuthenticatedEquipeRouteImport } from './routes/_authenticated/equipe'
 import { Route as AuthenticatedIntegracaoRouteImport } from './routes/_authenticated/integracao'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
+import { Route as ApiPublicHooksAgendaSyncRouteImport } from './routes/api/public/hooks/agenda-sync'
 import { Route as ApiPublicHooksC2sSyncRouteImport } from './routes/api/public/hooks/c2s-sync'
 
 const IndexRoute = IndexRouteImport.update({
@@ -52,6 +53,12 @@ const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
   path: '/pipeline',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const ApiPublicHooksAgendaSyncRoute =
+  ApiPublicHooksAgendaSyncRouteImport.update({
+    id: '/api/public/hooks/agenda-sync',
+    path: '/api/public/hooks/agenda-sync',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicHooksC2sSyncRoute = ApiPublicHooksC2sSyncRouteImport.update({
   id: '/api/public/hooks/c2s-sync',
   path: '/api/public/hooks/c2s-sync',
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
+  '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
 export interface FileRoutesByTo {
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
+  '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
 export interface FileRoutesById {
@@ -85,6 +94,7 @@ export interface FileRoutesById {
   '/_authenticated/equipe': typeof AuthenticatedEquipeRoute
   '/_authenticated/integracao': typeof AuthenticatedIntegracaoRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
+  '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
 export interface FileRouteTypes {
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
     | '/equipe'
     | '/integracao'
     | '/pipeline'
+    | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
     | '/equipe'
     | '/integracao'
     | '/pipeline'
+    | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
   id:
     | '__root__'
@@ -115,6 +127,7 @@ export interface FileRouteTypes {
     | '/_authenticated/equipe'
     | '/_authenticated/integracao'
     | '/_authenticated/pipeline'
+    | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
   fileRoutesById: FileRoutesById
 }
@@ -122,6 +135,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRoute: typeof AuthRoute
+  ApiPublicHooksAgendaSyncRoute: typeof ApiPublicHooksAgendaSyncRoute
   ApiPublicHooksC2sSyncRoute: typeof ApiPublicHooksC2sSyncRoute
 }
 
@@ -176,6 +190,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPipelineRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/api/public/hooks/agenda-sync': {
+      id: '/api/public/hooks/agenda-sync'
+      path: '/api/public/hooks/agenda-sync'
+      fullPath: '/api/public/hooks/agenda-sync'
+      preLoaderRoute: typeof ApiPublicHooksAgendaSyncRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/hooks/c2s-sync': {
       id: '/api/public/hooks/c2s-sync'
       path: '/api/public/hooks/c2s-sync'
@@ -207,6 +228,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRoute: AuthRoute,
+  ApiPublicHooksAgendaSyncRoute: ApiPublicHooksAgendaSyncRoute,
   ApiPublicHooksC2sSyncRoute: ApiPublicHooksC2sSyncRoute,
 }
 export const routeTree = rootRouteImport
