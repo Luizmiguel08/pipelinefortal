@@ -1,6 +1,4 @@
 import { useEffect, useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
 import {
   Dialog,
@@ -16,159 +14,6 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { STAGES, type StageId } from "@/lib/stages";
 import type { BoardCorretor, BoardLead } from "@/lib/crm.functions";
-import {
-  getLigacoesDoLead,
-  registrarLigacao,
-  type CallPeriodo,
-  type CallResultado,
-} from "@/lib/calls.functions";
-
-const RESULTADOS: { value: CallResultado; label: string }[] = [
-  { value: "nao_atendeu", label: "Não atendeu" },
-  { value: "atendeu", label: "Atendeu" },
-  { value: "caixa_postal", label: "Caixa postal" },
-  { value: "numero_invalido", label: "Número inválido" },
-  { value: "whatsapp", label: "Respondeu no WhatsApp" },
-];
-
-function periodoAtual(): CallPeriodo {
-  return new Date().getHours() < 12 ? "manha" : "tarde";
-}
-
-function LigacoesLead({ leadId }: { leadId: string }) {
-  const queryClient = useQueryClient();
-  const listar = useServerFn(getLigacoesDoLead);
-  const registrar = useServerFn(registrarLigacao);
-
-  const [periodo, setPeriodo] = useState<CallPeriodo>(periodoAtual);
-  const [resultado, setResultado] = useState<CallResultado>("nao_atendeu");
-  const [interessado, setInteressado] = useState<"" | "sim" | "nao">("");
-  const [observacao, setObservacao] = useState("");
-
-  const { data: ligacoes = [], isLoading } = useQuery({
-    queryKey: ["ligacoes", leadId],
-    queryFn: () => listar({ data: { leadId } }),
-    staleTime: 30_000,
-  });
-
-  const salvar = useMutation({
-    mutationFn: () =>
-      registrar({
-        data: {
-          leadId,
-          periodo,
-          resultado,
-          interessado: interessado === "" ? null : interessado === "sim",
-          observacao,
-        },
-      }),
-    onSuccess: () => {
-      toast.success("Ligação registrada");
-      setObservacao("");
-      setInteressado("");
-      queryClient.invalidateQueries({ queryKey: ["ligacoes", leadId] });
-      queryClient.invalidateQueries({ queryKey: ["ligacoes-hoje"] });
-    },
-    onError: (e: Error) => toast.error(e.message),
-  });
-
-  const hoje = new Date().toDateString();
-  const deHoje = ligacoes.filter((l) => new Date(l.called_at).toDateString() === hoje);
-  const manha = deHoje.some((l) => l.periodo === "manha");
-  const tarde = deHoje.some((l) => l.periodo === "tarde");
-  const atendeu = deHoje.some((l) => l.resultado === "atendeu");
-
-  return (
-    <div className="space-y-3 rounded-lg border border-border bg-muted/40 p-3">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium">Ligações de hoje</span>
-        <span
-          className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${manha ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}
-        >
-          {manha ? "✓" : "○"} Manhã
-        </span>
-        <span
-          className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${tarde ? "bg-primary/15 text-primary" : "bg-muted text-muted-foreground"}`}
-        >
-          {tarde ? "✓" : "○"} Tarde
-        </span>
-        {!atendeu && (!manha || !tarde) && (
-          <span className="text-[11px] font-semibold text-destructive">
-            Meta: 2 ligações por dia até o cliente atender
-          </span>
-        )}
-      </div>
-
-      <div className="grid gap-2 sm:grid-cols-3">
-        <select
-          aria-label="Período da ligação"
-          value={periodo}
-          onChange={(e) => setPeriodo(e.target.value as CallPeriodo)}
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-        >
-          <option value="manha">Manhã</option>
-          <option value="tarde">Tarde</option>
-        </select>
-        <select
-          aria-label="Resultado da ligação"
-          value={resultado}
-          onChange={(e) => setResultado(e.target.value as CallResultado)}
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-        >
-          {RESULTADOS.map((r) => (
-            <option key={r.value} value={r.value}>
-              {r.label}
-            </option>
-          ))}
-        </select>
-        <select
-          aria-label="Interesse do cliente"
-          value={interessado}
-          onChange={(e) => setInteressado(e.target.value as "" | "sim" | "nao")}
-          className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-        >
-          <option value="">Interesse: não informado</option>
-          <option value="sim">Tem interesse</option>
-          <option value="nao">Sem interesse</option>
-        </select>
-      </div>
-
-      <Input
-        value={observacao}
-        onChange={(e) => setObservacao(e.target.value)}
-        placeholder="Observação da ligação (opcional)"
-        className="h-9"
-      />
-
-      <Button
-        size="sm"
-        className="w-full"
-        onClick={() => salvar.mutate()}
-        disabled={salvar.isPending}
-      >
-        {salvar.isPending ? "Registrando..." : "Registrar ligação"}
-      </Button>
-
-      <div className="space-y-1">
-        {isLoading && <p className="text-xs text-muted-foreground">Carregando histórico...</p>}
-        {!isLoading && ligacoes.length === 0 && (
-          <p className="text-xs text-muted-foreground">Nenhuma ligação registrada ainda.</p>
-        )}
-        {ligacoes.slice(0, 8).map((l) => (
-          <p key={l.id} className="text-[11px] text-muted-foreground">
-            {new Date(l.called_at).toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })} ·{" "}
-            {l.periodo === "manha" ? "Manhã" : "Tarde"} ·{" "}
-            {RESULTADOS.find((r) => r.value === l.resultado)?.label ?? l.resultado}
-            {l.interessado === true && " · com interesse"}
-            {l.interessado === false && " · sem interesse"}
-            {l.observacao ? ` · ${l.observacao}` : ""}
-          </p>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 
 export type LeadFormValues = {
   id?: string;
@@ -254,8 +99,6 @@ export function LeadDialog({
               : "Cadastro manual — leads do C2S entram automaticamente."}
           </DialogDescription>
         </DialogHeader>
-
-        {lead && <LigacoesLead leadId={lead.id} />}
 
         <div className="grid gap-4">
 

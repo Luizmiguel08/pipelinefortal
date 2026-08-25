@@ -10,7 +10,6 @@ import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
-import { getLigacoesHoje } from "@/lib/calls.functions";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -41,7 +40,6 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
-  const fetchLigacoes = useServerFn(getLigacoesHoje);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
@@ -52,15 +50,6 @@ function PipelinePage() {
     refetchInterval: 5 * 60_000,
     refetchOnWindowFocus: false,
     staleTime: 2 * 60_000,
-    placeholderData: (prev) => prev,
-  });
-
-  // Meta diária de contato: 2 ligações (manhã e tarde) por lead até o cliente atender.
-  const { data: ligacoesHoje } = useQuery({
-    queryKey: ["ligacoes-hoje"],
-    queryFn: () => fetchLigacoes(),
-    refetchInterval: 60_000,
-    staleTime: 30_000,
     placeholderData: (prev) => prev,
   });
 
@@ -152,7 +141,6 @@ function PipelinePage() {
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const [buscaInput, setBuscaInput] = useState("");
-  const [soPendentes, setSoPendentes] = useState(false);
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -285,15 +273,10 @@ function PipelinePage() {
         if (inicioMs !== null && ref < inicioMs) return false;
         if (fimMs !== null && ref > fimMs) return false;
       }
-      if (soPendentes) {
-        const r = ligacoesHoje?.[l.id];
-        const feitas = (r?.manha ?? 0) > 0 && (r?.tarde ?? 0) > 0;
-        if (r?.atendeu || feitas) return false;
-      }
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
-  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim, soPendentes, ligacoesHoje]);
+  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim]);
 
   // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
   const colunas = useMemo(() => {
@@ -403,19 +386,10 @@ function PipelinePage() {
                       {c.nome}
                     </option>
                   ))}
-                </select>
-              )}
+              </select>
+            )}
 
-              <Button
-                variant={soPendentes ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSoPendentes((v) => !v)}
-                aria-pressed={soPendentes}
-              >
-                ☎ Faltam ligações hoje
-              </Button>
-
-              <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
+            <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
                 <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Período</span>
                 <Input
                   type="date"
@@ -523,7 +497,6 @@ function PipelinePage() {
                         corretorNome={lead.corretor_id ? nomePorCorretor.get(lead.corretor_id) : undefined}
                         showCorretor={corretorFiltro === "todos"}
                         agora={agora}
-                        ligacoes={ligacoesHoje?.[lead.id]}
                         onDragStart={setDragging}
                         onOpen={abrirLead}
                       />
