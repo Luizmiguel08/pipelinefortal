@@ -102,6 +102,19 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
       },
     },
     {
+      url: alvo,
+      init: {
+        method: "POST",
+        headers: {
+          "x-sync-secret": secret,
+          apikey: secret,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(desde ? { de: desde, desde } : {}),
+      },
+    },
+    {
       url: desde ? `${alvo}?desde=${encodeURIComponent(desde)}` : alvo,
       init: {
         method: "GET",
