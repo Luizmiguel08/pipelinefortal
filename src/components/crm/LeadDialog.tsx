@@ -24,6 +24,10 @@ export type LeadFormValues = {
   stage: StageId;
   corretor_id: string | null;
   observacoes: string;
+  entrada: number;
+  finalidade: "moradia" | "investimento" | null;
+  estagio_imovel: "pronto" | "planta" | null;
+  documentacao_ok: boolean;
 };
 
 const empty: LeadFormValues = {
@@ -35,6 +39,10 @@ const empty: LeadFormValues = {
   stage: "novo",
   corretor_id: null,
   observacoes: "",
+  entrada: 0,
+  finalidade: null,
+  estagio_imovel: null,
+  documentacao_ok: false,
 };
 
 export function LeadDialog({
