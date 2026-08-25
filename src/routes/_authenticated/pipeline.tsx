@@ -10,6 +10,7 @@ import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
+import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -164,6 +165,9 @@ function PipelinePage() {
     return () => clearTimeout(id);
   }, [buscaInput]);
 
+  // Auto-scroll horizontal durante drag
+  const { containerRef, containerProps, stopScroll } = useDragAutoscroll();
+
   const moveMutation = useMutation({
     mutationFn: (vars: { id: string; stage: StageId }) => move({ data: vars }),
     // Atualização otimista: o card muda de coluna na hora, sem esperar o servidor.
@@ -303,6 +307,7 @@ function PipelinePage() {
   }, []);
 
   function handleDrop(stage: StageId) {
+    stopScroll();
     if (!dragging || dragging.stage === stage) return setDragging(null);
     // Trava: sem indicador preenchido o lead não sai das colunas frias.
     if (!podeMoverPara(stage, dragging)) {
@@ -311,6 +316,11 @@ function PipelinePage() {
       return setDragging(null);
     }
     moveMutation.mutate({ id: dragging.id, stage });
+    setDragging(null);
+  }
+
+  function handleDragEnd() {
+    stopScroll();
     setDragging(null);
   }
 
@@ -470,7 +480,15 @@ function PipelinePage() {
         {isLoading ? (
           <p className="mt-10 text-sm text-muted-foreground">Carregando pipeline...</p>
         ) : (
-          <div className="scroll-slim mt-5 flex gap-4 overflow-x-auto pb-6">
+          <div
+            ref={containerRef}
+            {...containerProps}
+            onDragOver={(e) => {
+              e.preventDefault();
+              containerProps.onDragOver(e);
+            }}
+            className="scroll-slim mt-5 flex gap-4 overflow-x-auto pb-6"
+          >
             {STAGES.map((stage) => {
               const leadsColuna = colunas[stage.id];
               const totalColuna = leadsColuna.reduce((acc, l) => acc + l.valor, 0);
@@ -511,6 +529,7 @@ function PipelinePage() {
                         showCorretor={corretorFiltro === "todos"}
                         agora={agora}
                         onDragStart={setDragging}
+                        onDragEnd={handleDragEnd}
                         onOpen={abrirLead}
                       />
                     ))}

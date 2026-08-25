@@ -9,15 +9,17 @@ type Props = {
   agora: number;
   onOpen: (lead: BoardLead) => void;
   onDragStart: (lead: BoardLead) => void;
+  onDragEnd?: () => void;
 };
 
-function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragStart }: Props) {
+function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragStart, onDragEnd }: Props) {
   const sla = alertaSLA(lead.stage, lead.stage_since, lead.ultima_interacao, agora);
   const emAlerta = sla?.alerta ?? false;
   return (
     <article
       draggable
       onDragStart={() => onDragStart(lead)}
+      onDragEnd={onDragEnd}
       onClick={() => onOpen(lead)}
       className={`group cursor-grab rounded-lg border bg-card p-3 transition-all hover:-translate-y-0.5 hover:shadow-[var(--shadow-lift)] active:cursor-grabbing ${
         emAlerta ? "lead-alerta border-destructive" : "border-border hover:border-primary/50"
@@ -97,4 +99,3 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
 }
 
 export const LeadCard = memo(LeadCardBase);
-
