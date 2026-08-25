@@ -91,7 +91,11 @@ export type Database = {
           corretor_id: string | null
           created_at: string
           data_c2s: string | null
+          documentacao_ok: boolean
           email: string | null
+          entrada: number
+          estagio_imovel: string | null
+          finalidade: string | null
           id: string
           imovel: string | null
           last_synced_at: string | null
@@ -109,7 +113,11 @@ export type Database = {
           corretor_id?: string | null
           created_at?: string
           data_c2s?: string | null
+          documentacao_ok?: boolean
           email?: string | null
+          entrada?: number
+          estagio_imovel?: string | null
+          finalidade?: string | null
           id?: string
           imovel?: string | null
           last_synced_at?: string | null
@@ -127,7 +135,11 @@ export type Database = {
           corretor_id?: string | null
           created_at?: string
           data_c2s?: string | null
+          documentacao_ok?: boolean
           email?: string | null
+          entrada?: number
+          estagio_imovel?: string | null
+          finalidade?: string | null
           id?: string
           imovel?: string | null
           last_synced_at?: string | null
