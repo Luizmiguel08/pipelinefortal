@@ -175,6 +175,8 @@ export const saveLead = createServerFn({ method: "POST" })
             data.stage,
           ),
     };
+    if (!podeMoverPara(payload.stage as StageId, payload)) throw new Error(MENSAGEM_TRAVA);
+
     if (data.id) {
       const { error } = await context.supabase.from("leads").update(payload).eq("id", data.id);
       if (error) throw new Error(error.message);
