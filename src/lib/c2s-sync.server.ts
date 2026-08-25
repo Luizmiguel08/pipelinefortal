@@ -1,5 +1,5 @@
 import { fetchC2SContacts } from "./c2s.server";
-import { STAGE_IDS, type StageId } from "./stages";
+import { type StageId } from "./stages";
 
 export type SyncResult = {
   criados: number;
@@ -9,9 +9,7 @@ export type SyncResult = {
   total: number;
 };
 
-function rank(stage: StageId) {
-  return STAGE_IDS.indexOf(stage);
-}
+
 
 type AdminClient = Awaited<
   typeof import("@/integrations/supabase/client.server")
