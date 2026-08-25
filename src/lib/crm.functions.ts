@@ -17,6 +17,10 @@ export type BoardLead = {
   c2s_contact_id: string | null;
   created_at: string | null;
   data_c2s: string | null;
+  entrada: number;
+  finalidade: "moradia" | "investimento" | null;
+  estagio_imovel: "pronto" | "planta" | null;
+  documentacao_ok: boolean;
 };
 
 export type BoardCorretor = {
