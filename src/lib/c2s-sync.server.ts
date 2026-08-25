@@ -150,7 +150,6 @@ export async function runC2SSync(origem: string = "manual", desde?: string): Pro
   const registrar = async (status: "sucesso" | "erro", erro?: string) => {
     const linha = {
       started_at: startedAt.toISOString(),
-
       finished_at: new Date().toISOString(),
       duracao_ms: Date.now() - startedAt.getTime(),
       status,
@@ -161,8 +160,14 @@ export async function runC2SSync(origem: string = "manual", desde?: string): Pro
       movidos: result.movidos,
       corretores_criados: result.corretoresCriados,
       erro: erro ?? null,
-    });
+    };
+    if (corridaId) {
+      await supabaseAdmin.from("sync_runs").update(linha).eq("id", corridaId);
+    } else {
+      await supabaseAdmin.from("sync_runs").insert(linha);
+    }
   };
+
 
   // Modo incremental: sem data informada, buscamos só o que mudou desde a última
   // sincronização bem-sucedida (com 30 min de folga), deixando cada rodada bem rápida.
