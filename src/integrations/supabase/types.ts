@@ -108,6 +108,8 @@ export type Database = {
           ultima_interacao: string | null
           updated_at: string
           valor: number
+          visita_em: string | null
+          visita_realizada: boolean
         }
         Insert: {
           c2s_contact_id?: string | null
@@ -131,6 +133,8 @@ export type Database = {
           ultima_interacao?: string | null
           updated_at?: string
           valor?: number
+          visita_em?: string | null
+          visita_realizada?: boolean
         }
         Update: {
           c2s_contact_id?: string | null
@@ -154,6 +158,8 @@ export type Database = {
           ultima_interacao?: string | null
           updated_at?: string
           valor?: number
+          visita_em?: string | null
+          visita_realizada?: boolean
         }
         Relationships: [
           {
@@ -286,6 +292,7 @@ export type Database = {
         | "dia2"
         | "dia3"
         | "lista_fria"
+        | "visita"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -424,6 +431,7 @@ export const Constants = {
         "dia2",
         "dia3",
         "lista_fria",
+        "visita",
       ],
     },
   },
