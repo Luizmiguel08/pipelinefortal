@@ -102,6 +102,19 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
       },
     },
     {
+      url: alvo,
+      init: {
+        method: "POST",
+        headers: {
+          "x-sync-secret": secret,
+          apikey: secret,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(desde ? { de: desde, desde } : {}),
+      },
+    },
+    {
       url: desde ? `${alvo}?desde=${encodeURIComponent(desde)}` : alvo,
       init: {
         method: "GET",
@@ -126,11 +139,6 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
     if (!resposta.ok) {
       const corpo = await resposta.text().catch(() => "");
       ultimoErro = `${resposta.status}: ${corpo.slice(0, 160)}`;
-      if (resposta.status === 401 || resposta.status === 403) {
-        throw new Error(
-          "Agenda recusou o segredo (401/403). O valor de AGENDA_SYNC_SECRET aqui precisa ser idêntico ao SYNC_SHARED_SECRET do projeto de agendamentos.",
-        );
-      }
       continue;
     }
     const json = (await resposta.json()) as unknown;
