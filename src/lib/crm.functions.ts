@@ -46,7 +46,7 @@ export const getBoard = createServerFn({ method: "GET" })
         const { data, error } = await supabase
           .from("leads")
           .select(
-            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id",
+            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at",
           )
           .order("updated_at", { ascending: false })
           .range(inicio, inicio + pagina - 1);
