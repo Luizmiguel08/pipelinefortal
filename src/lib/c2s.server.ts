@@ -207,27 +207,46 @@ export async function fetchC2SContacts(options: FetchContactsOptions = {}): Prom
   const vistos = new Set<string>();
   let totalRemoto: number | null = null;
 
-  for (let page = 1; page <= maxPaginas; page++) {
-    const pagina = await fetchPage(root, token, page);
-    const lista = pagina.items;
-    totalRemoto = pagina.total ?? totalRemoto;
-    if (!lista.length) break;
+  // O C2S entrega somente 25 contatos por página. Lemos blocos em paralelo para que
+  // a conferência mensal não leve vários minutos, mantendo concorrência moderada.
+  const paginasPorBloco = 10;
+  let encerrar = false;
+  for (let inicio = 1; inicio <= maxPaginas && !encerrar; inicio += paginasPorBloco) {
+    const numeros = Array.from(
+      { length: Math.min(paginasPorBloco, maxPaginas - inicio + 1) },
+      (_, indice) => inicio + indice,
+    );
+    const paginas = await Promise.all(numeros.map((numero) => fetchPage(root, token, numero)));
 
-    let maisNovoQueCorte = 0;
-    for (const item of lista) {
-      const id = String(item["id"] ?? "");
-      if (id && vistos.has(id)) continue;
-      if (contactCreatedDate(item) < corte) {
-        continue;
+    for (let indice = 0; indice < paginas.length; indice += 1) {
+      const pagina = paginas[indice];
+      const numero = numeros[indice];
+      if (!pagina || numero === undefined) continue;
+      const lista = pagina.items;
+      totalRemoto = pagina.total ?? totalRemoto;
+      if (!lista.length) {
+        encerrar = true;
+        break;
       }
-      if (id) vistos.add(id);
-      itens.push(item);
-      maisNovoQueCorte += 1;
+
+      let maisNovoQueCorte = 0;
+      for (const item of lista) {
+        const id = String(item["id"] ?? "");
+        if (id && vistos.has(id)) continue;
+        if (contactCreatedDate(item) < corte) continue;
+        if (id) vistos.add(id);
+        itens.push(item);
+        maisNovoQueCorte += 1;
+      }
+      if (maisNovoQueCorte === 0) {
+        encerrar = true;
+        break;
+      }
+      if (totalRemoto !== null && numero * lista.length >= totalRemoto) {
+        encerrar = true;
+        break;
+      }
     }
-    // O endpoint é ordenado pela criação. Páginas podem se sobrepor quando um contato
-    // entra durante a varredura; por isso não encerramos apenas por encontrar duplicados.
-    if (maisNovoQueCorte === 0) break;
-    if (totalRemoto !== null && page * lista.length >= totalRemoto) break;
   }
 
   return itens
