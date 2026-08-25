@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { STAGE_IDS, type StageId } from "./stages";
+import { STAGE_IDS, resolverEtapa, type StageId } from "./stages";
 
 export type BoardLead = {
   id: string;
