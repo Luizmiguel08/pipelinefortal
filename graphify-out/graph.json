@@ -1129,7 +1129,7 @@
       "file_type": "code",
       "norm_label": "normalizarnome()",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L156"
+      "source_location": "L164"
     },
     {
       "id": "src_lib_agenda_server_normalizarstatus",
@@ -1151,7 +1151,7 @@
       "file_type": "code",
       "norm_label": "normalizartelefone()",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L151"
+      "source_location": "L159"
     },
     {
       "id": "src_lib_agenda_server_texto",
@@ -10081,7 +10081,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L137",
+      "source_location": "L145",
       "weight": 1.0
     },
     {
@@ -10093,7 +10093,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L139",
+      "source_location": "L147",
       "weight": 1.0
     },
     {
@@ -19617,7 +19617,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L151",
+      "source_location": "L159",
       "weight": 1.0
     },
     {
@@ -19628,7 +19628,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L156",
+      "source_location": "L164",
       "weight": 1.0
     },
     {
@@ -21555,5 +21555,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "52013d9105486b855dbf9aa80fbf0d74b8f5f53a"
+  "built_at_commit": "70520a861847214a71e69da18f83ac91da68cdf9"
 }
