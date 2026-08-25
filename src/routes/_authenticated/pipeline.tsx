@@ -90,6 +90,8 @@ function PipelinePage() {
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
   const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
@@ -156,14 +158,22 @@ function PipelinePage() {
 
   const leadsFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
+    const inicioMs = dataInicio ? new Date(`${dataInicio}T00:00:00`).getTime() : null;
+    const fimMs = dataFim ? new Date(`${dataFim}T23:59:59.999`).getTime() : null;
     return (data?.leads ?? []).filter((l) => {
       if (corretorFiltro === "meus" && l.corretor_id !== meuCorretorId) return false;
       if (corretorFiltro !== "todos" && corretorFiltro !== "meus" && l.corretor_id !== corretorFiltro)
         return false;
+      if (inicioMs !== null || fimMs !== null) {
+        const ref = l.created_at ? new Date(l.created_at).getTime() : null;
+        if (ref === null || Number.isNaN(ref)) return false;
+        if (inicioMs !== null && ref < inicioMs) return false;
+        if (fimMs !== null && ref > fimMs) return false;
+      }
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
-  }, [data?.leads, corretorFiltro, busca, meuCorretorId]);
+  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim]);
 
   // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
   const colunas = useMemo(() => {
@@ -224,6 +234,40 @@ function PipelinePage() {
               ))}
             </select>
           )}
+
+          <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Período</span>
+            <Input
+              type="date"
+              aria-label="Data inicial"
+              value={dataInicio}
+              max={dataFim || undefined}
+              onChange={(e) => setDataInicio(e.target.value)}
+              className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
+            />
+            <span className="text-xs text-muted-foreground">até</span>
+            <Input
+              type="date"
+              aria-label="Data final"
+              value={dataFim}
+              min={dataInicio || undefined}
+              onChange={(e) => setDataFim(e.target.value)}
+              className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
+            />
+            {(dataInicio || dataFim) && (
+              <Button
+                variant="ghost"
+                className="h-7 px-2 text-xs"
+                onClick={() => {
+                  setDataInicio("");
+                  setDataFim("");
+                }}
+              >
+                Limpar
+              </Button>
+            )}
+          </div>
+
 
           <Button
             onClick={() => {
