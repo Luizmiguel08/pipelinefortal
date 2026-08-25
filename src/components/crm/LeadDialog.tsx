@@ -36,6 +36,8 @@ export type LeadFormValues = {
   finalidade: "moradia" | "investimento" | null;
   estagio_imovel: "pronto" | "planta" | null;
   documentacao_ok: boolean;
+  /** Salva exatamente na etapa escolhida, ignorando a automação por indicadores. */
+  forcar_stage?: boolean;
 };
 
 const empty: LeadFormValues = {
@@ -363,13 +365,32 @@ export function LeadDialog({
           </div>
         </div>
 
-        <DialogFooter>
+        <DialogFooter className="sm:justify-between">
+          <Button
+            variant="outline"
+            className="text-destructive hover:text-destructive"
+            disabled={saving}
+            onClick={() =>
+              onSave({
+                ...values,
+                stage: "lista_fria",
+                forcar_stage: true,
+                observacoes: values.observacoes
+                  ? `${values.observacoes}\nNúmero incorreto.`
+                  : "Número incorreto.",
+              })
+            }
+          >
+            Número incorreto · Lista fria
+          </Button>
+          <div className="flex gap-2">
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
           <Button onClick={() => onSave(values)} disabled={saving}>
             {saving ? "Salvando..." : `Salvar · ${stageLabel(etapaFinal)}`}
           </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

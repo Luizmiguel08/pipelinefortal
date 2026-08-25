@@ -196,6 +196,7 @@ function PipelinePage() {
           finalidade: values.finalidade,
           estagio_imovel: values.estagio_imovel,
           documentacao_ok: values.documentacao_ok,
+          forcar_stage: values.forcar_stage,
         },
       }),
     // Atualização otimista: o card muda de coluna na hora (ex.: documentação recebida).
@@ -204,7 +205,9 @@ function PipelinePage() {
       if (!values.id) return { anterior: undefined };
       await queryClient.cancelQueries({ queryKey: ["board"] });
       const anterior = queryClient.getQueryData<Board>(["board"]);
-      const stageFinal: StageId = resolverEtapa(values, values.stage);
+      const stageFinal: StageId = values.forcar_stage
+        ? values.stage
+        : resolverEtapa(values, values.stage);
       queryClient.setQueryData<Board>(["board"], (old) =>
         old
           ? {
