@@ -34,11 +34,20 @@ function AuthPage() {
   const [nome, setNome] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Convite do gestor: /auth?convite=1&email=corretor@... já abre em "criar conta".
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("convite")) setMode("signup");
+    const convidado = params.get("email");
+    if (convidado) setEmail(convidado);
+  }, []);
+
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       if (data.session) navigate({ to: "/pipeline" });
     });
   }, [navigate]);
+
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

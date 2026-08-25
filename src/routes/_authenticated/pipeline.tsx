@@ -375,6 +375,12 @@ function PipelinePage() {
               <Link to="/auditoria">Auditoria</Link>
             </Button>
           )}
+          {data?.isGestor && (
+            <Button variant="secondary" asChild>
+              <Link to="/equipe">Equipe</Link>
+            </Button>
+          )}
+
 
           <Button variant="ghost" onClick={sair}>
             Sair
