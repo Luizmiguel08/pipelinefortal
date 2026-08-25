@@ -14,6 +14,45 @@ export type Database = {
   }
   public: {
     Tables: {
+      agenda_sync_runs: {
+        Row: {
+          atualizados: number
+          created_at: string
+          criados: number
+          erro: string | null
+          finished_at: string | null
+          id: string
+          origem: string
+          started_at: string
+          status: string
+          total: number
+        }
+        Insert: {
+          atualizados?: number
+          created_at?: string
+          criados?: number
+          erro?: string | null
+          finished_at?: string | null
+          id?: string
+          origem?: string
+          started_at?: string
+          status?: string
+          total?: number
+        }
+        Update: {
+          atualizados?: number
+          created_at?: string
+          criados?: number
+          erro?: string | null
+          finished_at?: string | null
+          id?: string
+          origem?: string
+          started_at?: string
+          status?: string
+          total?: number
+        }
+        Relationships: []
+      }
       corretores: {
         Row: {
           ativo: boolean
@@ -87,6 +126,8 @@ export type Database = {
       }
       leads: {
         Row: {
+          agenda_appointment_id: string | null
+          agenda_synced_at: string | null
           c2s_contact_id: string | null
           corretor_id: string | null
           created_at: string
@@ -109,9 +150,14 @@ export type Database = {
           updated_at: string
           valor: number
           visita_em: string | null
+          visita_motivo: string | null
+          visita_projeto: string | null
           visita_realizada: boolean
+          visita_status: string | null
         }
         Insert: {
+          agenda_appointment_id?: string | null
+          agenda_synced_at?: string | null
           c2s_contact_id?: string | null
           corretor_id?: string | null
           created_at?: string
@@ -134,9 +180,14 @@ export type Database = {
           updated_at?: string
           valor?: number
           visita_em?: string | null
+          visita_motivo?: string | null
+          visita_projeto?: string | null
           visita_realizada?: boolean
+          visita_status?: string | null
         }
         Update: {
+          agenda_appointment_id?: string | null
+          agenda_synced_at?: string | null
           c2s_contact_id?: string | null
           corretor_id?: string | null
           created_at?: string
@@ -159,7 +210,10 @@ export type Database = {
           updated_at?: string
           valor?: number
           visita_em?: string | null
+          visita_motivo?: string | null
+          visita_projeto?: string | null
           visita_realizada?: boolean
+          visita_status?: string | null
         }
         Relationships: [
           {
@@ -278,6 +332,7 @@ export type Database = {
         Returns: boolean
       }
       is_my_corretor: { Args: { _corretor_id: string }; Returns: boolean }
+      normalize_phone: { Args: { _phone: string }; Returns: string }
       owns_lead: { Args: { _lead_id: string }; Returns: boolean }
     }
     Enums: {
@@ -293,6 +348,7 @@ export type Database = {
         | "dia3"
         | "lista_fria"
         | "visita"
+        | "visita_realizada"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -432,6 +488,7 @@ export const Constants = {
         "dia3",
         "lista_fria",
         "visita",
+        "visita_realizada",
       ],
     },
   },
