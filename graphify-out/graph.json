@@ -1096,7 +1096,7 @@
       "file_type": "code",
       "norm_label": "extrairlista()",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L67"
+      "source_location": "L68"
     },
     {
       "id": "src_lib_agenda_server_fetchagendamentos",
@@ -1107,7 +1107,7 @@
       "file_type": "code",
       "norm_label": "fetchagendamentos()",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L82"
+      "source_location": "L83"
     },
     {
       "id": "src_lib_agenda_server_mapear",
@@ -1129,7 +1129,7 @@
       "file_type": "code",
       "norm_label": "normalizarnome()",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L155"
+      "source_location": "L156"
     },
     {
       "id": "src_lib_agenda_server_normalizarstatus",
@@ -1151,7 +1151,7 @@
       "file_type": "code",
       "norm_label": "normalizartelefone()",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L150"
+      "source_location": "L151"
     },
     {
       "id": "src_lib_agenda_server_texto",
@@ -2496,7 +2496,7 @@
       "file_type": "code",
       "norm_label": "route",
       "source_file": "src/routes/api/public/hooks/agenda-sync.ts",
-      "source_location": "L7"
+      "source_location": "L8"
     },
     {
       "id": "src_routes_api_public_hooks_c2s_sync",
@@ -3409,14 +3409,14 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_clsx",
-      "label": "clsx",
+      "id": "package_dependencies_class_variance_authority",
+      "label": "class-variance-authority",
       "_origin": "ast",
       "community": 16,
       "file_type": "code",
-      "norm_label": "clsx",
+      "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L53"
+      "source_location": "L52"
     },
     {
       "id": "package_dependencies_input_otp",
@@ -3469,14 +3469,14 @@
       "source_location": "L50"
     },
     {
-      "id": "clsx",
-      "label": "clsx",
+      "id": "class_variance_authority",
+      "label": "class-variance-authority",
       "_origin": "ast",
       "community": 16,
       "file_type": "concept",
-      "norm_label": "clsx",
+      "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L53"
+      "source_location": "L52"
     },
     {
       "id": "input_otp",
@@ -4569,24 +4569,24 @@
       "source_location": "L23"
     },
     {
-      "id": "package_dependencies_class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "package_dependencies_clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 27,
       "file_type": "code",
-      "norm_label": "class-variance-authority",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
-      "id": "class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 27,
       "file_type": "concept",
-      "norm_label": "class-variance-authority",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
       "id": "package_dependencies_cmdk",
@@ -10081,7 +10081,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L136",
+      "source_location": "L137",
       "weight": 1.0
     },
     {
@@ -10093,7 +10093,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L138",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -10129,7 +10129,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0
     },
     {
@@ -10158,18 +10158,6 @@
     },
     {
       "source": "src_lib_agenda_sync_server_runagendasync",
-      "target": "src_lib_agenda_sync_server_etapadostatus",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "src/lib/agenda-sync.server.ts",
-      "source_location": "L115",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_agenda_sync_server_runagendasync",
       "target": "src_lib_agenda_server_fetchagendamentos",
       "relation": "calls",
       "_origin": "ast",
@@ -10177,7 +10165,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda-sync.server.ts",
-      "source_location": "L81",
+      "source_location": "L107",
       "weight": 1.0
     },
     {
@@ -10189,7 +10177,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda-sync.server.ts",
-      "source_location": "L85",
+      "source_location": "L111",
       "weight": 1.0
     },
     {
@@ -10201,7 +10189,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda-sync.server.ts",
-      "source_location": "L86",
+      "source_location": "L112",
       "weight": 1.0
     },
     {
@@ -10213,7 +10201,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda-sync.server.ts",
-      "source_location": "L94",
+      "source_location": "L120",
       "weight": 1.0
     },
     {
@@ -10225,7 +10213,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/agenda-sync.server.ts",
-      "source_location": "L96",
+      "source_location": "L122",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_agenda_sync_server_runagendasync",
+      "target": "src_lib_agenda_sync_server_etapadostatus",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "src/lib/agenda-sync.server.ts",
+      "source_location": "L141",
       "weight": 1.0
     },
     {
@@ -10966,7 +10966,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/routes/api/public/hooks/agenda-sync.ts",
-      "source_location": "L29",
+      "source_location": "L43",
       "weight": 1.0
     },
     {
@@ -19617,7 +19617,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L150",
+      "source_location": "L151",
       "weight": 1.0
     },
     {
@@ -19628,7 +19628,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L155",
+      "source_location": "L156",
       "weight": 1.0
     },
     {
@@ -19694,7 +19694,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L67",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -19705,7 +19705,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/agenda.server.ts",
-      "source_location": "L82",
+      "source_location": "L83",
       "weight": 1.0
     },
     {
@@ -20574,7 +20574,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/api/public/hooks/agenda-sync.ts",
-      "source_location": "L7",
+      "source_location": "L8",
       "weight": 1.0
     },
     {
@@ -21555,5 +21555,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "005c235fa8baa7e5942e3b4b57585f28a7f60eb6"
+  "built_at_commit": "52013d9105486b855dbf9aa80fbf0d74b8f5f53a"
 }

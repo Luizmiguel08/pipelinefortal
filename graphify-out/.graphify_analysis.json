@@ -549,11 +549,11 @@
       "src_components_ui_carousel_usecarouselparameters"
     ],
     "16": [
-      "clsx",
+      "class_variance_authority",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_clsx",
+      "package_dependencies_class_variance_authority",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
       "package_dependencies_radix_ui_react_context_menu",
@@ -664,8 +664,8 @@
       "src_components_ui_tabs_tabstrigger"
     ],
     "27": [
-      "class_variance_authority",
-      "package_dependencies_class_variance_authority"
+      "clsx",
+      "package_dependencies_clsx"
     ],
     "28": [
       "cmdk",
@@ -1001,8 +1001,8 @@
       "degree": 8
     },
     {
-      "id": "src_lib_agenda_sync_server_runagendasync",
-      "label": "runAgendaSync()",
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
       "degree": 8
     }
   ],
@@ -1041,26 +1041,26 @@
       "why": "bridges separate communities; peripheral node `CommandShortcut()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "SheetFooter()",
+      "source": "AlertDescription",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/sheet.tsx",
+        "src/components/ui/alert.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `SheetFooter()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `AlertDescription` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "DropdownMenuShortcut()",
+      "source": "AlertTitle",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/dropdown-menu.tsx",
+        "src/components/ui/alert.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `DropdownMenuShortcut()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `AlertTitle` unexpectedly reaches hub `cn()`"
     }
   ],
   "tokens": {
