@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.escalate_stale_leads() FROM PUBLIC, anon, authenticated;

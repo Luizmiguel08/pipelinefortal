@@ -103,6 +103,7 @@ export type Database = {
           observacoes: string | null
           origem: string | null
           stage: Database["public"]["Enums"]["lead_stage"]
+          stage_since: string
           telefone: string | null
           ultima_interacao: string | null
           updated_at: string
@@ -125,6 +126,7 @@ export type Database = {
           observacoes?: string | null
           origem?: string | null
           stage?: Database["public"]["Enums"]["lead_stage"]
+          stage_since?: string
           telefone?: string | null
           ultima_interacao?: string | null
           updated_at?: string
@@ -147,6 +149,7 @@ export type Database = {
           observacoes?: string | null
           origem?: string | null
           stage?: Database["public"]["Enums"]["lead_stage"]
+          stage_since?: string
           telefone?: string | null
           ultima_interacao?: string | null
           updated_at?: string
@@ -260,6 +263,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      escalate_stale_leads: { Args: never; Returns: undefined }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -278,6 +282,10 @@ export type Database = {
         | "negociacao"
         | "documentacao"
         | "fechamento"
+        | "dia1"
+        | "dia2"
+        | "dia3"
+        | "lista_fria"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -412,6 +420,10 @@ export const Constants = {
         "negociacao",
         "documentacao",
         "fechamento",
+        "dia1",
+        "dia2",
+        "dia3",
+        "lista_fria",
       ],
     },
   },

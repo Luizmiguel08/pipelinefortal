@@ -40,6 +40,10 @@
   --color-stage-negociacao: var(--stage-negociacao);
   --color-stage-documentacao: var(--stage-documentacao);
   --color-stage-fechamento: var(--stage-fechamento);
+  --color-stage-dia1: var(--stage-dia1);
+  --color-stage-dia2: var(--stage-dia2);
+  --color-stage-dia3: var(--stage-dia3);
+  --color-stage-fria: var(--stage-fria);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
@@ -85,6 +89,10 @@
   --stage-negociacao: oklch(0.79 0.152 79);
   --stage-documentacao: oklch(0.72 0.15 305);
   --stage-fechamento: oklch(0.73 0.16 150);
+  --stage-dia1: oklch(0.78 0.14 60);
+  --stage-dia2: oklch(0.72 0.16 40);
+  --stage-dia3: oklch(0.67 0.19 25);
+  --stage-fria: oklch(0.66 0.05 250);
   --chart-1: oklch(0.72 0.13 235);
   --chart-2: oklch(0.74 0.14 195);
   --chart-3: oklch(0.79 0.152 79);
@@ -145,4 +153,20 @@
 @utility scroll-slim {
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
+}
+
+@keyframes alerta-lead {
+  0%,
+  100% {
+    border-color: var(--color-destructive);
+    box-shadow: 0 0 0 0 oklch(0.62 0.2 25 / 45%);
+  }
+  50% {
+    border-color: oklch(0.62 0.2 25 / 55%);
+    box-shadow: 0 0 0 6px oklch(0.62 0.2 25 / 0%);
+  }
+}
+
+@utility lead-alerta {
+  animation: alerta-lead 1.1s ease-in-out infinite;
 }

@@ -98,6 +98,12 @@ function PipelinePage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
   const [visiveis, setVisiveis] = useState<Partial<Record<StageId, number>>>({});
+  // Relógio para recalcular os alertas de prazo sem depender de novas buscas.
+  const [agora, setAgora] = useState(() => Date.now());
+  useEffect(() => {
+    const id = setInterval(() => setAgora(Date.now()), 15_000);
+    return () => clearInterval(id);
+  }, []);
 
   // Busca com debounce: digitar não re-renderiza milhares de cards a cada tecla.
   useEffect(() => {
@@ -341,7 +347,7 @@ function PipelinePage() {
                   key={stage.id}
                   onDragOver={(e) => e.preventDefault()}
                   onDrop={() => handleDrop(stage.id)}
-                  className="panel flex w-[300px] shrink-0 flex-col p-3"
+                  className="panel flex w-[280px] shrink-0 flex-col p-3"
                 >
                   <div className="stage-rail mb-3" style={{ backgroundColor: stage.color }} />
                   <div className="flex items-start justify-between gap-2">
@@ -364,6 +370,7 @@ function PipelinePage() {
                         lead={lead}
                         corretorNome={lead.corretor_id ? nomePorCorretor.get(lead.corretor_id) : undefined}
                         showCorretor={corretorFiltro === "todos"}
+                        agora={agora}
                         onDragStart={setDragging}
                         onOpen={abrirLead}
                       />
