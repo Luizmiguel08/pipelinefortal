@@ -90,6 +90,8 @@ function PipelinePage() {
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
+  const [dataInicio, setDataInicio] = useState("");
+  const [dataFim, setDataFim] = useState("");
   const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
