@@ -6,20 +6,21 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import fortalLogo from "@/assets/fortal-logo-light.png";
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
     meta: [
-      { title: "Entrar — Pipeline de Leads | CRM Imobiliário" },
+      { title: "Entrar — Fortal Pipeline" },
       {
         name: "description",
         content:
-          "Acesse o painel de pipeline de leads integrado ao C2S e acompanhe o funil de cada corretor em tempo real.",
+          "Acesse o Fortal Pipeline, funil de leads imobiliários integrado ao C2S e acompanhe o desempenho de cada corretor em tempo real.",
       },
-      { property: "og:title", content: "Entrar — Pipeline de Leads" },
+      { property: "og:title", content: "Entrar — Fortal Pipeline" },
       {
         property: "og:description",
-        content: "Painel kanban de leads por corretor, sincronizado com o C2S - Gestão de Contatos.",
+        content: "Funil kanban de leads por corretor, sincronizado com o C2S - Gestão de Contatos.",
       },
     ],
   }),
@@ -87,10 +88,18 @@ function AuthPage() {
   return (
     <main className="flex min-h-screen items-center justify-center px-4 py-12">
       <div className="panel w-full max-w-md p-8">
-        <p className="text-xs font-semibold uppercase tracking-[0.2em] text-primary">CRM Imobiliário</p>
-        <h1 className="mt-2 text-2xl font-semibold">Pipeline de leads</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          Funil por corretor sincronizado com o C2S - Gestão de Contatos.
+        <div className="mb-5 flex justify-center">
+          <img
+            src={fortalLogo}
+            alt="Fortal Pipeline"
+            width={192}
+            height={96}
+            className="h-12 w-auto object-contain"
+          />
+        </div>
+        <h1 className="text-center text-2xl font-semibold">Bem-vindo ao Fortal Pipeline</h1>
+        <p className="mt-1 text-center text-sm text-muted-foreground">
+          Funil de leads por corretor, sincronizado com o C2S.
         </p>
 
         <form onSubmit={handleSubmit} className="mt-7 space-y-4">

@@ -11,13 +11,13 @@ const PERIODOS = [1, 7, 15, 30] as const;
 export const Route = createFileRoute("/_authenticated/auditoria")({
   head: () => ({
     meta: [
-      { title: "Auditoria C2S x CRM por Corretor | CRM Imobiliário" },
+      { title: "Auditoria C2S x CRM | Fortal Pipeline" },
       {
         name: "description",
         content:
-          "Compare a quantidade de leads do C2S com a do CRM por corretor, veja as diferenças e as prováveis causas de divergência.",
+          "Compare a quantidade de leads do C2S com a do Fortal Pipeline por corretor, veja as diferenças e as prováveis causas de divergência.",
       },
-      { property: "og:title", content: "Auditoria C2S x CRM por Corretor" },
+      { property: "og:title", content: "Auditoria C2S x CRM | Fortal Pipeline" },
       {
         property: "og:description",
         content: "Diferenças de contagem de leads por corretor entre o C2S e o funil, com causas prováveis.",

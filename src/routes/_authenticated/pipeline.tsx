@@ -10,6 +10,7 @@ import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, syncNow, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
+import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
 const PAGINA_COLUNA = 25;
@@ -17,13 +18,13 @@ const PAGINA_COLUNA = 25;
 export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => ({
     meta: [
-      { title: "Pipeline de Leads por Corretor | CRM Imobiliário" },
+      { title: "Funil de Leads | Fortal Pipeline" },
       {
         name: "description",
         content:
           "Kanban de leads por corretor com totais em R$ por etapa, sincronizado com o C2S - Gestão de Contatos.",
       },
-      { property: "og:title", content: "Pipeline de Leads por Corretor" },
+      { property: "og:title", content: "Funil de Leads | Fortal Pipeline" },
       {
         property: "og:description",
         content: "Acompanhe leads novos, atendimento, negociação, documentação e fechamento de cada corretor.",
@@ -296,10 +297,15 @@ function PipelinePage() {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
-        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-5 py-3.5">
-          <div className="mr-auto">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-primary">CRM Imobiliário</p>
-            <h1 className="text-lg font-semibold">Pipeline de leads</h1>
+        <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-5 py-3">
+          <div className="mr-auto flex items-center gap-3">
+            <img
+              src={fortalLogo}
+              alt="Fortal Pipeline"
+              width={180}
+              height={90}
+              className="h-12 w-auto object-contain"
+            />
           </div>
           <Input
             value={buscaInput}
