@@ -69,6 +69,17 @@ export async function runAgendaSync(
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const inicio = Date.now();
 
+  // Trava: evita duas sincronizações simultâneas (igual ao C2S).
+  const { data: emAndamento } = await supabaseAdmin
+    .from("agenda_sync_runs")
+    .select("id")
+    .eq("status", "executando")
+    .gt("started_at", new Date(Date.now() - 5 * 60 * 1000).toISOString())
+    .limit(1);
+  if (emAndamento && emAndamento.length > 0) {
+    return { total: 0, criados: 0, atualizados: 0 };
+  }
+
   const { data: corrida } = await supabaseAdmin
     .from("agenda_sync_runs")
     .insert({ origem, status: "executando" })
@@ -77,8 +88,23 @@ export async function runAgendaSync(
 
   const result: AgendaSyncResult = { total: 0, criados: 0, atualizados: 0 };
 
+  // Modo incremental: se não veio data, pega desde a última sync com sucesso.
+  let janela = desde;
+  if (!janela) {
+    const { data: ultima } = await supabaseAdmin
+      .from("agenda_sync_runs")
+      .select("started_at")
+      .eq("status", "sucesso")
+      .order("started_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (ultima?.started_at) {
+      janela = new Date(Date.parse(ultima.started_at) - 10 * 60 * 1000).toISOString();
+    }
+  }
+
   try {
-    const agendamentos = await fetchAgendamentos(desde);
+    const agendamentos = await fetchAgendamentos(janela);
     result.total = agendamentos.length;
 
     const [leads, corretores] = await Promise.all([
@@ -131,7 +157,9 @@ export async function runAgendaSync(
           .update({
             ...base,
             ...(manterEtapa ? {} : { stage: etapa }),
-            ...(lead.corretor_id ? {} : corretorId ? { corretor_id: corretorId } : {}),
+            // Sempre atualiza o corretor_id se o agendamento identifica o corretor,
+            // garantindo que o lead apareça no pipeline do corretor certo.
+            ...(corretorId ? { corretor_id: corretorId } : {}),
           } as never)
           .eq("id", lead.id);
         if (!error) {
@@ -139,6 +167,7 @@ export async function runAgendaSync(
           lead.agenda_appointment_id = ag.id;
           porAppointment.set(ag.id, lead);
           if (!manterEtapa) lead.stage = etapa;
+          if (corretorId) lead.corretor_id = corretorId;
         }
       } else {
         const { data: criado, error } = await supabaseAdmin

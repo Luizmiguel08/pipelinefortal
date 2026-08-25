@@ -50,13 +50,14 @@ function mapear(raw: Record<string, unknown>): AgendaAppointment | null {
     cliente_telefone:
       texto(raw["cliente_telefone"]) ?? texto(raw["client_phone"]) ?? texto(raw["telefone"]),
     corretor_nome:
-      texto(raw["corretor_nome"]) ?? texto(raw["broker_name"]) ?? texto(raw["fonte_nome"]),
-    corretor_email: texto(raw["corretor_email"]) ?? texto(raw["broker_email"]),
+      texto(raw["corretor_nome"]) ?? texto(raw["broker_name"]) ?? texto(raw["fonte_nome"]) ?? texto(raw["agent_name"]),
+    corretor_email: texto(raw["corretor_email"]) ?? texto(raw["broker_email"]) ?? texto(raw["agent_email"]),
     empreendimento:
       texto(raw["empreendimento"]) ?? texto(raw["project_name"]) ?? texto(raw["projeto"]),
     visita_em:
       texto(raw["visita_em"]) ??
       combinarDataHora(raw["visit_date"], raw["visit_time"]) ??
+      combinarDataHora(raw["data_visita"], raw["hora_visita"]) ??
       texto(raw["data_visita"]),
     status: normalizarStatus(raw["status"]),
     motivo: texto(raw["motivo"]) ?? texto(raw["cancellation_reason"]),
@@ -67,7 +68,7 @@ function mapear(raw: Record<string, unknown>): AgendaAppointment | null {
 function extrairLista(json: unknown): unknown[] {
   if (Array.isArray(json)) return json;
   const obj = (json ?? {}) as Record<string, unknown>;
-  for (const chave of ["registros", "agendamentos", "data", "items", "results"]) {
+  for (const chave of ["registros", "agendamentos", "data", "items", "results", "appointments"]) {
     const v = obj[chave];
     if (Array.isArray(v)) return v;
   }
@@ -97,7 +98,7 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
           "Content-Type": "application/json",
           Accept: "application/json",
         },
-        body: JSON.stringify(desde ? { de: desde } : {}),
+        body: JSON.stringify(desde ? { de: desde, desde } : {}),
       },
     },
     {
@@ -141,8 +142,8 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
 
   throw new Error(
     `Não consegui ler os agendamentos em ${alvo} (${ultimoErro}). ` +
-      "O projeto de agendamentos só publica /api/public/export-metricas-diarias (totais do dia). " +
-      "Para sincronizar lead a lead é preciso publicar lá a rota export-agendamentos.",
+      "Para sincronizar lead a lead é preciso que o projeto de agendamentos publique a rota export-agendamentos. " +
+      "Configure AGENDA_API_BASE_URL e AGENDA_API_PATH se a URL for diferente.",
   );
 }
 
