@@ -238,6 +238,12 @@ function PipelinePage() {
               <Link to="/integracao">Integração C2S</Link>
             </Button>
           )}
+          {data?.isGestor && (
+            <Button variant="secondary" asChild>
+              <Link to="/auditoria">Auditoria</Link>
+            </Button>
+          )}
+
           <Button variant="ghost" onClick={sair}>
             Sair
           </Button>
