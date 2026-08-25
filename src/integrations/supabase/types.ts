@@ -273,7 +273,6 @@ export type Database = {
       }
       is_my_corretor: { Args: { _corretor_id: string }; Returns: boolean }
       owns_lead: { Args: { _lead_id: string }; Returns: boolean }
-      try_lock_sync: { Args: { _ttl_seconds?: number }; Returns: boolean }
     }
     Enums: {
       app_role: "gestor" | "corretor"
