@@ -136,9 +136,10 @@ export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
   if (q.documentacao_ok && stage !== "documentacao" && stage !== "fechamento") return "documentacao";
   if (!q.documentacao_ok && stage === "documentacao") return "negociacao";
   const frias = ETAPAS_FRIAS;
-  // Visita agendada (ou já realizada) tem prioridade sobre "Em atendimento".
-  if ((q.visita_em || q.visita_realizada) && (frias.includes(stage) || stage === "atendimento"))
-    return "visita";
+  const moveVisita = frias.includes(stage) || stage === "atendimento" || stage === "visita";
+  // Visita realizada tem prioridade sobre a visita apenas agendada.
+  if (q.visita_realizada && moveVisita) return "visita_realizada";
+  if (q.visita_em && moveVisita) return "visita";
   if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
   return stage;
 }
