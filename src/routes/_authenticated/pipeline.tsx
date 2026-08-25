@@ -42,6 +42,8 @@ function PipelinePage() {
   const persist = useServerFn(saveLead);
   const sync = useServerFn(syncNow);
 
+  const [filtrosAbertos, setFiltrosAbertos] = useState(true);
+
   const { data, isLoading } = useQuery({
     queryKey: ["board"],
     queryFn: () => fetchBoard(),
@@ -297,101 +299,119 @@ function PipelinePage() {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
+        {/* Linha 1: marca + ações */}
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-5 py-3">
           <div className="mr-auto flex items-center gap-3">
             <img
               src={fortalLogo}
               alt="Fortal Pipeline"
-              width={180}
-              height={90}
-              className="h-12 w-auto object-contain"
+              width={220}
+              height={110}
+              className="h-16 w-auto object-contain"
             />
           </div>
-          <Input
-            value={buscaInput}
-            onChange={(e) => setBuscaInput(e.target.value)}
-            placeholder="Buscar cliente ou imóvel"
-            className="h-9 w-56"
-          />
-          {data?.isGestor && (
-            <select
-              value={corretorFiltro}
-              onChange={(e) => setCorretorFiltro(e.target.value)}
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm"
-            >
-              <option value="todos">Todos os corretores</option>
-              {meuCorretorId && <option value="meus">Somente meus leads</option>}
-              {corretores.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nome}
-                </option>
-              ))}
-            </select>
-          )}
 
-          <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
-            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Período</span>
-            <Input
-              type="date"
-              aria-label="Data inicial"
-              value={dataInicio}
-              max={dataFim || undefined}
-              onChange={(e) => setDataInicio(e.target.value)}
-              className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
-            />
-            <span className="text-xs text-muted-foreground">até</span>
-            <Input
-              type="date"
-              aria-label="Data final"
-              value={dataFim}
-              min={dataInicio || undefined}
-              onChange={(e) => setDataFim(e.target.value)}
-              className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
-            />
-            {(dataInicio || dataFim) && (
-              <Button
-                variant="ghost"
-                className="h-7 px-2 text-xs"
-                onClick={() => {
-                  setDataInicio("");
-                  setDataFim("");
-                }}
-              >
-                Limpar
+          <div className="flex flex-wrap items-center gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setFiltrosAbertos((v) => !v)}
+              aria-expanded={filtrosAbertos}
+            >
+              {filtrosAbertos ? "Ocultar filtros" : "Mostrar filtros"}
+            </Button>
+
+            <Button
+              onClick={() => {
+                setLeadAtual(null);
+                setDialogOpen(true);
+              }}
+            >
+              Novo lead
+            </Button>
+            {data?.isGestor && (
+              <Button variant="secondary" asChild>
+                <Link to="/integracao">Integração C2S</Link>
               </Button>
             )}
+            {data?.isGestor && (
+              <Button variant="secondary" asChild>
+                <Link to="/auditoria">Auditoria</Link>
+              </Button>
+            )}
+            {data?.isGestor && (
+              <Button variant="secondary" asChild>
+                <Link to="/equipe">Equipe</Link>
+              </Button>
+            )}
+
+            <Button variant="ghost" onClick={sair}>
+              Sair
+            </Button>
           </div>
-
-
-          <Button
-            onClick={() => {
-              setLeadAtual(null);
-              setDialogOpen(true);
-            }}
-          >
-            Novo lead
-          </Button>
-          {data?.isGestor && (
-            <Button variant="secondary" asChild>
-              <Link to="/integracao">Integração C2S</Link>
-            </Button>
-          )}
-          {data?.isGestor && (
-            <Button variant="secondary" asChild>
-              <Link to="/auditoria">Auditoria</Link>
-            </Button>
-          )}
-          {data?.isGestor && (
-            <Button variant="secondary" asChild>
-              <Link to="/equipe">Equipe</Link>
-            </Button>
-          )}
-
-
-          <Button variant="ghost" onClick={sair}>
-            Sair
-          </Button>
         </div>
+
+        {/* Linha 2: filtros recolhíveis */}
+        {filtrosAbertos && (
+          <div className="border-t border-border">
+            <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-5 py-3">
+              <Input
+                value={buscaInput}
+                onChange={(e) => setBuscaInput(e.target.value)}
+                placeholder="Buscar cliente ou imóvel"
+                className="h-9 w-64"
+              />
+              {data?.isGestor && (
+                <select
+                  value={corretorFiltro}
+                  onChange={(e) => setCorretorFiltro(e.target.value)}
+                  className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+                >
+                  <option value="todos">Todos os corretores</option>
+                  {meuCorretorId && <option value="meus">Somente meus leads</option>}
+                  {corretores.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.nome}
+                    </option>
+                  ))}
+                </select>
+              )}
+
+              <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
+                <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Período</span>
+                <Input
+                  type="date"
+                  aria-label="Data inicial"
+                  value={dataInicio}
+                  max={dataFim || undefined}
+                  onChange={(e) => setDataInicio(e.target.value)}
+                  className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
+                />
+                <span className="text-xs text-muted-foreground">até</span>
+                <Input
+                  type="date"
+                  aria-label="Data final"
+                  value={dataFim}
+                  min={dataInicio || undefined}
+                  onChange={(e) => setDataFim(e.target.value)}
+                  className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
+                />
+                {(dataInicio || dataFim) && (
+                  <Button
+                    variant="ghost"
+                    className="h-7 px-2 text-xs"
+                    onClick={() => {
+                      setDataInicio("");
+                      setDataFim("");
+                    }}
+                  >
+                    Limpar
+                  </Button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </header>
 
       <main className="mx-auto max-w-[1600px] px-5 py-6">
