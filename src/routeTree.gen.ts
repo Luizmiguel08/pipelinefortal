@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authenticated/auditoria'
 import { Route as AuthenticatedIntegracaoRouteImport } from './routes/_authenticated/integracao'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
 import { Route as ApiPublicHooksC2sSyncRouteImport } from './routes/api/public/hooks/c2s-sync'
@@ -29,6 +30,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAuditoriaRoute = AuthenticatedAuditoriaRouteImport.update({
+  id: '/auditoria',
+  path: '/auditoria',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedIntegracaoRoute = AuthenticatedIntegracaoRouteImport.update({
   id: '/integracao',
@@ -49,6 +55,7 @@ const ApiPublicHooksC2sSyncRoute = ApiPublicHooksC2sSyncRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
@@ -56,6 +63,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
@@ -65,6 +73,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/auditoria': typeof AuthenticatedAuditoriaRoute
   '/_authenticated/integracao': typeof AuthenticatedIntegracaoRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
@@ -72,14 +81,26 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/auth' | '/integracao' | '/pipeline' | '/api/public/hooks/c2s-sync'
+    | '/'
+    | '/auth'
+    | '/auditoria'
+    | '/integracao'
+    | '/pipeline'
+    | '/api/public/hooks/c2s-sync'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/integracao' | '/pipeline' | '/api/public/hooks/c2s-sync'
+  to:
+    | '/'
+    | '/auth'
+    | '/auditoria'
+    | '/integracao'
+    | '/pipeline'
+    | '/api/public/hooks/c2s-sync'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/auditoria'
     | '/_authenticated/integracao'
     | '/_authenticated/pipeline'
     | '/api/public/hooks/c2s-sync'
@@ -115,6 +136,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/auditoria': {
+      id: '/_authenticated/auditoria'
+      path: '/auditoria'
+      fullPath: '/auditoria'
+      preLoaderRoute: typeof AuthenticatedAuditoriaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/integracao': {
       id: '/_authenticated/integracao'
       path: '/integracao'
@@ -140,11 +168,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAuditoriaRoute: typeof AuthenticatedAuditoriaRoute
   AuthenticatedIntegracaoRoute: typeof AuthenticatedIntegracaoRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAuditoriaRoute: AuthenticatedAuditoriaRoute,
   AuthenticatedIntegracaoRoute: AuthenticatedIntegracaoRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
 }
