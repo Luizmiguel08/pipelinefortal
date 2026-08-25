@@ -115,7 +115,12 @@ export const saveLead = createServerFn({ method: "POST" })
       stage: StageId;
       corretor_id: string | null;
       observacoes?: string | undefined;
+      entrada?: number | undefined;
+      finalidade?: "moradia" | "investimento" | null | undefined;
+      estagio_imovel?: "pronto" | "planta" | null | undefined;
+      documentacao_ok?: boolean | undefined;
     }) => {
+
 
       if (!input?.nome?.trim()) throw new Error("Informe o nome do cliente");
       if (!STAGE_IDS.includes(input.stage)) throw new Error("Etapa inválida");
