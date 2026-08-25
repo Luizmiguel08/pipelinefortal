@@ -95,6 +95,7 @@ function PipelinePage() {
   const [dragging, setDragging] = useState<BoardLead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
+  const [visiveis, setVisiveis] = useState<Partial<Record<StageId, number>>>({});
 
   // Busca com debounce: digitar não re-renderiza milhares de cards a cada tecla.
   useEffect(() => {
