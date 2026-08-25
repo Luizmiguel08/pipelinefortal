@@ -50,63 +50,6 @@ export type Database = {
         }
         Relationships: []
       }
-      lead_calls: {
-        Row: {
-          called_at: string
-          corretor_id: string | null
-          created_at: string
-          created_by: string | null
-          id: string
-          interessado: boolean | null
-          lead_id: string
-          observacao: string | null
-          periodo: Database["public"]["Enums"]["call_period"]
-          resultado: Database["public"]["Enums"]["call_outcome"]
-          updated_at: string
-        }
-        Insert: {
-          called_at?: string
-          corretor_id?: string | null
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          interessado?: boolean | null
-          lead_id: string
-          observacao?: string | null
-          periodo: Database["public"]["Enums"]["call_period"]
-          resultado?: Database["public"]["Enums"]["call_outcome"]
-          updated_at?: string
-        }
-        Update: {
-          called_at?: string
-          corretor_id?: string | null
-          created_at?: string
-          created_by?: string | null
-          id?: string
-          interessado?: boolean | null
-          lead_id?: string
-          observacao?: string | null
-          periodo?: Database["public"]["Enums"]["call_period"]
-          resultado?: Database["public"]["Enums"]["call_outcome"]
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "lead_calls_corretor_id_fkey"
-            columns: ["corretor_id"]
-            isOneToOne: false
-            referencedRelation: "corretores"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "lead_calls_lead_id_fkey"
-            columns: ["lead_id"]
-            isOneToOne: false
-            referencedRelation: "leads"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       lead_events: {
         Row: {
           created_at: string
@@ -333,13 +276,6 @@ export type Database = {
     }
     Enums: {
       app_role: "gestor" | "corretor"
-      call_outcome:
-        | "atendeu"
-        | "nao_atendeu"
-        | "caixa_postal"
-        | "numero_invalido"
-        | "whatsapp"
-      call_period: "manha" | "tarde"
       lead_stage:
         | "novo"
         | "atendimento"
@@ -478,14 +414,6 @@ export const Constants = {
   public: {
     Enums: {
       app_role: ["gestor", "corretor"],
-      call_outcome: [
-        "atendeu",
-        "nao_atendeu",
-        "caixa_postal",
-        "numero_invalido",
-        "whatsapp",
-      ],
-      call_period: ["manha", "tarde"],
       lead_stage: [
         "novo",
         "atendimento",
