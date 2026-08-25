@@ -143,16 +143,19 @@ export const saveLead = createServerFn({ method: "POST" })
       estagio_imovel: data.estagio_imovel ?? null,
       documentacao_ok: Boolean(data.documentacao_ok),
       // Documentação move para a coluna correspondente; qualquer indicador tira o lead das colunas frias.
-      stage: resolverEtapa(
-        {
-          valor: data.valor,
-          entrada: data.entrada,
-          finalidade: data.finalidade,
-          estagio_imovel: data.estagio_imovel,
-          documentacao_ok: data.documentacao_ok,
-        },
-        data.stage,
-      ),
+      // forcar_stage respeita a etapa enviada (ex.: número incorreto -> lista fria).
+      stage: data.forcar_stage
+        ? data.stage
+        : resolverEtapa(
+            {
+              valor: data.valor,
+              entrada: data.entrada,
+              finalidade: data.finalidade,
+              estagio_imovel: data.estagio_imovel,
+              documentacao_ok: data.documentacao_ok,
+            },
+            data.stage,
+          ),
     };
     if (data.id) {
       const { error } = await context.supabase.from("leads").update(payload).eq("id", data.id);
