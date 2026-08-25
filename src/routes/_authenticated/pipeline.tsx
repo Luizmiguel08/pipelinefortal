@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
-import { STAGES, formatBRL, formatCompactBRL, resolverEtapa, type StageId } from "@/lib/stages";
+import { MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -74,6 +74,8 @@ function PipelinePage() {
       finalidade: (r['finalidade'] as BoardLead["finalidade"]) ?? null,
       estagio_imovel: (r['estagio_imovel'] as BoardLead["estagio_imovel"]) ?? null,
       documentacao_ok: Boolean(r['documentacao_ok']),
+      visita_em: (r['visita_em'] as string) ?? null,
+      visita_realizada: Boolean(r['visita_realizada']),
       stage_since: (r['stage_since'] as string) ?? null,
     });
 
@@ -196,6 +198,8 @@ function PipelinePage() {
           finalidade: values.finalidade,
           estagio_imovel: values.estagio_imovel,
           documentacao_ok: values.documentacao_ok,
+          visita_em: values.visita_em,
+          visita_realizada: values.visita_realizada,
           forcar_stage: values.forcar_stage,
         },
       }),
@@ -227,6 +231,8 @@ function PipelinePage() {
                       finalidade: values.finalidade ?? null,
                       estagio_imovel: values.estagio_imovel ?? null,
                       documentacao_ok: Boolean(values.documentacao_ok),
+                      visita_em: values.visita_em ?? null,
+                      visita_realizada: Boolean(values.visita_realizada),
                       stage: stageFinal,
                       stage_since: l.stage === stageFinal ? l.stage_since : new Date().toISOString(),
                     }
@@ -295,6 +301,12 @@ function PipelinePage() {
 
   function handleDrop(stage: StageId) {
     if (!dragging || dragging.stage === stage) return setDragging(null);
+    // Trava: sem indicador preenchido o lead não sai das colunas frias.
+    if (!podeMoverPara(stage, dragging)) {
+      toast.error(MENSAGEM_TRAVA);
+      abrirLead(dragging);
+      return setDragging(null);
+    }
     moveMutation.mutate({ id: dragging.id, stage });
     setDragging(null);
   }
