@@ -21,6 +21,7 @@ export type BoardLead = {
   finalidade: "moradia" | "investimento" | null;
   estagio_imovel: "pronto" | "planta" | null;
   documentacao_ok: boolean;
+  stage_since: string | null;
 };
 
 export type BoardCorretor = {
@@ -51,7 +52,7 @@ export const getBoard = createServerFn({ method: "GET" })
         const { data, error } = await supabase
           .from("leads")
           .select(
-            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok",
+            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, stage_since",
           )
           .order("updated_at", { ascending: false })
           .range(inicio, inicio + pagina - 1);
