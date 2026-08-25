@@ -50,21 +50,56 @@ function PipelinePage() {
     placeholderData: (prev) => prev,
   });
 
-  // Atualização em tempo real: qualquer lead novo/alterado no banco recarrega o funil.
+  // Tempo real: aplicamos a mudança direto no cache, sem recarregar o funil.
   useEffect(() => {
-    let timer: ReturnType<typeof setTimeout> | undefined;
+    const normalizar = (r: Record<string, unknown>): BoardLead => ({
+      id: String(r.id),
+      nome: String(r.nome ?? ""),
+      telefone: (r.telefone as string) ?? null,
+      email: (r.email as string) ?? null,
+      imovel: (r.imovel as string) ?? null,
+      valor: Number(r.valor ?? 0),
+      stage: r.stage as StageId,
+      corretor_id: (r.corretor_id as string) ?? null,
+      origem: (r.origem as string) ?? null,
+      observacoes: (r.observacoes as string) ?? null,
+      ultima_interacao: (r.ultima_interacao as string) ?? null,
+      c2s_contact_id: (r.c2s_contact_id as string) ?? null,
+      created_at: (r.created_at as string) ?? null,
+      data_c2s: (r.data_c2s as string) ?? null,
+      entrada: Number(r.entrada ?? 0),
+      finalidade: (r.finalidade as BoardLead["finalidade"]) ?? null,
+      estagio_imovel: (r.estagio_imovel as BoardLead["estagio_imovel"]) ?? null,
+      documentacao_ok: Boolean(r.documentacao_ok),
+      stage_since: (r.stage_since as string) ?? null,
+    });
+
     const channel = supabase
       .channel("leads-tempo-real")
-      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, () => {
-        if (timer) clearTimeout(timer);
-        timer = setTimeout(() => queryClient.invalidateQueries({ queryKey: ["board"] }), 5000);
+      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, (payload) => {
+        queryClient.setQueryData<Board>(["board"], (old) => {
+          if (!old) return old;
+          if (payload.eventType === "DELETE") {
+            const id = (payload.old as { id?: string })?.id;
+            if (!id) return old;
+            return { ...old, leads: old.leads.filter((l) => l.id !== id) };
+          }
+          const novo = normalizar(payload.new as Record<string, unknown>);
+          const existe = old.leads.some((l) => l.id === novo.id);
+          return {
+            ...old,
+            leads: existe
+              ? old.leads.map((l) => (l.id === novo.id ? { ...l, ...novo } : l))
+              : [novo, ...old.leads],
+          };
+        });
       })
       .subscribe();
     return () => {
-      if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
+
 
 
   // Enquanto o gestor está com o funil aberto, buscamos novidades no C2S a cada minuto.
