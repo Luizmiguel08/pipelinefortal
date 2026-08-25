@@ -86,12 +86,20 @@ export function normalizeContact(rawItem: Record<string, unknown>): C2SContact |
   );
   const respondido = Boolean(pick(raw, ["replied_at"])) || Boolean(pick(raw, ["done_details.replied_at"]));
 
-  // Regra do time: "Em negociação" no C2S só vira Negociação aqui quando existe
-  // proposta com valor (R$) preenchido; sem valor o lead fica em Atendimento.
-  // E todo lead que já teve resposta sai de "Novo" para "Atendimento".
-  let stage = done ? ("fechamento" as StageId) : mapStage(statusRaw);
-  if (stage === "negociacao" && !(valor > 0)) stage = "atendimento";
-  if (stage === "novo" && respondido) stage = "atendimento";
+  // Regras do funil (automação):
+  // 1. Novo: contato ainda sem atendimento (o corretor não respondeu no C2S).
+  // 2. Em atendimento: corretor respondeu o cliente.
+  // 3. Negociação: houve proposta/valores (etapa de negociação no C2S + valor em R$).
+  // 4. Documentação: status de documentos/contrato no C2S.
+  // 5. Fechamento: contato finalizado/ganho no C2S.
+  const doC2S = done ? ("fechamento" as StageId) : mapStage(statusRaw);
+  let stage: StageId = "novo";
+  if (doC2S === "fechamento" || doC2S === "documentacao") {
+    stage = doC2S;
+  } else if (respondido) {
+    stage = doC2S === "negociacao" && valor > 0 ? "negociacao" : "atendimento";
+  }
+
 
   return {
     c2s_contact_id: String(id),
