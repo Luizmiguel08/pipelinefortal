@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { toast } from "sonner";
+import { useEffect, useMemo, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -12,7 +11,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { STAGES, type StageId } from "@/lib/stages";
+import {
+  STAGES,
+  formatBRL,
+  indicadoresPreenchidos,
+  resolverEtapa,
+  stageLabel,
+  type StageId,
+} from "@/lib/stages";
+import { cn } from "@/lib/utils";
 import type { BoardCorretor, BoardLead } from "@/lib/crm.functions";
 
 export type LeadFormValues = {
@@ -46,6 +53,71 @@ const empty: LeadFormValues = {
   documentacao_ok: false,
 };
 
+const ATALHOS_VALOR = [200_000, 300_000, 500_000, 800_000, 1_000_000];
+const ATALHOS_ENTRADA = [20_000, 50_000, 100_000, 200_000];
+
+function Chip({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={cn(
+        "rounded-full border px-3 py-1.5 text-sm transition-colors",
+        active
+          ? "border-primary bg-primary text-primary-foreground"
+          : "border-input bg-background text-muted-foreground hover:border-primary/50 hover:text-foreground",
+      )}
+    >
+      {children}
+    </button>
+  );
+}
+
+function CampoValor({
+  id,
+  label,
+  value,
+  atalhos,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: number;
+  atalhos: number[];
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div className="space-y-2">
+      <Label htmlFor={id}>{label}</Label>
+      <Input
+        id={id}
+        type="number"
+        inputMode="numeric"
+        min={0}
+        step={1000}
+        value={value || ""}
+        placeholder="0"
+        onChange={(e) => onChange(Number(e.target.value) || 0)}
+      />
+      <div className="flex flex-wrap gap-1.5">
+        {atalhos.map((v) => (
+          <Chip key={v} active={value === v} onClick={() => onChange(value === v ? 0 : v)}>
+            {formatBRL(v)}
+          </Chip>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function LeadDialog({
   open,
   lead,
@@ -64,9 +136,11 @@ export function LeadDialog({
   onSave: (values: LeadFormValues) => void;
 }) {
   const [values, setValues] = useState<LeadFormValues>(empty);
+  const [maisCampos, setMaisCampos] = useState(false);
 
   useEffect(() => {
     if (!open) return;
+    setMaisCampos(false);
     setValues(
       lead
         ? {
@@ -88,72 +162,119 @@ export function LeadDialog({
     );
   }, [open, lead, defaultCorretorId]);
 
+  const etapaFinal = useMemo(() => resolverEtapa(values, values.stage), [values]);
+  const qualificado = indicadoresPreenchidos(values);
+  const set = (patch: Partial<LeadFormValues>) => setValues((v) => ({ ...v, ...patch }));
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{lead ? "Editar lead" : "Novo lead"}</DialogTitle>
+          <DialogTitle>{lead ? lead.nome : "Novo lead"}</DialogTitle>
           <DialogDescription>
-            {lead?.c2s_contact_id
-              ? `Sincronizado com o C2S (contato ${lead.c2s_contact_id}).`
-              : "Cadastro manual — leads do C2S entram automaticamente."}
+            {lead?.telefone ? `${lead.telefone} · ` : ""}
+            {lead?.c2s_contact_id ? "Lead sincronizado do C2S." : "Cadastro manual."}
           </DialogDescription>
         </DialogHeader>
 
-        <div className="grid gap-4">
+        <div className="grid gap-5">
+          {/* Qualificação: preencher qualquer indicador já move o lead para Em atendimento */}
+          <section className="space-y-4 rounded-xl border border-border bg-muted/30 p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <h3 className="text-sm font-semibold">Qualificação do lead</h3>
+                <p className="text-xs text-muted-foreground">
+                  Preencha pelo menos um indicador para mover o lead de etapa.
+                </p>
+              </div>
+              <span
+                className={cn(
+                  "shrink-0 rounded-full px-2.5 py-1 text-xs font-medium",
+                  qualificado
+                    ? "bg-primary/15 text-primary"
+                    : "bg-muted text-muted-foreground",
+                )}
+              >
+                {stageLabel(etapaFinal)}
+              </span>
+            </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="lead-nome">Cliente</Label>
-            <Input
-              id="lead-nome"
-              value={values.nome}
-              onChange={(e) => setValues({ ...values, nome: e.target.value })}
-            />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="lead-tel">Telefone</Label>
-              <Input
-                id="lead-tel"
-                value={values.telefone}
-                onChange={(e) => setValues({ ...values, telefone: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lead-email">E-mail</Label>
-              <Input
-                id="lead-email"
-                value={values.email}
-                onChange={(e) => setValues({ ...values, email: e.target.value })}
-              />
-            </div>
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="lead-imovel">Imóvel de interesse</Label>
-            <Input
-              id="lead-imovel"
-              value={values.imovel}
-              onChange={(e) => setValues({ ...values, imovel: e.target.value })}
-            />
-          </div>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div className="space-y-2">
-              <Label htmlFor="lead-valor">Valor da negociação (R$)</Label>
-              <Input
+            <div className="grid gap-4 sm:grid-cols-2">
+              <CampoValor
                 id="lead-valor"
-                type="number"
-                min={0}
-                step={1000}
+                label="Valor da negociação"
                 value={values.valor}
-                onChange={(e) => setValues({ ...values, valor: Number(e.target.value) })}
+                atalhos={ATALHOS_VALOR}
+                onChange={(valor) => set({ valor })}
+              />
+              <CampoValor
+                id="lead-entrada"
+                label="Valor de entrada"
+                value={values.entrada}
+                atalhos={ATALHOS_ENTRADA}
+                onChange={(entrada) => set({ entrada })}
               />
             </div>
+
+            <div className="space-y-2">
+              <Label>Finalidade</Label>
+              <div className="flex flex-wrap gap-2">
+                {(["moradia", "investimento"] as const).map((op) => (
+                  <Chip
+                    key={op}
+                    active={values.finalidade === op}
+                    onClick={() => set({ finalidade: values.finalidade === op ? null : op })}
+                  >
+                    {op === "moradia" ? "Moradia" : "Investimento"}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Imóvel</Label>
+              <div className="flex flex-wrap gap-2">
+                {(["pronto", "planta"] as const).map((op) => (
+                  <Chip
+                    key={op}
+                    active={values.estagio_imovel === op}
+                    onClick={() =>
+                      set({ estagio_imovel: values.estagio_imovel === op ? null : op })
+                    }
+                  >
+                    {op === "pronto" ? "Pronto" : "Na planta"}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+
+            <label
+              htmlFor="lead-doc"
+              className="flex items-start gap-3 rounded-lg border border-border bg-background p-3"
+            >
+              <input
+                id="lead-doc"
+                type="checkbox"
+                className="mt-0.5 h-4 w-4 accent-[hsl(var(--primary))]"
+                checked={values.documentacao_ok}
+                onChange={(e) => set({ documentacao_ok: e.target.checked })}
+              />
+              <span className="text-sm">
+                <span className="font-medium">Documentação recebida</span>
+                <span className="block text-xs text-muted-foreground">
+                  Ao marcar, o lead vai para Documentação. Ao desmarcar, volta para Negociação.
+                </span>
+              </span>
+            </label>
+          </section>
+
+          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="lead-stage">Etapa</Label>
               <select
                 id="lead-stage"
                 value={values.stage}
-                onChange={(e) => setValues({ ...values, stage: e.target.value as StageId })}
+                onChange={(e) => set({ stage: e.target.value as StageId })}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
                 {STAGES.map((s) => (
@@ -163,113 +284,82 @@ export function LeadDialog({
                 ))}
               </select>
             </div>
-          </div>
-
-          <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="lead-entrada">Valor de entrada (R$)</Label>
-              <Input
-                id="lead-entrada"
-                type="number"
-                min={0}
-                step={1000}
-                value={values.entrada}
-                onChange={(e) => setValues({ ...values, entrada: Number(e.target.value) })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="lead-finalidade">Finalidade</Label>
+              <Label htmlFor="lead-corretor">Corretor responsável</Label>
               <select
-                id="lead-finalidade"
-                value={values.finalidade ?? ""}
-                onChange={(e) =>
-                  setValues({
-                    ...values,
-                    finalidade: (e.target.value || null) as LeadFormValues["finalidade"],
-                  })
-                }
+                id="lead-corretor"
+                value={values.corretor_id ?? ""}
+                onChange={(e) => set({ corretor_id: e.target.value || null })}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
-                <option value="">Não informado</option>
-                <option value="moradia">Moradia</option>
-                <option value="investimento">Investimento</option>
+                <option value="">Sem responsável</option>
+                {corretores.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.nome}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="lead-estagio-imovel">Imóvel pronto ou na planta</Label>
-            <select
-              id="lead-estagio-imovel"
-              value={values.estagio_imovel ?? ""}
-              onChange={(e) =>
-                setValues({
-                  ...values,
-                  estagio_imovel: (e.target.value || null) as LeadFormValues["estagio_imovel"],
-                })
-              }
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-            >
-              <option value="">Não informado</option>
-              <option value="pronto">Pronto</option>
-              <option value="planta">Na planta</option>
-            </select>
-          </div>
-
-          <label
-            htmlFor="lead-doc"
-            className="flex items-start gap-3 rounded-lg border border-border bg-muted/40 p-3"
-          >
-            <input
-              id="lead-doc"
-              type="checkbox"
-              className="mt-0.5 h-4 w-4 accent-[hsl(var(--primary))]"
-              checked={values.documentacao_ok}
-              onChange={(e) =>
-                setValues({
-                  ...values,
-                  documentacao_ok: e.target.checked,
-                  stage:
-                    e.target.checked && values.stage !== "documentacao" && values.stage !== "fechamento"
-                      ? "documentacao"
-                      : !e.target.checked && values.stage === "documentacao"
-                        ? "negociacao"
-                      : values.stage,
-                })
-              }
-            />
-            <span className="text-sm">
-              <span className="font-medium">Documentação recebida</span>
-              <span className="block text-xs text-muted-foreground">
-                Ao marcar, o lead vai para Documentação. Ao desmarcar, volta para Negociação.
-              </span>
-            </span>
-          </label>
-
-          <div className="space-y-2">
-            <Label htmlFor="lead-corretor">Corretor responsável</Label>
-            <select
-              id="lead-corretor"
-              value={values.corretor_id ?? ""}
-              onChange={(e) => setValues({ ...values, corretor_id: e.target.value || null })}
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
-            >
-              <option value="">Sem responsável</option>
-              {corretores.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.nome}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div className="space-y-2">
             <Label htmlFor="lead-obs">Observações</Label>
             <Textarea
               id="lead-obs"
               rows={3}
+              placeholder="O que o cliente falou nessa conversa?"
               value={values.observacoes}
-              onChange={(e) => setValues({ ...values, observacoes: e.target.value })}
+              onChange={(e) => set({ observacoes: e.target.value })}
             />
+          </div>
+
+          {/* Dados de cadastro ficam recolhidos: raramente mudam no dia a dia */}
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={() => setMaisCampos((v) => !v)}
+              className="text-sm font-medium text-primary underline-offset-4 hover:underline"
+            >
+              {maisCampos ? "Ocultar dados de cadastro" : "Editar dados de cadastro"}
+            </button>
+            {maisCampos && (
+              <div className="grid gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="lead-nome">Cliente</Label>
+                  <Input
+                    id="lead-nome"
+                    value={values.nome}
+                    onChange={(e) => set({ nome: e.target.value })}
+                  />
+                </div>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="lead-tel">Telefone</Label>
+                    <Input
+                      id="lead-tel"
+                      value={values.telefone}
+                      onChange={(e) => set({ telefone: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="lead-email">E-mail</Label>
+                    <Input
+                      id="lead-email"
+                      value={values.email}
+                      onChange={(e) => set({ email: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lead-imovel">Imóvel de interesse</Label>
+                  <Input
+                    id="lead-imovel"
+                    value={values.imovel}
+                    onChange={(e) => set({ imovel: e.target.value })}
+                  />
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
@@ -278,7 +368,7 @@ export function LeadDialog({
             Cancelar
           </Button>
           <Button onClick={() => onSave(values)} disabled={saving}>
-            {saving ? "Salvando..." : "Salvar lead"}
+            {saving ? "Salvando..." : `Salvar · ${stageLabel(etapaFinal)}`}
           </Button>
         </DialogFooter>
       </DialogContent>
