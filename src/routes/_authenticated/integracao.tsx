@@ -10,6 +10,8 @@ import {
   testC2SConnection,
   importC2SCorretores,
 } from "@/lib/crm.functions";
+import { getAgendaRuns, syncAgenda } from "@/lib/agenda.functions";
+
 
 import { STAGES } from "@/lib/stages";
 
