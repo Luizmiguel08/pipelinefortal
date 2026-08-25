@@ -204,12 +204,7 @@ function PipelinePage() {
       if (!values.id) return { anterior: undefined };
       await queryClient.cancelQueries({ queryKey: ["board"] });
       const anterior = queryClient.getQueryData<Board>(["board"]);
-      const stageFinal: StageId =
-        values.documentacao_ok && values.stage !== "documentacao" && values.stage !== "fechamento"
-          ? "documentacao"
-          : !values.documentacao_ok && values.stage === "documentacao"
-            ? "negociacao"
-          : values.stage;
+      const stageFinal: StageId = resolverEtapa(values, values.stage);
       queryClient.setQueryData<Board>(["board"], (old) =>
         old
           ? {
