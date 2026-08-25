@@ -14,6 +14,7 @@ export type C2SContact = {
   origem: string | null;
   stage: StageId;
   ultima_interacao: string | null;
+  data_c2s: string | null;
   c2s_agent_id: string | null;
   corretor_nome: string | null;
   corretor_email: string | null;
@@ -122,6 +123,9 @@ export function normalizeContact(rawItem: Record<string, unknown>): C2SContact |
         "last_message_at",
         "atualizado_em",
       ]) as string) ?? null,
+    // Data real de entrada do contato no C2S (usada nos filtros por período).
+    data_c2s:
+      (pick(raw, ["created_at", "created_date", "criado_em", "date", "inserted_at"]) as string) ?? null,
     c2s_agent_id: agentId ? String(agentId) : null,
     corretor_nome: ((pick(raw, ["seller.name", "agent_name", "broker_name", "corretor"]) as string) ?? null)
       ? String(pick(raw, ["seller.name", "agent_name", "broker_name", "corretor"])).trim()

@@ -86,6 +86,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
       valor: contato.valor,
       origem: contato.origem,
       ultima_interacao: contato.ultima_interacao,
+      data_c2s: contato.data_c2s,
       corretor_id: corretorId,
       last_synced_at: new Date().toISOString(),
     };

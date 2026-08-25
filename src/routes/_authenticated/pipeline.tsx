@@ -165,7 +165,8 @@ function PipelinePage() {
       if (corretorFiltro !== "todos" && corretorFiltro !== "meus" && l.corretor_id !== corretorFiltro)
         return false;
       if (inicioMs !== null || fimMs !== null) {
-        const ref = l.created_at ? new Date(l.created_at).getTime() : null;
+        const dataRef = l.data_c2s ?? l.created_at;
+        const ref = dataRef ? new Date(dataRef).getTime() : null;
         if (ref === null || Number.isNaN(ref)) return false;
         if (inicioMs !== null && ref < inicioMs) return false;
         if (fimMs !== null && ref > fimMs) return false;
