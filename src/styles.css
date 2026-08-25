@@ -154,3 +154,19 @@
   scrollbar-width: thin;
   scrollbar-color: var(--color-border) transparent;
 }
+
+@keyframes alerta-lead {
+  0%,
+  100% {
+    border-color: var(--color-destructive);
+    box-shadow: 0 0 0 0 oklch(0.62 0.2 25 / 45%);
+  }
+  50% {
+    border-color: oklch(0.62 0.2 25 / 55%);
+    box-shadow: 0 0 0 6px oklch(0.62 0.2 25 / 0%);
+  }
+}
+
+@utility lead-alerta {
+  animation: alerta-lead 1.1s ease-in-out infinite;
+}
