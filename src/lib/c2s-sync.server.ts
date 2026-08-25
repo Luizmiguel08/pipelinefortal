@@ -16,11 +16,10 @@ type AdminClient = Awaited<
 >["supabaseAdmin"];
 
 async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desde?: string) {
-  // Janelas curtas (sincronização de minuto a minuto) leem poucas páginas para
-  // terminar em segundos; janelas longas (carga histórica) varrem tudo.
+  // Janelas curtas terminam rapidamente; reconciliações históricas varrem todas as páginas.
   const recente = desde ? Date.now() - Date.parse(desde) < 3 * 60 * 60 * 1000 : false;
   const contatos = await fetchC2SContacts(
-    desde ? { desde, maxPaginas: recente ? 12 : 600 } : {},
+    desde ? { desde, maxPaginas: recente ? 40 : 2000 } : {},
   );
   result.total = contatos.length;
 
@@ -107,9 +106,10 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
   // Gravação em lote (upsert por c2s_contact_id) para a rodada terminar em segundos.
   const gravar = async (linhas: Record<string, unknown>[]) => {
     for (let i = 0; i < linhas.length; i += 200) {
-      await supabaseAdmin
+      const { error } = await supabaseAdmin
         .from("leads")
         .upsert(linhas.slice(i, i + 200) as never, { onConflict: "c2s_contact_id" });
+      if (error) throw new Error(`Falha ao gravar contatos no CRM: ${error.message}`);
     }
   };
   await gravar(novos);

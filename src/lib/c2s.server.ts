@@ -150,7 +150,12 @@ export type FetchContactsOptions = {
   maxPaginas?: number;
 };
 
-async function fetchPage(root: string, token: string, page: number): Promise<Record<string, unknown>[]> {
+type C2SPage = {
+  items: Record<string, unknown>[];
+  total: number | null;
+};
+
+async function fetchPage(root: string, token: string, page: number): Promise<C2SPage> {
   const response = await fetch(`${root}/contacts?page=${page}`, {
     headers: { Authorization: `Bearer ${token}`, Accept: "application/json" },
   });
@@ -165,21 +170,22 @@ async function fetchPage(root: string, token: string, page: number): Promise<Rec
       (p?.["contacts"] as unknown[]) ??
       (p?.["results"] as unknown[]) ??
       []);
-  return list.filter((item): item is Record<string, unknown> => !!item && typeof item === "object");
+  const totalRaw = p?.["meta"] && typeof p["meta"] === "object"
+    ? (p["meta"] as Record<string, unknown>)["total"]
+    : undefined;
+  const total = typeof totalRaw === "number" ? totalRaw : Number(totalRaw);
+  return {
+    items: list.filter((item): item is Record<string, unknown> => !!item && typeof item === "object"),
+    total: Number.isFinite(total) ? total : null,
+  };
 }
 
-function contactDate(rawItem: Record<string, unknown>): number {
+function contactCreatedDate(rawItem: Record<string, unknown>): number {
   const attrs = (rawItem["attributes"] as Record<string, unknown> | undefined) ?? {};
   const raw: Record<string, unknown> = { ...attrs, ...rawItem };
-  // Usamos a data mais recente entre criação, atualização e última interação:
-  // assim um contato antigo que mudou de etapa continua entrando na sincronização.
-  let maior = NaN;
-  for (const campo of ["created_at", "updated_at", "last_activity_date"]) {
-    const d = raw[campo];
-    const t = d ? Date.parse(String(d)) : NaN;
-    if (Number.isFinite(t) && (!Number.isFinite(maior) || t > maior)) maior = t;
-  }
-  return Number.isFinite(maior) ? maior : Date.now();
+  const value = pick(raw, ["created_at", "created_date", "criado_em", "date", "inserted_at"]);
+  const parsed = value ? Date.parse(String(value)) : NaN;
+  return Number.isFinite(parsed) ? parsed : Date.now();
 }
 
 export async function fetchC2SContacts(options: FetchContactsOptions = {}): Promise<C2SContact[]> {
@@ -199,26 +205,48 @@ export async function fetchC2SContacts(options: FetchContactsOptions = {}): Prom
 
   const itens: Record<string, unknown>[] = [];
   const vistos = new Set<string>();
+  let totalRemoto: number | null = null;
 
-  for (let page = 1; page <= maxPaginas; page++) {
-    const lista = await fetchPage(root, token, page);
-    if (!lista.length) break;
+  // O C2S entrega somente 25 contatos por página. Lemos blocos em paralelo para que
+  // a conferência mensal não leve vários minutos, mantendo concorrência moderada.
+  const paginasPorBloco = 10;
+  let encerrar = false;
+  for (let inicio = 1; inicio <= maxPaginas && !encerrar; inicio += paginasPorBloco) {
+    const numeros = Array.from(
+      { length: Math.min(paginasPorBloco, maxPaginas - inicio + 1) },
+      (_, indice) => inicio + indice,
+    );
+    const paginas = await Promise.all(numeros.map((numero) => fetchPage(root, token, numero)));
 
-    let novosNaPagina = 0;
-    let alcancouCorte = false;
-    for (const item of lista) {
-      const id = String(item["id"] ?? "");
-      if (id && vistos.has(id)) continue;
-      if (contactDate(item) < corte) {
-        alcancouCorte = true;
-        continue;
+    for (let indice = 0; indice < paginas.length; indice += 1) {
+      const pagina = paginas[indice];
+      const numero = numeros[indice];
+      if (!pagina || numero === undefined) continue;
+      const lista = pagina.items;
+      totalRemoto = pagina.total ?? totalRemoto;
+      if (!lista.length) {
+        encerrar = true;
+        break;
       }
-      if (id) vistos.add(id);
-      itens.push(item);
-      novosNaPagina += 1;
+
+      let maisNovoQueCorte = 0;
+      for (const item of lista) {
+        const id = String(item["id"] ?? "");
+        if (id && vistos.has(id)) continue;
+        if (contactCreatedDate(item) < corte) continue;
+        if (id) vistos.add(id);
+        itens.push(item);
+        maisNovoQueCorte += 1;
+      }
+      if (maisNovoQueCorte === 0) {
+        encerrar = true;
+        break;
+      }
+      if (totalRemoto !== null && numero * lista.length >= totalRemoto) {
+        encerrar = true;
+        break;
+      }
     }
-    // A API devolve do mais recente para o mais antigo: parar ao cruzar a data de corte.
-    if (alcancouCorte || novosNaPagina === 0) break;
   }
 
   return itens

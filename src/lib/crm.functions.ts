@@ -225,14 +225,29 @@ export const getSyncHistory = createServerFn({ method: "GET" })
 
 export const syncNow = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }) => {
+  .inputValidator((input: { reconciliarMes?: boolean } | undefined) => ({
+    reconciliarMes: input?.reconciliarMes === true,
+  }))
+  .handler(async ({ data, context }) => {
     const { data: isGestor } = await context.supabase.rpc("has_role", {
       _user_id: context.userId,
       _role: "gestor",
     });
     if (!isGestor) throw new Error("Apenas gestores podem disparar a sincronização.");
     const { runC2SSync } = await import("./c2s-sync.server");
-    return await runC2SSync();
+    if (!data.reconciliarMes) return await runC2SSync();
+
+    // Reconciliação manual desde o início do mês no fuso de São Paulo.
+    const agora = new Date();
+    const partes = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Sao_Paulo",
+      year: "numeric",
+      month: "2-digit",
+    }).formatToParts(agora);
+    const ano = partes.find((p) => p.type === "year")?.value;
+    const mes = partes.find((p) => p.type === "month")?.value;
+    if (!ano || !mes) throw new Error("Não foi possível calcular o período mensal.");
+    return await runC2SSync("reconciliacao_mensal", `${ano}-${mes}-01T00:00:00-03:00`);
   });
 
 export const importC2SCorretores = createServerFn({ method: "POST" })

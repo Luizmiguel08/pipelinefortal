@@ -66,14 +66,14 @@ function IntegracaoPage() {
 
 
   const sync = useMutation({
-    mutationFn: () => runSync(),
+    mutationFn: () => runSync({ data: { reconciliarMes: true } }),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["board"] });
       queryClient.invalidateQueries({ queryKey: ["c2s-status"] });
       queryClient.invalidateQueries({ queryKey: ["c2s-history"] });
     },
     onSuccess: (r) => {
-      toast.success(`Sincronizado: ${r.criados} novos, ${r.atualizados} atualizados, ${r.movidos} movidos`);
+      toast.success(`Mês reconciliado: ${r.total} contatos conferidos, ${r.criados} novos e ${r.atualizados} atualizados`);
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -111,7 +111,7 @@ function IntegracaoPage() {
             disabled={!data?.isGestor || !data?.configurado || sync.isPending}
             onClick={() => sync.mutate()}
           >
-            {sync.isPending ? "Sincronizando..." : "Sincronizar agora"}
+            {sync.isPending ? "Reconciliando o mês..." : "Reconciliar mês atual"}
           </Button>
         </div>
       </div>
