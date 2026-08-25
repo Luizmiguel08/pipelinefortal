@@ -64,36 +64,86 @@ function mapear(raw: Record<string, unknown>): AgendaAppointment | null {
   };
 }
 
+function extrairLista(json: unknown): unknown[] {
+  if (Array.isArray(json)) return json;
+  const obj = (json ?? {}) as Record<string, unknown>;
+  for (const chave of ["registros", "agendamentos", "data", "items", "results"]) {
+    const v = obj[chave];
+    if (Array.isArray(v)) return v;
+  }
+  return [];
+}
+
+/**
+ * Busca os agendamentos individuais no app de agenda.
+ * Tenta os formatos de rota/autenticação já usados pelas integrações existentes lá:
+ * POST + Authorization: Bearer <segredo> e GET + x-sync-secret.
+ */
 export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointment[]> {
   const secret = process.env["AGENDA_SYNC_SECRET"];
   if (!secret) throw new Error("AGENDA_SYNC_SECRET não configurado");
   const base = (process.env["AGENDA_API_BASE_URL"] ?? BASE_PADRAO).replace(/\/+$/, "");
+  const caminho =
+    process.env["AGENDA_API_PATH"] ?? "/api/public/export-agendamentos";
+  const alvo = `${base}${caminho.startsWith("/") ? caminho : `/${caminho}`}`;
 
-  const url = new URL(`${base}/api/public/export-agendamentos`);
-  if (desde) url.searchParams.set("desde", desde);
+  const tentativas: Array<{ url: string; init: RequestInit }> = [
+    {
+      url: alvo,
+      init: {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${secret}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(desde ? { de: desde } : {}),
+      },
+    },
+    {
+      url: desde ? `${alvo}?desde=${encodeURIComponent(desde)}` : alvo,
+      init: {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${secret}`,
+          "x-sync-secret": secret,
+          Accept: "application/json",
+        },
+      },
+    },
+  ];
 
-  const resposta = await fetch(url.toString(), {
-    method: "GET",
-    headers: { "x-sync-secret": secret, Accept: "application/json" },
-  });
-
-  if (!resposta.ok) {
-    const corpo = await resposta.text().catch(() => "");
-    throw new Error(`Agenda respondeu ${resposta.status}: ${corpo.slice(0, 200)}`);
+  let ultimoErro = "";
+  for (const tentativa of tentativas) {
+    let resposta: Response;
+    try {
+      resposta = await fetch(tentativa.url, tentativa.init);
+    } catch (e) {
+      ultimoErro = e instanceof Error ? e.message : String(e);
+      continue;
+    }
+    if (!resposta.ok) {
+      const corpo = await resposta.text().catch(() => "");
+      ultimoErro = `${resposta.status}: ${corpo.slice(0, 160)}`;
+      if (resposta.status === 401 || resposta.status === 403) {
+        throw new Error(
+          "Agenda recusou o segredo (401/403). O valor de AGENDA_SYNC_SECRET aqui precisa ser idêntico ao SYNC_SHARED_SECRET do projeto de agendamentos.",
+        );
+      }
+      continue;
+    }
+    const json = (await resposta.json()) as unknown;
+    const lista = extrairLista(json);
+    return lista
+      .map((item) => mapear(item as Record<string, unknown>))
+      .filter((a): a is AgendaAppointment => a !== null);
   }
 
-  const json = (await resposta.json()) as unknown;
-  const lista = Array.isArray(json)
-    ? json
-    : Array.isArray((json as { registros?: unknown[] })?.registros)
-      ? (json as { registros: unknown[] }).registros
-      : Array.isArray((json as { data?: unknown[] })?.data)
-        ? (json as { data: unknown[] }).data
-        : [];
-
-  return lista
-    .map((item) => mapear(item as Record<string, unknown>))
-    .filter((a): a is AgendaAppointment => a !== null);
+  throw new Error(
+    `Não consegui ler os agendamentos em ${alvo} (${ultimoErro}). ` +
+      "O projeto de agendamentos só publica /api/public/export-metricas-diarias (totais do dia). " +
+      "Para sincronizar lead a lead é preciso publicar lá a rota export-agendamentos.",
+  );
 }
 
 /** Últimos 11 dígitos — tolera DDI e máscaras diferentes entre os dois sistemas. */
