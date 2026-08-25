@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.touch_lead_on_call() FROM PUBLIC, anon, authenticated;
