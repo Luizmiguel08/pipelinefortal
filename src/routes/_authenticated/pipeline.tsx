@@ -173,7 +173,7 @@ function PipelinePage() {
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
-  }, [data?.leads, corretorFiltro, busca, meuCorretorId]);
+  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim]);
 
   // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
   const colunas = useMemo(() => {
