@@ -17,6 +17,10 @@ export type BoardLead = {
   c2s_contact_id: string | null;
   created_at: string | null;
   data_c2s: string | null;
+  entrada: number;
+  finalidade: "moradia" | "investimento" | null;
+  estagio_imovel: "pronto" | "planta" | null;
+  documentacao_ok: boolean;
 };
 
 export type BoardCorretor = {
@@ -47,7 +51,7 @@ export const getBoard = createServerFn({ method: "GET" })
         const { data, error } = await supabase
           .from("leads")
           .select(
-            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s",
+            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok",
           )
           .order("updated_at", { ascending: false })
           .range(inicio, inicio + pagina - 1);
@@ -73,7 +77,12 @@ export const getBoard = createServerFn({ method: "GET" })
       nome: profile?.nome ?? "",
       meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
       corretores: lista.map(({ user_id: _u, ...c }) => c),
-      leads: ((leads ?? []) as BoardLead[]).map((l) => ({ ...l, valor: Number(l.valor) })),
+      leads: ((leads ?? []) as BoardLead[]).map((l) => ({
+        ...l,
+        valor: Number(l.valor),
+        entrada: Number(l.entrada ?? 0),
+        documentacao_ok: Boolean(l.documentacao_ok),
+      })),
     };
   });
 
@@ -106,7 +115,12 @@ export const saveLead = createServerFn({ method: "POST" })
       stage: StageId;
       corretor_id: string | null;
       observacoes?: string | undefined;
+      entrada?: number | undefined;
+      finalidade?: "moradia" | "investimento" | null | undefined;
+      estagio_imovel?: "pronto" | "planta" | null | undefined;
+      documentacao_ok?: boolean | undefined;
     }) => {
+
 
       if (!input?.nome?.trim()) throw new Error("Informe o nome do cliente");
       if (!STAGE_IDS.includes(input.stage)) throw new Error("Etapa inválida");
@@ -120,9 +134,17 @@ export const saveLead = createServerFn({ method: "POST" })
       email: data.email ?? null,
       imovel: data.imovel ?? null,
       valor: Number(data.valor) || 0,
-      stage: data.stage,
       corretor_id: data.corretor_id,
       observacoes: data.observacoes ?? null,
+      entrada: Number(data.entrada) || 0,
+      finalidade: data.finalidade ?? null,
+      estagio_imovel: data.estagio_imovel ?? null,
+      documentacao_ok: Boolean(data.documentacao_ok),
+      // Regra: ao marcar documentação recebida, o lead vai direto para a coluna Documentação.
+      stage:
+        data.documentacao_ok && data.stage !== "documentacao" && data.stage !== "fechamento"
+          ? ("documentacao" as StageId)
+          : data.stage,
     };
     if (data.id) {
       const { error } = await context.supabase.from("leads").update(payload).eq("id", data.id);

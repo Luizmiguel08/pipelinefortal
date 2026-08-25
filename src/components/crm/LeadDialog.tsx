@@ -24,6 +24,10 @@ export type LeadFormValues = {
   stage: StageId;
   corretor_id: string | null;
   observacoes: string;
+  entrada: number;
+  finalidade: "moradia" | "investimento" | null;
+  estagio_imovel: "pronto" | "planta" | null;
+  documentacao_ok: boolean;
 };
 
 const empty: LeadFormValues = {
@@ -35,6 +39,10 @@ const empty: LeadFormValues = {
   stage: "novo",
   corretor_id: null,
   observacoes: "",
+  entrada: 0,
+  finalidade: null,
+  estagio_imovel: null,
+  documentacao_ok: false,
 };
 
 export function LeadDialog({
@@ -70,6 +78,10 @@ export function LeadDialog({
             stage: lead.stage,
             corretor_id: lead.corretor_id,
             observacoes: lead.observacoes ?? "",
+            entrada: lead.entrada ?? 0,
+            finalidade: lead.finalidade ?? null,
+            estagio_imovel: lead.estagio_imovel ?? null,
+            documentacao_ok: Boolean(lead.documentacao_ok),
           }
         : { ...empty, corretor_id: defaultCorretorId },
     );
@@ -150,6 +162,86 @@ export function LeadDialog({
               </select>
             </div>
           </div>
+
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="lead-entrada">Valor de entrada (R$)</Label>
+              <Input
+                id="lead-entrada"
+                type="number"
+                min={0}
+                step={1000}
+                value={values.entrada}
+                onChange={(e) => setValues({ ...values, entrada: Number(e.target.value) })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="lead-finalidade">Finalidade</Label>
+              <select
+                id="lead-finalidade"
+                value={values.finalidade ?? ""}
+                onChange={(e) =>
+                  setValues({
+                    ...values,
+                    finalidade: (e.target.value || null) as LeadFormValues["finalidade"],
+                  })
+                }
+                className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              >
+                <option value="">Não informado</option>
+                <option value="moradia">Moradia</option>
+                <option value="investimento">Investimento</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="lead-estagio-imovel">Imóvel pronto ou na planta</Label>
+            <select
+              id="lead-estagio-imovel"
+              value={values.estagio_imovel ?? ""}
+              onChange={(e) =>
+                setValues({
+                  ...values,
+                  estagio_imovel: (e.target.value || null) as LeadFormValues["estagio_imovel"],
+                })
+              }
+              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+            >
+              <option value="">Não informado</option>
+              <option value="pronto">Pronto</option>
+              <option value="planta">Na planta</option>
+            </select>
+          </div>
+
+          <label
+            htmlFor="lead-doc"
+            className="flex items-start gap-3 rounded-lg border border-border bg-muted/40 p-3"
+          >
+            <input
+              id="lead-doc"
+              type="checkbox"
+              className="mt-0.5 h-4 w-4 accent-[hsl(var(--primary))]"
+              checked={values.documentacao_ok}
+              onChange={(e) =>
+                setValues({
+                  ...values,
+                  documentacao_ok: e.target.checked,
+                  stage:
+                    e.target.checked && values.stage !== "documentacao" && values.stage !== "fechamento"
+                      ? "documentacao"
+                      : values.stage,
+                })
+              }
+            />
+            <span className="text-sm">
+              <span className="font-medium">Documentação recebida</span>
+              <span className="block text-xs text-muted-foreground">
+                Ao marcar, o lead é movido automaticamente para a coluna Documentação.
+              </span>
+            </span>
+          </label>
+
           <div className="space-y-2">
             <Label htmlFor="lead-corretor">Corretor responsável</Label>
             <select
