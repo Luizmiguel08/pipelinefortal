@@ -219,6 +219,8 @@ function PipelinePage() {
       const stageFinal: StageId =
         values.documentacao_ok && values.stage !== "documentacao" && values.stage !== "fechamento"
           ? "documentacao"
+          : !values.documentacao_ok && values.stage === "documentacao"
+            ? "negociacao"
           : values.stage;
       queryClient.setQueryData<Board>(["board"], (old) =>
         old
