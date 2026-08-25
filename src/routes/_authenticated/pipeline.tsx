@@ -138,6 +138,10 @@ function PipelinePage() {
           stage: values.stage,
           corretor_id: values.corretor_id,
           observacoes: values.observacoes,
+          entrada: values.entrada,
+          finalidade: values.finalidade,
+          estagio_imovel: values.estagio_imovel,
+          documentacao_ok: values.documentacao_ok,
         },
       }),
     onSuccess: () => {
