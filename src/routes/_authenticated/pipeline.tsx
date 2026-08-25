@@ -158,10 +158,18 @@ function PipelinePage() {
 
   const leadsFiltrados = useMemo(() => {
     const termo = busca.trim().toLowerCase();
+    const inicioMs = dataInicio ? new Date(`${dataInicio}T00:00:00`).getTime() : null;
+    const fimMs = dataFim ? new Date(`${dataFim}T23:59:59.999`).getTime() : null;
     return (data?.leads ?? []).filter((l) => {
       if (corretorFiltro === "meus" && l.corretor_id !== meuCorretorId) return false;
       if (corretorFiltro !== "todos" && corretorFiltro !== "meus" && l.corretor_id !== corretorFiltro)
         return false;
+      if (inicioMs !== null || fimMs !== null) {
+        const ref = l.created_at ? new Date(l.created_at).getTime() : null;
+        if (ref === null || Number.isNaN(ref)) return false;
+        if (inicioMs !== null && ref < inicioMs) return false;
+        if (fimMs !== null && ref > fimMs) return false;
+      }
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
