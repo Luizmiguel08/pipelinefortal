@@ -409,10 +409,6 @@ function PipelinePage() {
                       {leadsColuna.length}
                     </span>
                   </div>
-                  <p className="sr-only">{formatBRL(totalColuna)}</p>
-                  <p className="hidden" style={{ color: stage.color }}>
-                    {formatBRL(totalColuna)}
-                  </p>
 
                   <div className="scroll-slim mt-3 flex max-h-[62vh] flex-col gap-2 overflow-y-auto pr-0.5">
                     {mostrados.map((lead) => (
