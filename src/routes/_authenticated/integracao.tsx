@@ -41,6 +41,8 @@ function IntegracaoPage() {
   const runTest = useServerFn(testC2SConnection);
   const fetchHistory = useServerFn(getSyncHistory);
   const runImportCorretores = useServerFn(importC2SCorretores);
+  const fetchAgendaRuns = useServerFn(getAgendaRuns);
+  const runAgendaSync = useServerFn(syncAgenda);
 
   const importar = useMutation({
     mutationFn: () => runImportCorretores(),
