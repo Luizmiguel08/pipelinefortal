@@ -391,7 +391,15 @@ function PipelinePage() {
                   onDrop={() => handleDrop(stage.id)}
                   className="panel flex w-[280px] shrink-0 flex-col p-3"
                 >
-                  <div className="stage-rail mb-3" style={{ backgroundColor: stage.color }} />
+                  <div
+                    className="mb-3 rounded-lg border border-border bg-surface-2 px-3 py-2 text-center"
+                    style={{ borderTop: `3px solid ${stage.color}` }}
+                  >
+                    <p className="text-[10px] uppercase tracking-wide text-muted-foreground">Acumulado</p>
+                    <p className="text-lg font-semibold leading-tight" style={{ color: stage.color }}>
+                      {formatBRL(totalColuna)}
+                    </p>
+                  </div>
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <h2 className="text-sm font-semibold">{stage.label}</h2>
@@ -401,7 +409,8 @@ function PipelinePage() {
                       {leadsColuna.length}
                     </span>
                   </div>
-                  <p className="mt-2 text-base font-semibold" style={{ color: stage.color }}>
+                  <p className="sr-only">{formatBRL(totalColuna)}</p>
+                  <p className="hidden" style={{ color: stage.color }}>
                     {formatBRL(totalColuna)}
                   </p>
 
