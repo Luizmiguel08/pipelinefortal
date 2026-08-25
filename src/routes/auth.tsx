@@ -92,9 +92,9 @@ function AuthPage() {
           <img
             src={fortalLogo}
             alt="Fortal Pipeline"
-            width={192}
-            height={96}
-            className="h-12 w-auto object-contain"
+            width={320}
+            height={160}
+            className="h-28 w-auto object-contain"
           />
         </div>
         <h1 className="text-center text-2xl font-semibold">Bem-vindo ao Fortal Pipeline</h1>
