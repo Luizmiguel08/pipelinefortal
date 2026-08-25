@@ -141,7 +141,6 @@ function PipelinePage() {
   const [dataInicio, setDataInicio] = useState("");
   const [dataFim, setDataFim] = useState("");
   const [buscaInput, setBuscaInput] = useState("");
-  const [soPendentes, setSoPendentes] = useState(false);
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -274,15 +273,10 @@ function PipelinePage() {
         if (inicioMs !== null && ref < inicioMs) return false;
         if (fimMs !== null && ref > fimMs) return false;
       }
-      if (soPendentes) {
-        const r = ligacoesHoje?.[l.id];
-        const feitas = (r?.manha ?? 0) > 0 && (r?.tarde ?? 0) > 0;
-        if (r?.atendeu || feitas) return false;
-      }
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
-  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim, soPendentes, ligacoesHoje]);
+  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim]);
 
   // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
   const colunas = useMemo(() => {
@@ -392,19 +386,10 @@ function PipelinePage() {
                       {c.nome}
                     </option>
                   ))}
-                </select>
-              )}
+              </select>
+            )}
 
-              <Button
-                variant={soPendentes ? "default" : "outline"}
-                size="sm"
-                onClick={() => setSoPendentes((v) => !v)}
-                aria-pressed={soPendentes}
-              >
-                ☎ Faltam ligações hoje
-              </Button>
-
-              <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
+            <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
                 <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Período</span>
                 <Input
                   type="date"
@@ -512,7 +497,6 @@ function PipelinePage() {
                         corretorNome={lead.corretor_id ? nomePorCorretor.get(lead.corretor_id) : undefined}
                         showCorretor={corretorFiltro === "todos"}
                         agora={agora}
-                        ligacoes={ligacoesHoje?.[lead.id]}
                         onDragStart={setDragging}
                         onOpen={abrirLead}
                       />
