@@ -89,6 +89,27 @@ export type Database = {
         }
         Relationships: []
       }
+      integration_settings: {
+        Row: {
+          atualizado_em: string
+          atualizado_por: string | null
+          chave: string
+          valor: string
+        }
+        Insert: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          chave: string
+          valor: string
+        }
+        Update: {
+          atualizado_em?: string
+          atualizado_por?: string | null
+          chave?: string
+          valor?: string
+        }
+        Relationships: []
+      }
       lead_events: {
         Row: {
           created_at: string

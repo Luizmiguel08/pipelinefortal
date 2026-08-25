@@ -81,12 +81,25 @@ function extrairLista(json: unknown): unknown[] {
  * POST + Authorization: Bearer <segredo> e GET + x-sync-secret.
  */
 export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointment[]> {
-  const secret = process.env["AGENDA_SYNC_SECRET"];
-  if (!secret) throw new Error("AGENDA_SYNC_SECRET não configurado");
-  const base = (process.env["AGENDA_API_BASE_URL"] ?? BASE_PADRAO).replace(/\/+$/, "");
+  const { segredoAgenda, lerConfig, AGENDA_BASE_URL_KEY, AGENDA_PATH_KEY } = await import(
+    "./integration-settings.server"
+  );
+  const { valor: secret } = await segredoAgenda();
+  if (!secret)
+    throw new Error(
+      "Segredo da agenda não configurado. Abra Configurações da agenda e salve o AGENDA_SYNC_SECRET.",
+    );
+  const base = (
+    (await lerConfig(AGENDA_BASE_URL_KEY)) ??
+    process.env["AGENDA_API_BASE_URL"] ??
+    BASE_PADRAO
+  ).replace(/\/+$/, "");
   const caminho =
-    process.env["AGENDA_API_PATH"] ?? "/api/public/export-agendamentos";
+    (await lerConfig(AGENDA_PATH_KEY)) ??
+    process.env["AGENDA_API_PATH"] ??
+    "/api/public/export-agendamentos";
   const alvo = `${base}${caminho.startsWith("/") ? caminho : `/${caminho}`}`;
+
 
   const tentativas: Array<{ url: string; init: RequestInit }> = [
     {

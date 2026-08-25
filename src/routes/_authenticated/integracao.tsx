@@ -196,6 +196,13 @@ function IntegracaoPage() {
       <div className="panel mt-4 p-5">
         <div className="flex flex-wrap items-center gap-3">
           <h2 className="text-sm font-semibold">Agenda de visitas (Agendamento Pro)</h2>
+          <Link
+            to="/configuracoes-agenda"
+            className="text-xs text-muted-foreground underline hover:text-foreground"
+          >
+            Configurar segredo
+          </Link>
+
           <Button
             size="sm"
             variant="secondary"
