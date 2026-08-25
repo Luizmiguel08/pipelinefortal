@@ -215,12 +215,19 @@ function IntegracaoPage() {
                           backgroundColor:
                             e.status === "sucesso"
                               ? "var(--stage-fechamento)"
-                              : "var(--destructive)",
+                              : e.status === "rodando"
+                                ? "var(--stage-atendimento)"
+                                : "var(--destructive)",
                           color: "var(--primary-foreground)",
                         }}
                       >
-                        {e.status === "sucesso" ? "Sucesso" : "Erro"}
+                        {e.status === "sucesso"
+                          ? "Sucesso"
+                          : e.status === "rodando"
+                            ? "Em andamento"
+                            : "Erro"}
                       </span>
+
                       {e.erro && (
                         <p className="mt-1 max-w-xs text-xs text-muted-foreground">{e.erro}</p>
                       )}
