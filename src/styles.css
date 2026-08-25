@@ -89,6 +89,10 @@
   --stage-negociacao: oklch(0.79 0.152 79);
   --stage-documentacao: oklch(0.72 0.15 305);
   --stage-fechamento: oklch(0.73 0.16 150);
+  --stage-dia1: oklch(0.78 0.14 60);
+  --stage-dia2: oklch(0.72 0.16 40);
+  --stage-dia3: oklch(0.67 0.19 25);
+  --stage-fria: oklch(0.66 0.05 250);
   --chart-1: oklch(0.72 0.13 235);
   --chart-2: oklch(0.74 0.14 195);
   --chart-3: oklch(0.79 0.152 79);
