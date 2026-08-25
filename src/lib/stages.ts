@@ -86,11 +86,11 @@ export function relativeTime(iso: string | null) {
 }
 
 export type Qualificacao = {
-  valor?: number | null;
-  entrada?: number | null;
-  finalidade?: string | null;
-  estagio_imovel?: string | null;
-  documentacao_ok?: boolean | null;
+  valor?: number | null | undefined;
+  entrada?: number | null | undefined;
+  finalidade?: string | null | undefined;
+  estagio_imovel?: string | null | undefined;
+  documentacao_ok?: boolean | null | undefined;
 };
 
 /** Indicadores preenchidos = o corretor já qualificou o lead. */
