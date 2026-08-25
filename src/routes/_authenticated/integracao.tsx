@@ -16,13 +16,13 @@ import { STAGES } from "@/lib/stages";
 export const Route = createFileRoute("/_authenticated/integracao")({
   head: () => ({
     meta: [
-      { title: "Integração C2S — Sincronização de Leads | CRM Imobiliário" },
+      { title: "Integração C2S | Fortal Pipeline" },
       {
         name: "description",
         content:
-          "Configure e execute a sincronização de contatos do C2S - Gestão de Contatos com o pipeline dos corretores.",
+          "Configure e execute a sincronização de contatos do C2S - Gestão de Contatos com o funil dos corretores no Fortal Pipeline.",
       },
-      { property: "og:title", content: "Integração C2S — Sincronização de Leads" },
+      { property: "og:title", content: "Integração C2S | Fortal Pipeline" },
       {
         property: "og:description",
         content: "Traga os leads diários do C2S direto para o kanban de cada corretor.",

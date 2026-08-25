@@ -10,13 +10,13 @@ import { getEquipe, setCorretorEmail, vincularContas } from "@/lib/equipe.functi
 export const Route = createFileRoute("/_authenticated/equipe")({
   head: () => ({
     meta: [
-      { title: "Equipe e convites — CRM Imobiliário" },
+      { title: "Equipe e convites | Fortal Pipeline" },
       {
         name: "description",
         content:
-          "Cadastre o e-mail de cada corretor e envie o link de convite para que ele crie a conta e veja apenas os próprios leads.",
+          "Cadastre o e-mail de cada corretor e envie o link de convite para que ele crie a conta e veja apenas os próprios leads no Fortal Pipeline.",
       },
-      { property: "og:title", content: "Equipe e convites — CRM Imobiliário" },
+      { property: "og:title", content: "Equipe e convites | Fortal Pipeline" },
       {
         property: "og:description",
         content: "Convide corretores por link e acompanhe quais contas já estão vinculadas ao funil.",

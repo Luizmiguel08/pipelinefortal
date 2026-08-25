@@ -79,14 +79,26 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "CRM Imobiliário — Pipeline de Leads por Corretor" },
+      { title: "Fortal Pipeline — Gestão de Leads Imobiliários" },
       {
         name: "description",
         content:
-          "Kanban de leads por corretor com totais em R$ por etapa, sincronizado com o C2S - Gestão de Contatos.",
+          "Funil de leads por corretor com totais em R$ por etapa, sincronizado em tempo real com o C2S - Gestão de Contatos.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: "Fortal Pipeline — Gestão de Leads Imobiliários" },
+      {
+        property: "og:description",
+        content:
+          "Acompanhe leads novos, atendimento, negociação, documentação e fechamento de cada corretor em um kanban inteligente.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Fortal Pipeline — Gestão de Leads Imobiliários" },
+      {
+        name: "twitter:description",
+        content:
+          "Funil de leads por corretor com totais em R$ por etapa, sincronizado em tempo real com o C2S.",
+      },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -96,7 +108,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: "https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;500;600;700&display=swap",
       },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
     ],
   }),
 
