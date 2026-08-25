@@ -302,9 +302,9 @@ function PipelinePage() {
             <img
               src={fortalLogo}
               alt="Fortal Pipeline"
-              width={160}
-              height={80}
-              className="h-11 w-auto object-contain"
+              width={180}
+              height={90}
+              className="h-12 w-auto object-contain"
             />
           </div>
           <Input
