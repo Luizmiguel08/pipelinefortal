@@ -71,7 +71,7 @@ function PipelinePage() {
       finalidade: (r['finalidade'] as BoardLead["finalidade"]) ?? null,
       estagio_imovel: (r['estagio_imovel'] as BoardLead["estagio_imovel"]) ?? null,
       documentacao_ok: Boolean(r['documentacao_ok']),
-      stage_since: (r['stage']_since as string) ?? null,
+      stage_since: (r['stage_since'] as string) ?? null,
     });
 
     const channel = supabase
