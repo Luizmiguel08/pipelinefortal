@@ -255,7 +255,10 @@ export function LeadDialog({
           </DialogDescription>
         </DialogHeader>
 
+        {lead && <LigacoesLead leadId={lead.id} />}
+
         <div className="grid gap-4">
+
           <div className="space-y-2">
             <Label htmlFor="lead-nome">Cliente</Label>
             <Input
