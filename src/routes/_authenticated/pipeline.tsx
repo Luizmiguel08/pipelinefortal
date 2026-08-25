@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, syncNow, type Board, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
@@ -40,20 +40,20 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
-  const sync = useServerFn(syncNow);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
   const { data, isLoading } = useQuery({
     queryKey: ["board"],
+    // O tempo real já mantém o funil atualizado; a recarga completa é só rede de segurança.
     queryFn: () => fetchBoard(),
-    refetchInterval: 60_000,
-    refetchOnWindowFocus: true,
-    staleTime: 30_000,
+    refetchInterval: 5 * 60_000,
+    refetchOnWindowFocus: false,
+    staleTime: 2 * 60_000,
     placeholderData: (prev) => prev,
   });
 
-  // Tempo real: aplicamos a mudança direto no cache, sem recarregar o funil.
+  // Tempo real: aplicamos as mudanças direto no cache, em lotes, sem recarregar o funil.
   useEffect(() => {
     const normalizar = (r: Record<string, unknown>): BoardLead => ({
       id: String(r['id']),
@@ -77,54 +77,64 @@ function PipelinePage() {
       stage_since: (r['stage_since'] as string) ?? null,
     });
 
+    // Durante uma sincronização grande chegam centenas de eventos por segundo:
+    // acumulamos e aplicamos em blocos para a tela não travar.
+    const pendentes = new Map<string, BoardLead | null>();
+    let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const aplicar = () => {
+      timer = null;
+      if (pendentes.size === 0) return;
+      const lote = new Map(pendentes);
+      pendentes.clear();
+      queryClient.setQueryData<Board>(["board"], (old) => {
+        if (!old) return old;
+        const removidos = new Set<string>();
+        const atualizados = new Map<string, BoardLead>();
+        for (const [id, lead] of lote) {
+          if (lead === null) removidos.add(id);
+          else atualizados.set(id, lead);
+        }
+        const leads = old.leads
+          .filter((l) => !removidos.has(l.id))
+          .map((l) => {
+            const novo = atualizados.get(l.id);
+            if (!novo) return l;
+            atualizados.delete(l.id);
+            return { ...l, ...novo };
+          });
+        const novos = Array.from(atualizados.values());
+        return { ...old, leads: novos.length ? [...novos, ...leads] : leads };
+      });
+    };
+
+    const agendar = () => {
+      if (timer) return;
+      timer = setTimeout(aplicar, 400);
+    };
+
     const channel = supabase
       .channel("leads-tempo-real")
       .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, (payload) => {
-        queryClient.setQueryData<Board>(["board"], (old) => {
-          if (!old) return old;
-          if (payload.eventType === "DELETE") {
-            const id = (payload.old as { id?: string })?.id;
-            if (!id) return old;
-            return { ...old, leads: old.leads.filter((l) => l.id !== id) };
-          }
+        if (payload.eventType === "DELETE") {
+          const id = (payload.old as { id?: string })?.id;
+          if (id) pendentes.set(id, null);
+        } else {
           const novo = normalizar(payload.new as Record<string, unknown>);
-          const existe = old.leads.some((l) => l.id === novo.id);
-          return {
-            ...old,
-            leads: existe
-              ? old.leads.map((l) => (l.id === novo.id ? { ...l, ...novo } : l))
-              : [novo, ...old.leads],
-          };
-        });
+          pendentes.set(novo.id, novo);
+        }
+        agendar();
       })
       .subscribe();
     return () => {
+      if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
   }, [queryClient]);
 
+  // A sincronização com o C2S roda no servidor a cada minuto (rotina automática),
+  // por isso o navegador de cada corretor/gestor não dispara mais sync sozinho.
 
-
-  // Enquanto o gestor está com o funil aberto, buscamos novidades no C2S a cada minuto.
-  const isGestor = data?.isGestor ?? false;
-  useEffect(() => {
-    if (!isGestor) return;
-    let rodando = false;
-    const disparar = async () => {
-      if (rodando || document.hidden) return;
-      rodando = true;
-      try {
-        await sync({ data: { reconciliarMes: false } });
-      } catch {
-        // silencioso: o histórico em Integração mostra eventuais falhas
-      } finally {
-        rodando = false;
-      }
-    };
-    void disparar();
-    const id = setInterval(() => void disparar(), 60_000);
-    return () => clearInterval(id);
-  }, [isGestor, sync]);
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
