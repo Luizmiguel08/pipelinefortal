@@ -389,6 +389,8 @@ export function LeadDialog({
                   stage:
                     e.target.checked && values.stage !== "documentacao" && values.stage !== "fechamento"
                       ? "documentacao"
+                      : !e.target.checked && values.stage === "documentacao"
+                        ? "negociacao"
                       : values.stage,
                 })
               }
@@ -396,7 +398,7 @@ export function LeadDialog({
             <span className="text-sm">
               <span className="font-medium">Documentação recebida</span>
               <span className="block text-xs text-muted-foreground">
-                Ao marcar, o lead é movido automaticamente para a coluna Documentação.
+                Ao marcar, o lead vai para Documentação. Ao desmarcar, volta para Negociação.
               </span>
             </span>
           </label>

@@ -141,10 +141,12 @@ export const saveLead = createServerFn({ method: "POST" })
       finalidade: data.finalidade ?? null,
       estagio_imovel: data.estagio_imovel ?? null,
       documentacao_ok: Boolean(data.documentacao_ok),
-      // Regra: ao marcar documentação recebida, o lead vai direto para a coluna Documentação.
+      // Ao marcar, vai para Documentação; ao desmarcar nessa etapa, volta para Negociação.
       stage:
         data.documentacao_ok && data.stage !== "documentacao" && data.stage !== "fechamento"
           ? ("documentacao" as StageId)
+          : !data.documentacao_ok && data.stage === "documentacao"
+            ? ("negociacao" as StageId)
           : data.stage,
     };
     if (data.id) {
