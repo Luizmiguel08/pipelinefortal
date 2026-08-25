@@ -40,7 +40,8 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
         lead.estagio_imovel ||
         lead.documentacao_ok ||
         lead.visita_em ||
-        lead.visita_realizada) && (
+        lead.visita_realizada ||
+        lead.visita_status) && (
         <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
           {lead.entrada > 0 && (
             <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
