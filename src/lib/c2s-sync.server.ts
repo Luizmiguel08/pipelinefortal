@@ -130,9 +130,27 @@ export async function runC2SSync(origem: string = "manual", desde?: string): Pro
     total: 0,
   };
 
+  // Trava: com vários corretores logados e a rotina automática de 1 em 1 minuto,
+  // nunca deixamos duas sincronizações rodarem ao mesmo tempo (evita travar o C2S e o banco).
+  const { data: emAndamento } = await supabaseAdmin
+    .from("sync_runs")
+    .select("id")
+    .is("finished_at", null)
+    .gt("started_at", new Date(Date.now() - 5 * 60 * 1000).toISOString())
+    .limit(1);
+  if (emAndamento && emAndamento.length > 0) return result;
+
+  const { data: corrida } = await supabaseAdmin
+    .from("sync_runs")
+    .insert({ started_at: startedAt.toISOString(), status: "rodando", origem })
+    .select("id")
+    .single();
+  const corridaId = corrida?.id ?? null;
+
   const registrar = async (status: "sucesso" | "erro", erro?: string) => {
-    await supabaseAdmin.from("sync_runs").insert({
+    const linha = {
       started_at: startedAt.toISOString(),
+
       finished_at: new Date().toISOString(),
       duracao_ms: Date.now() - startedAt.getTime(),
       status,
