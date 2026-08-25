@@ -76,6 +76,9 @@ function PipelinePage() {
       documentacao_ok: Boolean(r['documentacao_ok']),
       visita_em: (r['visita_em'] as string) ?? null,
       visita_realizada: Boolean(r['visita_realizada']),
+      visita_status: (r['visita_status'] as BoardLead["visita_status"]) ?? null,
+      visita_motivo: (r['visita_motivo'] as string) ?? null,
+      visita_projeto: (r['visita_projeto'] as string) ?? null,
       stage_since: (r['stage_since'] as string) ?? null,
     });
 

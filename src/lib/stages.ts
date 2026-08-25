@@ -2,6 +2,7 @@ export const STAGES = [
   { id: "novo", label: "Lead novo", hint: "Responder em até 5 min", color: "var(--stage-novo)" },
   { id: "atendimento", label: "Em atendimento", hint: "Avanço em até 1 dia", color: "var(--stage-atendimento)" },
   { id: "visita", label: "Visita agendada", hint: "Agendamento e visita ao imóvel", color: "var(--stage-visita)" },
+  { id: "visita_realizada", label: "Visita realizada", hint: "Cliente compareceu à visita", color: "var(--stage-visita-realizada)" },
   { id: "dia1", label: "Dia 1", hint: "Sem retorno há 1 dia", color: "var(--stage-dia1)" },
   { id: "dia2", label: "Dia 2", hint: "Sem retorno há 2 dias", color: "var(--stage-dia2)" },
   { id: "dia3", label: "Dia 3", hint: "Sem retorno há 3 dias", color: "var(--stage-dia3)" },
@@ -135,9 +136,10 @@ export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
   if (q.documentacao_ok && stage !== "documentacao" && stage !== "fechamento") return "documentacao";
   if (!q.documentacao_ok && stage === "documentacao") return "negociacao";
   const frias = ETAPAS_FRIAS;
-  // Visita agendada (ou já realizada) tem prioridade sobre "Em atendimento".
-  if ((q.visita_em || q.visita_realizada) && (frias.includes(stage) || stage === "atendimento"))
-    return "visita";
+  const moveVisita = frias.includes(stage) || stage === "atendimento" || stage === "visita";
+  // Visita realizada tem prioridade sobre a visita apenas agendada.
+  if (q.visita_realizada && moveVisita) return "visita_realizada";
+  if (q.visita_em && moveVisita) return "visita";
   if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
   return stage;
 }

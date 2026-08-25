@@ -10,6 +10,8 @@ import {
   testC2SConnection,
   importC2SCorretores,
 } from "@/lib/crm.functions";
+import { getAgendaRuns, syncAgenda } from "@/lib/agenda.functions";
+
 
 import { STAGES } from "@/lib/stages";
 
@@ -39,6 +41,8 @@ function IntegracaoPage() {
   const runTest = useServerFn(testC2SConnection);
   const fetchHistory = useServerFn(getSyncHistory);
   const runImportCorretores = useServerFn(importC2SCorretores);
+  const fetchAgendaRuns = useServerFn(getAgendaRuns);
+  const runAgendaSync = useServerFn(syncAgenda);
 
   const importar = useMutation({
     mutationFn: () => runImportCorretores(),
@@ -62,6 +66,22 @@ function IntegracaoPage() {
   const { data: history } = useQuery({
     queryKey: ["c2s-history"],
     queryFn: () => fetchHistory(),
+  });
+  const { data: agendaRuns } = useQuery({
+    queryKey: ["agenda-runs"],
+    queryFn: () => fetchAgendaRuns(),
+  });
+  const syncAgendaMut = useMutation({
+    mutationFn: () => runAgendaSync(),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["board"] });
+      queryClient.invalidateQueries({ queryKey: ["agenda-runs"] });
+    },
+    onSuccess: (r) =>
+      toast.success(
+        `Agenda sincronizada: ${r.total} agendamentos (${r.criados} novos, ${r.atualizados} atualizados)`,
+      ),
+    onError: (e: Error) => toast.error(e.message),
   });
 
 
@@ -171,6 +191,64 @@ function IntegracaoPage() {
             </span>
           )}
         </div>
+      </div>
+
+      <div className="panel mt-4 p-5">
+        <div className="flex flex-wrap items-center gap-3">
+          <h2 className="text-sm font-semibold">Agenda de visitas (Agendamento Pro)</h2>
+          <Button
+            size="sm"
+            variant="secondary"
+            className="ml-auto"
+            disabled={!data?.isGestor || syncAgendaMut.isPending}
+            onClick={() => syncAgendaMut.mutate()}
+          >
+            {syncAgendaMut.isPending ? "Sincronizando agenda..." : "Sincronizar agenda agora"}
+          </Button>
+        </div>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Agendamentos, visitas realizadas e desmarcações são puxados a cada minuto e cruzados com
+          os leads do C2S por telefone ou nome. Sem correspondência, o lead é criado com origem
+          Agenda.
+        </p>
+        {agendaRuns && agendaRuns.length > 0 && (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="text-left text-xs uppercase tracking-wide text-muted-foreground">
+                  <th className="pb-2 pr-4 font-medium">Data/hora</th>
+                  <th className="pb-2 pr-4 font-medium">Status</th>
+                  <th className="pb-2 pr-4 font-medium">Agendamentos</th>
+                  <th className="pb-2 pr-4 font-medium">Novos</th>
+                  <th className="pb-2 font-medium">Atualizados</th>
+                </tr>
+              </thead>
+              <tbody>
+                {agendaRuns.map((r) => (
+                  <tr key={r.id} className="border-t border-border align-top">
+                    <td className="py-2 pr-4 whitespace-nowrap">
+                      {new Date(r.started_at).toLocaleString("pt-BR")}
+                    </td>
+                    <td className="py-2 pr-4">
+                      {r.status === "erro" ? (
+                        <span className="text-destructive" title={r.erro ?? ""}>
+                          Erro
+                        </span>
+                      ) : r.status === "sucesso" ? (
+                        "Sucesso"
+                      ) : (
+                        "Em andamento"
+                      )}
+                    </td>
+                    <td className="py-2 pr-4">{r.total}</td>
+                    <td className="py-2 pr-4">{r.criados}</td>
+                    <td className="py-2">{r.atualizados}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
 
       <div className="panel mt-4 p-5">
