@@ -196,6 +196,7 @@ function PipelinePage() {
           finalidade: values.finalidade,
           estagio_imovel: values.estagio_imovel,
           documentacao_ok: values.documentacao_ok,
+          forcar_stage: values.forcar_stage,
         },
       }),
     // Atualização otimista: o card muda de coluna na hora (ex.: documentação recebida).
