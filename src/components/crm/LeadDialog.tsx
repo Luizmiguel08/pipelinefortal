@@ -78,6 +78,10 @@ export function LeadDialog({
             stage: lead.stage,
             corretor_id: lead.corretor_id,
             observacoes: lead.observacoes ?? "",
+            entrada: lead.entrada ?? 0,
+            finalidade: lead.finalidade ?? null,
+            estagio_imovel: lead.estagio_imovel ?? null,
+            documentacao_ok: Boolean(lead.documentacao_ok),
           }
         : { ...empty, corretor_id: defaultCorretorId },
     );
