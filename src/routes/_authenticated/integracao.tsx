@@ -63,6 +63,22 @@ function IntegracaoPage() {
     queryKey: ["c2s-history"],
     queryFn: () => fetchHistory(),
   });
+  const { data: agendaRuns } = useQuery({
+    queryKey: ["agenda-runs"],
+    queryFn: () => fetchAgendaRuns(),
+  });
+  const syncAgendaMut = useMutation({
+    mutationFn: () => runAgendaSync(),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["board"] });
+      queryClient.invalidateQueries({ queryKey: ["agenda-runs"] });
+    },
+    onSuccess: (r) =>
+      toast.success(
+        `Agenda sincronizada: ${r.total} agendamentos (${r.criados} novos, ${r.atualizados} atualizados)`,
+      ),
+    onError: (e: Error) => toast.error(e.message),
+  });
 
 
   const sync = useMutation({
