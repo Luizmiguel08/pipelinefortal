@@ -235,6 +235,40 @@ function PipelinePage() {
             </select>
           )}
 
+          <div className="flex items-center gap-1.5 rounded-md border border-input bg-background px-2 py-1">
+            <span className="text-[11px] font-medium uppercase tracking-wide text-muted-foreground">Período</span>
+            <Input
+              type="date"
+              aria-label="Data inicial"
+              value={dataInicio}
+              max={dataFim || undefined}
+              onChange={(e) => setDataInicio(e.target.value)}
+              className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
+            />
+            <span className="text-xs text-muted-foreground">até</span>
+            <Input
+              type="date"
+              aria-label="Data final"
+              value={dataFim}
+              min={dataInicio || undefined}
+              onChange={(e) => setDataFim(e.target.value)}
+              className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
+            />
+            {(dataInicio || dataFim) && (
+              <Button
+                variant="ghost"
+                className="h-7 px-2 text-xs"
+                onClick={() => {
+                  setDataInicio("");
+                  setDataFim("");
+                }}
+              >
+                Limpar
+              </Button>
+            )}
+          </div>
+
+
           <Button
             onClick={() => {
               setLeadAtual(null);
