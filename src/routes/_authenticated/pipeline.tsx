@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -8,8 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, syncNow, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, syncNow, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
+
+// Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
+const PAGINA_COLUNA = 25;
 
 export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => ({
@@ -92,6 +95,7 @@ function PipelinePage() {
   const [dragging, setDragging] = useState<BoardLead | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
+  const [visiveis, setVisiveis] = useState<Partial<Record<StageId, number>>>({});
 
   // Busca com debounce: digitar não re-renderiza milhares de cards a cada tecla.
   useEffect(() => {
@@ -161,17 +165,29 @@ function PipelinePage() {
     });
   }, [data?.leads, corretorFiltro, busca, meuCorretorId]);
 
+  // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
+  const colunas = useMemo(() => {
+    const mapa = Object.fromEntries(STAGES.map((s) => [s.id, [] as BoardLead[]])) as Record<StageId, BoardLead[]>;
+    for (const lead of leadsFiltrados) mapa[lead.stage]?.push(lead);
+    return mapa;
+  }, [leadsFiltrados]);
 
   const totalGeral = leadsFiltrados.reduce((acc, l) => acc + l.valor, 0);
   const emAndamento = leadsFiltrados
     .filter((l) => l.stage !== "fechamento")
     .reduce((acc, l) => acc + l.valor, 0);
 
+  const abrirLead = useCallback((l: BoardLead) => {
+    setLeadAtual(l);
+    setDialogOpen(true);
+  }, []);
+
   function handleDrop(stage: StageId) {
     if (!dragging || dragging.stage === stage) return setDragging(null);
     moveMutation.mutate({ id: dragging.id, stage });
     setDragging(null);
   }
+
 
   async function sair() {
     await supabase.auth.signOut();
@@ -188,8 +204,8 @@ function PipelinePage() {
             <h1 className="text-lg font-semibold">Pipeline de leads</h1>
           </div>
           <Input
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
+            value={buscaInput}
+            onChange={(e) => setBuscaInput(e.target.value)}
             placeholder="Buscar cliente ou imóvel"
             className="h-9 w-56"
           />
