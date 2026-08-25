@@ -90,6 +90,7 @@ export type Database = {
           c2s_contact_id: string | null
           corretor_id: string | null
           created_at: string
+          data_c2s: string | null
           email: string | null
           id: string
           imovel: string | null
@@ -107,6 +108,7 @@ export type Database = {
           c2s_contact_id?: string | null
           corretor_id?: string | null
           created_at?: string
+          data_c2s?: string | null
           email?: string | null
           id?: string
           imovel?: string | null
@@ -124,6 +126,7 @@ export type Database = {
           c2s_contact_id?: string | null
           corretor_id?: string | null
           created_at?: string
+          data_c2s?: string | null
           email?: string | null
           id?: string
           imovel?: string | null
