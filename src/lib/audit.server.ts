@@ -30,7 +30,7 @@ type LeadRow = {
   id: string;
   c2s_contact_id: string | null;
   corretor_id: string | null;
-  created_at: string;
+  data_c2s: string | null;
 };
 
 async function carregarLeads(supabase: SupabaseClient, desde: string): Promise<LeadRow[]> {
@@ -39,9 +39,9 @@ async function carregarLeads(supabase: SupabaseClient, desde: string): Promise<L
   for (let inicio = 0; ; inicio += pagina) {
     const { data, error } = await supabase
       .from("leads")
-      .select("id, c2s_contact_id, corretor_id, created_at")
-      .gte("created_at", desde)
-      .order("created_at", { ascending: false })
+      .select("id, c2s_contact_id, corretor_id, data_c2s")
+      .gte("data_c2s", desde)
+      .order("data_c2s", { ascending: false })
       .range(inicio, inicio + pagina - 1);
     if (error) throw new Error(error.message);
     const lote = (data ?? []) as LeadRow[];

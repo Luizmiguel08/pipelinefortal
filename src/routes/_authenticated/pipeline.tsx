@@ -76,7 +76,7 @@ function PipelinePage() {
       if (rodando || document.hidden) return;
       rodando = true;
       try {
-        await sync();
+        await sync({ data: { reconciliarMes: false } });
       } catch {
         // silencioso: o histórico em Integração mostra eventuais falhas
       } finally {
