@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { getEquipe, setCorretorEmail, vincularContas } from "@/lib/equipe.functions";
 
+const URL_PUBLICA = "https://pipelinefortal.lovable.app";
+
 export const Route = createFileRoute("/_authenticated/equipe")({
   head: () => ({
     meta: [
@@ -49,8 +51,6 @@ function EquipePage() {
 
   const { data, isLoading } = useQuery({ queryKey: ["equipe"], queryFn: () => buscar() });
 
-  const origem = typeof window !== "undefined" ? window.location.origin : "";
-
   const mutSalvar = useMutation({
     mutationFn: (vars: { id: string; email: string }) => salvarEmail({ data: vars }),
     onSuccess: (r) => {
@@ -79,7 +79,7 @@ function EquipePage() {
   }, [corretores, busca]);
 
   const linkConvite = (email: string | null) =>
-    `${origem}/auth?convite=1${email ? `&email=${encodeURIComponent(email)}` : ""}`;
+    `${URL_PUBLICA}/auth?convite=1${email ? `&email=${encodeURIComponent(email)}` : ""}`;
 
   async function copiar(texto: string) {
     try {
