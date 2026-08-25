@@ -23,6 +23,30 @@ function LeadCardBase({ lead, corretorNome, showCorretor, onOpen, onDragStart }:
         <span className="shrink-0 text-sm font-semibold text-primary">{formatBRL(lead.valor)}</span>
       </div>
       {lead.imovel && <p className="mt-1 text-xs text-muted-foreground">{lead.imovel}</p>}
+      {(lead.entrada > 0 || lead.finalidade || lead.estagio_imovel || lead.documentacao_ok) && (
+        <div className="mt-2 flex flex-wrap items-center gap-1.5 text-[11px]">
+          {lead.entrada > 0 && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
+              Entrada {formatBRL(lead.entrada)}
+            </span>
+          )}
+          {lead.finalidade && (
+            <span className="rounded-full bg-muted px-2 py-0.5 capitalize text-muted-foreground">
+              {lead.finalidade}
+            </span>
+          )}
+          {lead.estagio_imovel && (
+            <span className="rounded-full bg-muted px-2 py-0.5 text-muted-foreground">
+              {lead.estagio_imovel === "pronto" ? "Pronto" : "Na planta"}
+            </span>
+          )}
+          {lead.documentacao_ok && (
+            <span className="rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary">
+              Documentação OK
+            </span>
+          )}
+        </div>
+      )}
       <div className="mt-3 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground">
         {showCorretor && corretorNome && (
           <span className="rounded-full bg-secondary px-2 py-0.5 font-medium text-secondary-foreground">
