@@ -91,22 +91,18 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
       last_synced_at: new Date().toISOString(),
     };
 
-    // Regra do time: Negociação exige proposta com valor (R$) preenchido.
-    const semValor = !(contato.valor > 0);
-    const ajustar = (s: StageId): StageId => (s === "negociacao" && semValor ? "atendimento" : s);
-
+    // Regra do time: o C2S nunca move o lead de coluna.
+    // Novo lead entra sempre em "novo"; a etapa só muda manualmente dentro do CRM.
     if (!existente) {
-      novos.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: ajustar(contato.stage) });
+      novos.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: "novo" as StageId });
       result.criados += 1;
       continue;
     }
 
-    // O lead nunca volta de etapa: mantemos a fase mais avançada entre C2S e painel.
-    const atual = existente.stage;
-    const proxima = ajustar(rank(contato.stage) > rank(atual) ? contato.stage : atual);
-    atualizados.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: proxima });
+    // Atualiza somente dados do contato, preservando a etapa definida no painel.
+    atualizados.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: existente.stage });
     result.atualizados += 1;
-    if (proxima !== atual) result.movidos += 1;
+
 
   }
 
