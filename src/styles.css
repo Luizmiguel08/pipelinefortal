@@ -40,6 +40,10 @@
   --color-stage-negociacao: var(--stage-negociacao);
   --color-stage-documentacao: var(--stage-documentacao);
   --color-stage-fechamento: var(--stage-fechamento);
+  --color-stage-dia1: var(--stage-dia1);
+  --color-stage-dia2: var(--stage-dia2);
+  --color-stage-dia3: var(--stage-dia3);
+  --color-stage-fria: var(--stage-fria);
   --color-chart-1: var(--chart-1);
   --color-chart-2: var(--chart-2);
   --color-chart-3: var(--chart-3);
