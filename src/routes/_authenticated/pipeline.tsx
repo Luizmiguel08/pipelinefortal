@@ -150,12 +150,54 @@ function PipelinePage() {
           documentacao_ok: values.documentacao_ok,
         },
       }),
-    onSuccess: () => {
-      toast.success("Lead salvo");
+    // Atualização otimista: o card muda de coluna na hora (ex.: documentação recebida).
+    onMutate: async (values) => {
       setDialogOpen(false);
-      queryClient.invalidateQueries({ queryKey: ["board"] });
+      if (!values.id) return { anterior: undefined };
+      await queryClient.cancelQueries({ queryKey: ["board"] });
+      const anterior = queryClient.getQueryData<Board>(["board"]);
+      const stageFinal: StageId =
+        values.documentacao_ok && values.stage !== "documentacao" && values.stage !== "fechamento"
+          ? "documentacao"
+          : values.stage;
+      queryClient.setQueryData<Board>(["board"], (old) =>
+        old
+          ? {
+              ...old,
+              leads: old.leads.map((l) =>
+                l.id === values.id
+                  ? {
+                      ...l,
+                      nome: values.nome,
+                      telefone: values.telefone ?? null,
+                      email: values.email ?? null,
+                      imovel: values.imovel ?? null,
+                      valor: values.valor,
+                      corretor_id: values.corretor_id,
+                      observacoes: values.observacoes ?? null,
+                      entrada: values.entrada ?? 0,
+                      finalidade: values.finalidade ?? null,
+                      estagio_imovel: values.estagio_imovel ?? null,
+                      documentacao_ok: Boolean(values.documentacao_ok),
+                      stage: stageFinal,
+                      stage_since: l.stage === stageFinal ? l.stage_since : new Date().toISOString(),
+                    }
+                  : l,
+              ),
+            }
+          : old,
+      );
+      return { anterior };
     },
-    onError: (e: Error) => toast.error(e.message),
+    onSuccess: (_r, values) => {
+      toast.success("Lead salvo");
+      // Só recarregamos o funil inteiro quando o lead é novo; edições já foram aplicadas localmente.
+      if (!values.id) queryClient.invalidateQueries({ queryKey: ["board"] });
+    },
+    onError: (e: Error, _values, ctx) => {
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      toast.error(e.message);
+    },
   });
 
   const corretores = data?.corretores ?? [];
