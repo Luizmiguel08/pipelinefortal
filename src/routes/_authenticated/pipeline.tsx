@@ -10,7 +10,6 @@ import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { STAGES, formatBRL, formatCompactBRL, type StageId } from "@/lib/stages";
-import { getLigacoesHoje } from "@/lib/calls.functions";
 import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -41,7 +40,6 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
-  const fetchLigacoes = useServerFn(getLigacoesHoje);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
@@ -52,15 +50,6 @@ function PipelinePage() {
     refetchInterval: 5 * 60_000,
     refetchOnWindowFocus: false,
     staleTime: 2 * 60_000,
-    placeholderData: (prev) => prev,
-  });
-
-  // Meta diária de contato: 2 ligações (manhã e tarde) por lead até o cliente atender.
-  const { data: ligacoesHoje } = useQuery({
-    queryKey: ["ligacoes-hoje"],
-    queryFn: () => fetchLigacoes(),
-    refetchInterval: 60_000,
-    staleTime: 30_000,
     placeholderData: (prev) => prev,
   });
 
