@@ -67,6 +67,14 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
               Visita realizada
             </span>
           )}
+          {lead.visita_status === "desmarcado" && (
+            <span
+              className="rounded-full bg-destructive/10 px-2 py-0.5 font-medium text-destructive"
+              title={lead.visita_motivo ?? undefined}
+            >
+              Desmarcou{lead.visita_motivo ? ` · ${lead.visita_motivo}` : ""}
+            </span>
+          )}
           {lead.documentacao_ok && (
             <span className="rounded-full bg-primary/10 px-2 py-0.5 font-medium text-primary">
               Documentação OK
