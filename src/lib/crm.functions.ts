@@ -137,6 +137,15 @@ export const saveLead = createServerFn({ method: "POST" })
       stage: data.stage,
       corretor_id: data.corretor_id,
       observacoes: data.observacoes ?? null,
+      entrada: Number(data.entrada) || 0,
+      finalidade: data.finalidade ?? null,
+      estagio_imovel: data.estagio_imovel ?? null,
+      documentacao_ok: Boolean(data.documentacao_ok),
+      // Regra: ao marcar documentação recebida, o lead vai direto para a coluna Documentação.
+      stage:
+        data.documentacao_ok && data.stage !== "documentacao" && data.stage !== "fechamento"
+          ? ("documentacao" as StageId)
+          : data.stage,
     };
     if (data.id) {
       const { error } = await context.supabase.from("leads").update(payload).eq("id", data.id);
