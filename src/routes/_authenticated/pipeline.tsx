@@ -454,8 +454,8 @@ function PipelinePage() {
       <main className="mx-auto max-w-[1600px] px-5 py-6">
         <section className="grid gap-3 sm:grid-cols-3">
           <FunnelSummaryCard
-            total={leadsFiltrados.length}
-            colunas={colunas}
+            total={totalLeads}
+            resumo={resumoPorEtapa}
           />
           <SummaryCard label="Em andamento" value={formatBRL(emAndamento)} hint="Exclui a coluna Fechamento" />
           <SummaryCard label="Volume total" value={formatBRL(totalGeral)} hint="Somatório de todas as colunas" />
@@ -464,8 +464,9 @@ function PipelinePage() {
         {corretorFiltro === "todos" && data?.isGestor && corretores.length > 0 && (
           <section className="mt-4 flex flex-wrap gap-2">
             {corretores.map((c) => {
-              const leadsDoCorretor = leadsFiltrados.filter((l) => l.corretor_id === c.id);
-              const total = leadsDoCorretor.reduce((acc, l) => acc + l.valor, 0);
+              const agregado = (data?.porCorretor ?? []).find((r) => r.corretor_id === c.id);
+              const total = agregado?.soma ?? 0;
+              const qtd = agregado?.total ?? 0;
               return (
                 <button
                   key={c.id}
@@ -474,7 +475,7 @@ function PipelinePage() {
                 >
                   <span className="font-semibold">{c.nome}</span>
                   <span className="ml-2 text-muted-foreground">
-                    {leadsDoCorretor.length} leads · {formatCompactBRL(total)}
+                    {qtd} leads · {formatCompactBRL(total)}
                   </span>
                 </button>
               );
@@ -496,9 +497,10 @@ function PipelinePage() {
           >
             {STAGES.map((stage) => {
               const leadsColuna = colunas[stage.id];
-              const totalColuna = leadsColuna.reduce((acc, l) => acc + l.valor, 0);
-              const limite = visiveis[stage.id] ?? PAGINA_COLUNA;
-              const mostrados = leadsColuna.slice(0, limite);
+              const agregado = resumoPorEtapa[stage.id] ?? { total: 0, soma: 0 };
+              const totalColuna = agregado.soma;
+              const mostrados = leadsColuna;
+              const restantes = Math.max(0, agregado.total - mostrados.length);
               return (
                 <section
                   key={stage.id}
@@ -521,7 +523,7 @@ function PipelinePage() {
                       <p className="text-[11px] text-muted-foreground">{stage.hint}</p>
                     </div>
                     <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
-                      {leadsColuna.length}
+                      {agregado.total}
                     </span>
                   </div>
 
@@ -538,18 +540,17 @@ function PipelinePage() {
                         onOpen={abrirLead}
                       />
                     ))}
-                    {leadsColuna.length > mostrados.length && (
+                    {restantes > 0 && (
                       <Button
                         variant="secondary"
                         className="h-8 text-xs"
-                        onClick={() =>
-                          setVisiveis((v) => ({ ...v, [stage.id]: (v[stage.id] ?? PAGINA_COLUNA) + PAGINA_COLUNA }))
-                        }
+                        disabled={carregandoMais === stage.id}
+                        onClick={() => carregarMais(stage.id)}
                       >
-                        Carregar mais ({leadsColuna.length - mostrados.length} restantes)
+                        {carregandoMais === stage.id ? "Carregando..." : `Carregar mais (${restantes} restantes)`}
                       </Button>
                     )}
-                    {leadsColuna.length === 0 && (
+                    {agregado.total === 0 && (
                       <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
                         Arraste um lead para cá
                       </p>
@@ -588,10 +589,10 @@ function SummaryCard({ label, value, hint }: { label: string; value: string; hin
 
 function FunnelSummaryCard({
   total,
-  colunas,
+  resumo,
 }: {
   total: number;
-  colunas: Record<StageId, BoardLead[]>;
+  resumo: Record<StageId, { total: number; soma: number }>;
 }) {
   return (
     <div className="panel p-4">
@@ -599,7 +600,7 @@ function FunnelSummaryCard({
       <p className="mt-1 text-2xl font-semibold">{total}</p>
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
         {STAGES.map((stage) => {
-          const count = colunas[stage.id].length;
+          const count = resumo[stage.id]?.total ?? 0;
           if (count === 0) return null;
           return (
             <span
