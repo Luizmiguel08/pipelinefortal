@@ -102,7 +102,14 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
     }
 
     // Atualiza somente dados do contato, preservando a etapa definida no painel.
-    atualizados.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: existente.stage });
+    // O valor da negociação digitado pelo corretor no funil nunca é zerado pelo C2S:
+    // só sobrescrevemos quando o C2S traz um valor maior que zero.
+    atualizados.push({
+      ...base,
+      valor: Number(contato.valor) > 0 ? contato.valor : existente.valor,
+      c2s_contact_id: contato.c2s_contact_id,
+      stage: existente.stage,
+    });
     result.atualizados += 1;
 
 
