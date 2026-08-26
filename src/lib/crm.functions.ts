@@ -178,21 +178,23 @@ export const getBoard = createServerFn({ method: "GET" })
             encontrado_c2s: a.encontrado_c2s,
             corretor_agenda_nome: a.corretor_nome,
           };
-          const registros: BoardLead[] = [{
+          // Cada agendamento gera exatamente um card e avança pela sequência do funil:
+          // Agendado -> Visita realizada -> Documentação. Antes, uma visita realizada
+          // mantinha também o card em Agendado, duplicando clientes (especialmente Jean).
+          const stage: StageId = vinculado?.documentacao_ok
+            ? "documentacao"
+            : a.status === "realizado"
+              ? "visita_realizada"
+              : "visita";
+          return [{
             ...base,
-            id: `agenda:${a.id}:agendado`,
-            stage: "visita",
-            data_c2s: dataCsRef,
+            id: `agenda:${a.id}:${stage}`,
+            stage,
+            data_c2s:
+              stage === "visita"
+                ? dataCsRef
+                : a.visita_em ?? a.agenda_atualizado_em ?? a.created_at,
           }];
-          if (a.status === "realizado") {
-            registros.push({
-              ...base,
-              id: `agenda:${a.id}:realizado`,
-              stage: "visita_realizada",
-              data_c2s: a.visita_em ?? a.agenda_atualizado_em ?? a.created_at,
-            });
-          }
-          return registros;
         }),
       ],
     };
