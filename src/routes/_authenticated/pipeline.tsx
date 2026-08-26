@@ -449,7 +449,10 @@ function PipelinePage() {
 
       <main className="mx-auto max-w-[1600px] px-5 py-6">
         <section className="grid gap-3 sm:grid-cols-3">
-          <SummaryCard label="Leads no funil" value={String(leadsFiltrados.length)} hint="Após filtros aplicados" />
+          <FunnelSummaryCard
+            total={leadsFiltrados.length}
+            colunas={colunas}
+          />
           <SummaryCard label="Em andamento" value={formatBRL(emAndamento)} hint="Exclui a coluna Fechamento" />
           <SummaryCard label="Volume total" value={formatBRL(totalGeral)} hint="Somatório de todas as colunas" />
         </section>
@@ -575,6 +578,40 @@ function SummaryCard({ label, value, hint }: { label: string; value: string; hin
       <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
       <p className="mt-1 text-2xl font-semibold">{value}</p>
       <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>
+    </div>
+  );
+}
+
+function FunnelSummaryCard({
+  total,
+  colunas,
+}: {
+  total: number;
+  colunas: Record<StageId, BoardLead[]>;
+}) {
+  return (
+    <div className="panel p-4">
+      <p className="text-xs uppercase tracking-wide text-muted-foreground">Leads no funil</p>
+      <p className="mt-1 text-2xl font-semibold">{total}</p>
+      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
+        {STAGES.map((stage) => {
+          const count = colunas[stage.id].length;
+          if (count === 0) return null;
+          return (
+            <span
+              key={stage.id}
+              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"
+            >
+              <span
+                className="inline-block h-2 w-2 rounded-full"
+                style={{ backgroundColor: stage.color }}
+              />
+              {stage.label}: <span className="font-medium text-foreground">{count}</span>
+            </span>
+          );
+        })}
+      </div>
+      <p className="mt-1 text-[11px] text-muted-foreground">Após filtros aplicados</p>
     </div>
   );
 }
