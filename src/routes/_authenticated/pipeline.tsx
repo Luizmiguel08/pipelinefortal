@@ -37,6 +37,42 @@ export const Route = createFileRoute("/_authenticated/pipeline")({
   component: PipelinePage,
 });
 
+function FunnelSummaryCard({
+  total,
+  colunas,
+}: {
+  total: number;
+  colunas: Record<StageId, BoardLead[]>;
+}) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-4">
+      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">Total de leads</p>
+      <p className="text-2xl font-bold">{total}</p>
+      <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
+        {STAGES.map((s) => {
+          const count = colunas[s.id]?.length ?? 0;
+          if (count === 0) return null;
+          return (
+            <span key={s.id} className="rounded-full bg-muted px-2 py-0.5">
+              {s.label}: {count}
+            </span>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function SummaryCard({ label, value, hint }: { label: string; value: string; hint: string }) {
+  return (
+    <div className="rounded-xl border border-border bg-card p-4">
+      <p className="text-[11px] uppercase tracking-wide text-muted-foreground">{label}</p>
+      <p className="text-2xl font-bold">{value}</p>
+      <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+    </div>
+  );
+}
+
 function PipelinePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -290,9 +326,12 @@ function PipelinePage() {
         // Assim um lead entrou hoje e movido para outra etapa continua contando uma única vez.
         const dataRef = l.data_c2s ?? l.created_at;
         const ref = dataRef ? new Date(dataRef).getTime() : null;
-        if (ref === null || Number.isNaN(ref)) return false;
-        if (inicioMs !== null && ref < inicioMs) return false;
-        if (fimMs !== null && ref > fimMs) return false;
+        // Se o lead não tem data de referência, incluímos mesmo assim para não ocultar
+        // contatos que ainda não foram sincronizados com uma data válida.
+        if (ref !== null && !Number.isNaN(ref)) {
+          if (inicioMs !== null && ref < inicioMs) return false;
+          if (fimMs !== null && ref > fimMs) return false;
+        }
       }
 
       if (!termo) return true;
@@ -586,7 +625,6 @@ function PipelinePage() {
               );
             })}
           </div>
-
         )}
       </main>
 
@@ -594,55 +632,11 @@ function PipelinePage() {
         open={dialogOpen}
         lead={leadAtual}
         corretores={corretores}
-        defaultCorretorId={corretorFiltro !== "todos" ? corretorFiltro : null}
+        defaultCorretorId={meuCorretorId}
         saving={saveMutation.isPending}
         onOpenChange={setDialogOpen}
         onSave={(values) => saveMutation.mutate(values)}
       />
-    </div>
-  );
-}
-
-function SummaryCard({ label, value, hint }: { label: string; value: string; hint: string }) {
-  return (
-    <div className="panel p-4">
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">{label}</p>
-      <p className="mt-1 text-2xl font-semibold">{value}</p>
-      <p className="mt-1 text-[11px] text-muted-foreground">{hint}</p>
-    </div>
-  );
-}
-
-function FunnelSummaryCard({
-  total,
-  colunas,
-}: {
-  total: number;
-  colunas: Record<StageId, BoardLead[]>;
-}) {
-  return (
-    <div className="panel p-4">
-      <p className="text-xs uppercase tracking-wide text-muted-foreground">Leads no funil</p>
-      <p className="mt-1 text-2xl font-semibold">{total}</p>
-      <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
-        {STAGES.map((stage) => {
-          const count = colunas[stage.id].length;
-          if (count === 0) return null;
-          return (
-            <span
-              key={stage.id}
-              className="inline-flex items-center gap-1 text-[11px] text-muted-foreground"
-            >
-              <span
-                className="inline-block h-2 w-2 rounded-full"
-                style={{ backgroundColor: stage.color }}
-              />
-              {stage.label}: <span className="font-medium text-foreground">{count}</span>
-            </span>
-          );
-        })}
-      </div>
-      <p className="mt-1 text-[11px] text-muted-foreground">Após filtros aplicados</p>
     </div>
   );
 }

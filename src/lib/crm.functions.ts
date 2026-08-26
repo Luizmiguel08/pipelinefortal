@@ -125,6 +125,9 @@ export const getBoard = createServerFn({ method: "GET" })
         ...(agendaRows ?? []).flatMap((a): BoardLead[] => {
           // Indicadores vêm do lead do C2S vinculado, para o corretor poder preenchê-los aqui.
           const vinculado = a.lead_id ? porId.get(a.lead_id) : undefined;
+          // Garantir que data_c2s nunca fique null: usar agenda_criado_em, depois visita_em,
+          // depois created_at como fallbacks para que o filtro de período não exclua o registro.
+          const dataCsRef = a.agenda_criado_em ?? a.visita_em ?? a.created_at;
           const base: Omit<BoardLead, "id" | "stage" | "data_c2s"> = {
             nome: a.cliente_nome,
             telefone: a.cliente_telefone,
@@ -156,7 +159,7 @@ export const getBoard = createServerFn({ method: "GET" })
             ...base,
             id: `agenda:${a.id}:agendado`,
             stage: "visita",
-            data_c2s: a.agenda_criado_em ?? a.created_at,
+            data_c2s: dataCsRef,
           }];
           if (a.status === "realizado") {
             registros.push({
