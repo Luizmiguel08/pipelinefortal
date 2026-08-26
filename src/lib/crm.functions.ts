@@ -76,16 +76,24 @@ export const getBoard = createServerFn({ method: "GET" })
 
     // A agenda também pode passar de 1000 linhas: paginamos para não perder datas antigas ou futuras.
     const carregarAgenda = async () => {
-      const pagina = 1000;
-      const todos: NonNullable<Awaited<ReturnType<typeof buscarPaginaAgenda>>["data"]> = [];
-      for (let inicio = 0; ; inicio += pagina) {
-        const { data, error } = await buscarPaginaAgenda(inicio, pagina);
-        if (error) throw new Error(error.message);
-        const lote = data ?? [];
-        todos.push(...lote);
-        if (lote.length < pagina) break;
+      try {
+        const pagina = 1000;
+        const todos: NonNullable<Awaited<ReturnType<typeof buscarPaginaAgenda>>["data"]> = [];
+        for (let inicio = 0; ; inicio += pagina) {
+          const { data, error } = await buscarPaginaAgenda(inicio, pagina);
+          if (error) {
+            console.error("[getBoard] Erro ao carregar agenda_appointments:", error.message);
+            return [];
+          }
+          const lote = data ?? [];
+          todos.push(...lote);
+          if (lote.length < pagina) break;
+        }
+        return todos;
+      } catch (e) {
+        console.error("[getBoard] Exceção ao carregar agenda:", e);
+        return [];
       }
-      return todos;
     };
     function buscarPaginaAgenda(inicio: number, pagina: number) {
       return supabase
@@ -95,7 +103,7 @@ export const getBoard = createServerFn({ method: "GET" })
         .range(inicio, inicio + pagina - 1);
     }
 
-    const [{ data: roles }, { data: profile }, { data: corretores }, leads, agendaRows] = await Promise.all([
+    const [rolesResult, profileResult, corretoresResult, leads, agendaRows] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("profiles").select("nome").eq("id", userId).maybeSingle(),
       supabase.from("corretores").select("id, nome, email, c2s_agent_id, user_id").order("nome"),
@@ -103,6 +111,9 @@ export const getBoard = createServerFn({ method: "GET" })
       carregarAgenda(),
     ]);
 
+    const roles = rolesResult.data;
+    const profile = profileResult.data;
+    const corretores = corretoresResult.data;
 
     const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
     const porId = new Map((leads ?? []).map((l) => [l.id, l] as const));

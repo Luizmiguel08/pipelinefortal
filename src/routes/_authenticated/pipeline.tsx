@@ -82,7 +82,7 @@ function PipelinePage() {
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, isError, error: queryError } = useQuery({
     queryKey: ["board"],
     // O tempo real já mantém o funil atualizado; a recarga completa é só rede de segurança.
     queryFn: () => fetchBoard(),
@@ -90,6 +90,7 @@ function PipelinePage() {
     refetchOnWindowFocus: false,
     staleTime: 2 * 60_000,
     placeholderData: (prev) => prev,
+    retry: 2,
   });
 
   // Tempo real: aplicamos as mudanças direto no cache, em lotes, sem recarregar o funil.
@@ -224,7 +225,7 @@ function PipelinePage() {
       return { anterior };
     },
     onError: (e: Error, _vars, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -300,7 +301,7 @@ function PipelinePage() {
       if (!values.id || values.preservar_stage) queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -518,6 +519,23 @@ function PipelinePage() {
       </header>
 
       <main className="mx-auto max-w-[1600px] px-5 py-6">
+        {isError && (
+          <div className="mb-6 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+            <p className="text-sm font-medium text-destructive">Falha ao carregar os leads</p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              {(queryError as Error)?.message || "Erro desconhecido. Tente recarregar a página."}
+            </p>
+            <Button
+              variant="outline"
+              size="sm"
+              className="mt-3"
+              onClick={() => queryClient.invalidateQueries({ queryKey: ["board"] })}
+            >
+              Tentar novamente
+            </Button>
+          </div>
+        )}
+
         <section className="grid gap-3 sm:grid-cols-3">
           <FunnelSummaryCard
             total={leadsFiltrados.length}
@@ -599,26 +617,22 @@ function PipelinePage() {
                         corretorNome={lead.corretor_id ? nomePorCorretor.get(lead.corretor_id) : undefined}
                         showCorretor={corretorFiltro === "todos"}
                         agora={agora}
+                        onOpen={abrirLead}
                         onDragStart={setDragging}
                         onDragEnd={handleDragEnd}
-                        onOpen={abrirLead}
                       />
                     ))}
-                    {leadsColuna.length > mostrados.length && (
+                    {leadsColuna.length > limite && (
                       <Button
-                        variant="secondary"
-                        className="h-8 text-xs"
+                        variant="ghost"
+                        size="sm"
+                        className="mt-1 w-full text-xs"
                         onClick={() =>
-                          setVisiveis((v) => ({ ...v, [stage.id]: (v[stage.id] ?? PAGINA_COLUNA) + PAGINA_COLUNA }))
+                          setVisiveis((v) => ({ ...v, [stage.id]: limite + PAGINA_COLUNA }))
                         }
                       >
-                        Carregar mais ({leadsColuna.length - mostrados.length} restantes)
+                        Mostrar mais ({leadsColuna.length - limite} restantes)
                       </Button>
-                    )}
-                    {leadsColuna.length === 0 && (
-                      <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
-                        Arraste um lead para cá
-                      </p>
                     )}
                   </div>
                 </section>
