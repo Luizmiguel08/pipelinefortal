@@ -1,0 +1,1 @@
+ALTER TABLE public.agenda_appointments ADD COLUMN agenda_criado_em timestamptz; CREATE INDEX agenda_appointments_criado_idx ON public.agenda_appointments(agenda_criado_em);

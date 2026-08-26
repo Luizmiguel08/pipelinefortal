@@ -17,6 +17,7 @@ export type Database = {
       agenda_appointments: {
         Row: {
           agenda_atualizado_em: string | null
+          agenda_criado_em: string | null
           cliente_nome: string
           cliente_telefone: string | null
           corretor_email: string | null
@@ -35,6 +36,7 @@ export type Database = {
         }
         Insert: {
           agenda_atualizado_em?: string | null
+          agenda_criado_em?: string | null
           cliente_nome: string
           cliente_telefone?: string | null
           corretor_email?: string | null
@@ -53,6 +55,7 @@ export type Database = {
         }
         Update: {
           agenda_atualizado_em?: string | null
+          agenda_criado_em?: string | null
           cliente_nome?: string
           cliente_telefone?: string | null
           corretor_email?: string | null
