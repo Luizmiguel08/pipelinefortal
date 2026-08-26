@@ -558,11 +558,11 @@
       "src_components_ui_menubar_menubartrigger"
     ],
     "14": [
-      "class_variance_authority",
+      "embla_carousel_react",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_class_variance_authority",
+      "package_dependencies_embla_carousel_react",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
       "package_dependencies_radix_ui_react_context_menu",
@@ -701,20 +701,20 @@
       "src_components_ui_badge_badgevariants"
     ],
     "28": [
+      "class_variance_authority",
+      "package_dependencies_class_variance_authority"
+    ],
+    "29": [
       "clsx",
       "package_dependencies_clsx"
     ],
-    "29": [
+    "30": [
       "cmdk",
       "package_dependencies_cmdk"
     ],
-    "30": [
+    "31": [
       "date_fns",
       "package_dependencies_date_fns"
-    ],
-    "31": [
-      "embla_carousel_react",
-      "package_dependencies_embla_carousel_react"
     ],
     "32": [
       "hookform_resolvers",
@@ -1019,6 +1019,11 @@
       "degree": 9
     },
     {
+      "id": "src_lib_agenda_server_fetchagendamentos",
+      "label": "fetchAgendamentos()",
+      "degree": 8
+    },
+    {
       "id": "src_lib_stages_formatbrl",
       "label": "formatBRL()",
       "degree": 8
@@ -1029,18 +1034,13 @@
       "degree": 8
     },
     {
-      "id": "src_routes_authenticated_pipeline_pipelinepage",
-      "label": "PipelinePage()",
-      "degree": 8
-    },
-    {
-      "id": "src_lib_agenda_server_fetchagendamentos",
-      "label": "fetchAgendamentos()",
-      "degree": 8
-    },
-    {
       "id": "src_lib_c2s_server_fetchc2scontacts",
       "label": "fetchC2SContacts()",
+      "degree": 8
+    },
+    {
+      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
+      "label": "requireSupabaseAuth",
       "degree": 8
     }
   ],

@@ -1242,7 +1242,7 @@
       "file_type": "code",
       "norm_label": "funnelsummarycard()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L616"
+      "source_location": "L40"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage",
@@ -1253,7 +1253,7 @@
       "file_type": "code",
       "norm_label": "pipelinepage()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L40"
+      "source_location": "L76"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledragend",
@@ -1264,7 +1264,7 @@
       "file_type": "code",
       "norm_label": "handledragend()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L351"
+      "source_location": "L390"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledrop",
@@ -1275,7 +1275,7 @@
       "file_type": "code",
       "norm_label": "handledrop()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L330"
+      "source_location": "L369"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_sair",
@@ -1286,7 +1286,7 @@
       "file_type": "code",
       "norm_label": "sair()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L357"
+      "source_location": "L396"
     },
     {
       "id": "src_routes_authenticated_pipeline_summarycard",
@@ -1297,7 +1297,7 @@
       "file_type": "code",
       "norm_label": "summarycard()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L606"
+      "source_location": "L66"
     },
     {
       "id": "src_components_ui_resizable_resizablehandle",
@@ -2693,7 +2693,7 @@
       "file_type": "code",
       "norm_label": "getintegrationstatus",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L289"
+      "source_location": "L292"
     },
     {
       "id": "src_lib_crm_functions_getsynchistory",
@@ -2703,7 +2703,7 @@
       "file_type": "code",
       "norm_label": "getsynchistory",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L337"
+      "source_location": "L340"
     },
     {
       "id": "src_lib_crm_functions_importc2scorretores",
@@ -2713,7 +2713,7 @@
       "file_type": "code",
       "norm_label": "importc2scorretores",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L401"
+      "source_location": "L404"
     },
     {
       "id": "src_lib_crm_functions_movelead",
@@ -2723,7 +2723,7 @@
       "file_type": "code",
       "norm_label": "movelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L176"
+      "source_location": "L179"
     },
     {
       "id": "src_lib_crm_functions_savelead",
@@ -2733,7 +2733,7 @@
       "file_type": "code",
       "norm_label": "savelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L201"
+      "source_location": "L204"
     },
     {
       "id": "src_lib_crm_functions_syncnow",
@@ -2743,7 +2743,7 @@
       "file_type": "code",
       "norm_label": "syncnow",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L374"
+      "source_location": "L377"
     },
     {
       "id": "src_lib_crm_functions_testc2sconnection",
@@ -2753,7 +2753,7 @@
       "file_type": "code",
       "norm_label": "testc2sconnection",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L321"
+      "source_location": "L324"
     },
     {
       "id": "src_lib_stages",
@@ -3476,14 +3476,14 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "package_dependencies_embla_carousel_react",
+      "label": "embla-carousel-react",
       "_origin": "ast",
       "community": 14,
       "file_type": "code",
-      "norm_label": "class-variance-authority",
+      "norm_label": "embla-carousel-react",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L56"
     },
     {
       "id": "package_dependencies_input_otp",
@@ -3536,14 +3536,14 @@
       "source_location": "L50"
     },
     {
-      "id": "class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "embla_carousel_react",
+      "label": "embla-carousel-react",
       "_origin": "ast",
       "community": 14,
       "file_type": "concept",
-      "norm_label": "class-variance-authority",
+      "norm_label": "embla-carousel-react",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L56"
     },
     {
       "id": "input_otp",
@@ -4886,10 +4886,30 @@
       "source_location": "L6"
     },
     {
+      "id": "package_dependencies_class_variance_authority",
+      "label": "class-variance-authority",
+      "_origin": "ast",
+      "community": 28,
+      "file_type": "code",
+      "norm_label": "class-variance-authority",
+      "source_file": "package.json",
+      "source_location": "L52"
+    },
+    {
+      "id": "class_variance_authority",
+      "label": "class-variance-authority",
+      "_origin": "ast",
+      "community": 28,
+      "file_type": "concept",
+      "norm_label": "class-variance-authority",
+      "source_file": "package.json",
+      "source_location": "L52"
+    },
+    {
       "id": "package_dependencies_clsx",
       "label": "clsx",
       "_origin": "ast",
-      "community": 28,
+      "community": 29,
       "file_type": "code",
       "norm_label": "clsx",
       "source_file": "package.json",
@@ -4899,31 +4919,11 @@
       "id": "clsx",
       "label": "clsx",
       "_origin": "ast",
-      "community": 28,
+      "community": 29,
       "file_type": "concept",
       "norm_label": "clsx",
       "source_file": "package.json",
       "source_location": "L53"
-    },
-    {
-      "id": "package_dependencies_cmdk",
-      "label": "cmdk",
-      "_origin": "ast",
-      "community": 29,
-      "file_type": "code",
-      "norm_label": "cmdk",
-      "source_file": "package.json",
-      "source_location": "L54"
-    },
-    {
-      "id": "cmdk",
-      "label": "cmdk",
-      "_origin": "ast",
-      "community": 29,
-      "file_type": "concept",
-      "norm_label": "cmdk",
-      "source_file": "package.json",
-      "source_location": "L54"
     },
     {
       "id": "src_components_ui_sonner",
@@ -5196,10 +5196,30 @@
       "source_location": "L284"
     },
     {
+      "id": "package_dependencies_cmdk",
+      "label": "cmdk",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "code",
+      "norm_label": "cmdk",
+      "source_file": "package.json",
+      "source_location": "L54"
+    },
+    {
+      "id": "cmdk",
+      "label": "cmdk",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "concept",
+      "norm_label": "cmdk",
+      "source_file": "package.json",
+      "source_location": "L54"
+    },
+    {
       "id": "package_dependencies_date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "code",
       "norm_label": "date-fns",
       "source_file": "package.json",
@@ -5209,31 +5229,11 @@
       "id": "date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "concept",
       "norm_label": "date-fns",
       "source_file": "package.json",
       "source_location": "L55"
-    },
-    {
-      "id": "package_dependencies_embla_carousel_react",
-      "label": "embla-carousel-react",
-      "_origin": "ast",
-      "community": 31,
-      "file_type": "code",
-      "norm_label": "embla-carousel-react",
-      "source_file": "package.json",
-      "source_location": "L56"
-    },
-    {
-      "id": "embla_carousel_react",
-      "label": "embla-carousel-react",
-      "_origin": "ast",
-      "community": 31,
-      "file_type": "concept",
-      "norm_label": "embla-carousel-react",
-      "source_file": "package.json",
-      "source_location": "L56"
     },
     {
       "id": "package_dependencies_hookform_resolvers",
@@ -10772,7 +10772,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L191",
+      "source_location": "L194",
       "weight": 1.0
     },
     {
@@ -10784,7 +10784,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L250",
+      "source_location": "L253",
       "weight": 1.0
     },
     {
@@ -10796,7 +10796,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L273",
+      "source_location": "L276",
       "weight": 1.0
     },
     {
@@ -10928,7 +10928,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L175",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -10940,7 +10940,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L229",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -10952,7 +10952,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L487",
+      "source_location": "L526",
       "weight": 1.0
     },
     {
@@ -10964,7 +10964,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L504",
+      "source_location": "L543",
       "weight": 1.0
     },
     {
@@ -10976,7 +10976,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L342",
+      "source_location": "L381",
       "weight": 1.0
     },
     {
@@ -11108,7 +11108,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L330",
+      "source_location": "L369",
       "weight": 1.0
     },
     {
@@ -11312,7 +11312,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L410",
+      "source_location": "L413",
       "weight": 1.0
     },
     {
@@ -11325,7 +11325,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L411",
+      "source_location": "L414",
       "weight": 1.0
     },
     {
@@ -11338,7 +11338,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L385",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -11351,7 +11351,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L332",
+      "source_location": "L335",
       "weight": 1.0
     },
     {
@@ -20988,7 +20988,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L176",
+      "source_location": "L179",
       "weight": 1.0
     },
     {
@@ -20999,7 +20999,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L201",
+      "source_location": "L204",
       "weight": 1.0
     },
     {
@@ -21010,7 +21010,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L289",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -21021,7 +21021,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L321",
+      "source_location": "L324",
       "weight": 1.0
     },
     {
@@ -21032,7 +21032,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L337",
+      "source_location": "L340",
       "weight": 1.0
     },
     {
@@ -21054,7 +21054,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L374",
+      "source_location": "L377",
       "weight": 1.0
     },
     {
@@ -21065,7 +21065,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L401",
+      "source_location": "L404",
       "weight": 1.0
     },
     {
@@ -21752,24 +21752,24 @@
     },
     {
       "source": "src_routes_authenticated_pipeline",
-      "target": "src_routes_authenticated_pipeline_summarycard",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L606",
-      "weight": 1.0
-    },
-    {
-      "source": "src_routes_authenticated_pipeline",
       "target": "src_routes_authenticated_pipeline_funnelsummarycard",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L616",
+      "source_location": "L40",
+      "weight": 1.0
+    },
+    {
+      "source": "src_routes_authenticated_pipeline",
+      "target": "src_routes_authenticated_pipeline_summarycard",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/routes/_authenticated/pipeline.tsx",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -21780,7 +21780,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L351",
+      "source_location": "L390",
       "weight": 1.0
     },
     {
@@ -21791,7 +21791,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L357",
+      "source_location": "L396",
       "weight": 1.0
     },
     {
@@ -22755,5 +22755,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "bdc4c4532863a5ad1530af815607938bbbbb7edc"
+  "built_at_commit": "6b4f01072ba975691663a69af876c675e0e61022"
 }
