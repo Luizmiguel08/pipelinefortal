@@ -30,6 +30,8 @@ export type BoardLead = {
   agenda_record?: boolean;
   encontrado_c2s?: boolean;
   corretor_agenda_nome?: string | null;
+  /** Lead do C2S vinculado ao agendamento — permite editar os indicadores sem mover de coluna. */
+  agenda_lead_id?: string | null;
 };
 
 export type BoardCorretor = {
