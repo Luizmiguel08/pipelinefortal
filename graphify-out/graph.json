@@ -2454,7 +2454,7 @@
       "file_type": "code",
       "norm_label": "getintegrationstatus",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L421"
+      "source_location": "L423"
     },
     {
       "id": "src_lib_crm_functions_getsynchistory",
@@ -2464,7 +2464,7 @@
       "file_type": "code",
       "norm_label": "getsynchistory",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L469"
+      "source_location": "L471"
     },
     {
       "id": "src_lib_crm_functions_movelead",
@@ -2474,7 +2474,7 @@
       "file_type": "code",
       "norm_label": "movelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L202"
+      "source_location": "L204"
     },
     {
       "id": "src_lib_crm_functions_salvarleadagenda",
@@ -2484,7 +2484,7 @@
       "file_type": "code",
       "norm_label": "salvarleadagenda",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L321"
+      "source_location": "L323"
     },
     {
       "id": "src_lib_crm_functions_savelead",
@@ -2494,7 +2494,7 @@
       "file_type": "code",
       "norm_label": "savelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L227"
+      "source_location": "L229"
     },
     {
       "id": "src_lib_crm_functions_syncnow",
@@ -2504,7 +2504,7 @@
       "file_type": "code",
       "norm_label": "syncnow",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L506"
+      "source_location": "L508"
     },
     {
       "id": "src_lib_crm_functions_testc2sconnection",
@@ -2514,7 +2514,7 @@
       "file_type": "code",
       "norm_label": "testc2sconnection",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L453"
+      "source_location": "L455"
     },
     {
       "id": "src_lib_stages",
@@ -2764,7 +2764,7 @@
       "file_type": "code",
       "norm_label": "importc2scorretores",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L533"
+      "source_location": "L535"
     },
     {
       "id": "src_lib_integration_settings_server",
@@ -10805,7 +10805,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L217",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -10817,7 +10817,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L276",
+      "source_location": "L278",
       "weight": 1.0
     },
     {
@@ -10829,7 +10829,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L299",
+      "source_location": "L301",
       "weight": 1.0
     },
     {
@@ -11345,7 +11345,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L542",
+      "source_location": "L544",
       "weight": 1.0
     },
     {
@@ -11358,7 +11358,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L543",
+      "source_location": "L545",
       "weight": 1.0
     },
     {
@@ -11371,7 +11371,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L375",
+      "source_location": "L377",
       "weight": 1.0
     },
     {
@@ -11384,7 +11384,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L517",
+      "source_location": "L519",
       "weight": 1.0
     },
     {
@@ -11397,7 +11397,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L464",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -21057,7 +21057,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L202",
+      "source_location": "L204",
       "weight": 1.0
     },
     {
@@ -21068,7 +21068,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L227",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -21079,7 +21079,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L321",
+      "source_location": "L323",
       "weight": 1.0
     },
     {
@@ -21101,7 +21101,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L421",
+      "source_location": "L423",
       "weight": 1.0
     },
     {
@@ -21112,7 +21112,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L453",
+      "source_location": "L455",
       "weight": 1.0
     },
     {
@@ -21134,7 +21134,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L469",
+      "source_location": "L471",
       "weight": 1.0
     },
     {
@@ -21156,7 +21156,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L506",
+      "source_location": "L508",
       "weight": 1.0
     },
     {
@@ -21167,7 +21167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L533",
+      "source_location": "L535",
       "weight": 1.0
     },
     {
@@ -22835,5 +22835,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "bcebe49aa6f35066900bc671a2d26fa31015e509"
+  "built_at_commit": "eca1de349fd808546eb2575b8bd47ade68352fd8"
 }
