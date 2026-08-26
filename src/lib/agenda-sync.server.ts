@@ -88,12 +88,22 @@ export async function runAgendaSync(
       idsRecebidos.push(ag.id);
       const telefone = normalizarTelefone(ag.cliente_telefone);
       const nome = normalizarNome(ag.cliente_nome);
+      // O vínculo por nome só vale quando não há telefone para conferir e o nome é
+      // único no C2S. Sem isso, vários "Leonardo" de telefones diferentes caíam no
+      // mesmo lead e o card se repetia em Documentação/Visita realizada.
+      const porNomeCandidatos = porNome.get(nome) ?? [];
+      const nomeUnico =
+        porNomeCandidatos.length === 1 &&
+        (!telefone || !normalizarTelefone(porNomeCandidatos[0]!.telefone));
       const candidatos = porAppointment.get(ag.id)
         ? [porAppointment.get(ag.id)]
         : telefone && porTelefone.has(telefone)
           ? porTelefone.get(telefone)
-          : porNome.get(nome);
+          : nomeUnico
+            ? porNomeCandidatos
+            : [];
       const lead = candidatos?.[0] ?? null;
+
 
       const emailCorretor = ag.corretor_email?.trim().toLowerCase();
       const corretorId =
