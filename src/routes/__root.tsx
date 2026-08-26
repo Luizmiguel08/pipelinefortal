@@ -92,6 +92,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "Acompanhe leads novos, atendimento, negociação, documentação e fechamento de cada corretor em um kanban inteligente.",
       },
+      // Impede a tradução automática do navegador (em alguns computadores o Chrome
+      // trocava palavras da interface, que já está em português).
+      { name: "google", content: "notranslate" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Fortal Pipeline — Gestão de Leads Imobiliários" },
       {
@@ -120,7 +123,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR" translate="no" className="notranslate">
       <head>
         <HeadContent />
       </head>

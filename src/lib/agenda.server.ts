@@ -174,6 +174,54 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
   );
 }
 
+/**
+ * Varredura completa: a rota da Agenda só aceita o parâmetro "desde" (data da visita)
+ * e devolve no máximo 1000 registros por chamada. Fazemos várias janelas (mês a mês,
+ * mais as últimas semanas e a chamada padrão) e unimos tudo pelo id do agendamento.
+ */
+export async function fetchTodosAgendamentos(inicio = "2026-01-01"): Promise<AgendaAppointment[]> {
+  const marcos: string[] = [];
+  const hoje = new Date();
+  const primeiro = new Date(`${inicio}T00:00:00Z`);
+  // Um marco por mês, do início configurado até 3 meses à frente (visitas futuras).
+  const cursor = new Date(Date.UTC(primeiro.getUTCFullYear(), primeiro.getUTCMonth(), 1));
+  const limite = new Date(Date.UTC(hoje.getUTCFullYear(), hoje.getUTCMonth() + 3, 1));
+  while (cursor <= limite) {
+    marcos.push(cursor.toISOString().slice(0, 10));
+    cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+  }
+  // Marcos semanais nas últimas 8 semanas: períodos densos podem estourar o teto de 1000.
+  for (let semana = 0; semana < 8; semana += 1) {
+    const d = new Date(hoje.getTime() - semana * 7 * 86_400_000);
+    marcos.push(d.toISOString().slice(0, 10));
+  }
+
+  const porId = new Map<string, AgendaAppointment>();
+  const erros: string[] = [];
+
+  const padrao = await fetchAgendamentos().catch((e: unknown) => {
+    erros.push(e instanceof Error ? e.message : String(e));
+    return [] as AgendaAppointment[];
+  });
+  for (const a of padrao) porId.set(a.id, a);
+
+  for (const marco of Array.from(new Set(marcos))) {
+    try {
+      const lote = await fetchAgendamentos(marco);
+      for (const a of lote) porId.set(a.id, a);
+    } catch (e) {
+      erros.push(e instanceof Error ? e.message : String(e));
+    }
+  }
+
+  if (porId.size === 0) {
+    throw new Error(
+      `Não consegui ler os agendamentos da Agenda. ${erros[0] ?? ""}`.trim(),
+    );
+  }
+  return [...porId.values()];
+}
+
 /** Últimos 11 dígitos — tolera DDI e máscaras diferentes entre os dois sistemas. */
 export function normalizarTelefone(valor: string | null | undefined) {
   const digitos = (valor ?? "").replace(/\D/g, "");

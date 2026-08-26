@@ -1,6 +1,6 @@
 /** Espelha cada registro da Agenda e cruza o contato com C2S e corretor. */
 import { supabaseAdmin } from "@/integrations/supabase/client.server";
-import { fetchAgendamentos, normalizarNome, normalizarTelefone } from "./agenda.server";
+import { fetchTodosAgendamentos, normalizarNome, normalizarTelefone } from "./agenda.server";
 
 type SyncResult = {
   total: number;
@@ -31,7 +31,7 @@ export async function runAgendaSync(
   try {
     // Espelho fiel: sempre lemos a agenda inteira (datas passadas, de hoje e futuras)
     // para refletir criações, mudanças de status e cancelamentos em qualquer data.
-    const agendamentos = await fetchAgendamentos();
+    const agendamentos = await fetchTodosAgendamentos();
     total = agendamentos.length;
 
 

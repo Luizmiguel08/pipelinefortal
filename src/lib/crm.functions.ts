@@ -32,6 +32,8 @@ export type BoardLead = {
   corretor_agenda_nome?: string | null;
   /** Lead do C2S vinculado ao agendamento — permite editar os indicadores sem mover de coluna. */
   agenda_lead_id?: string | null;
+  /** Id do agendamento no projeto Agenda (origem do card). */
+  agenda_appointment_id?: string | null;
 };
 
 export type BoardCorretor = {
@@ -138,7 +140,9 @@ export const getBoard = createServerFn({ method: "GET" })
           const vinculado = a.lead_id ? porId.get(a.lead_id) : undefined;
           // Garantir que data_c2s nunca fique null: usar agenda_criado_em, depois visita_em,
           // depois created_at como fallbacks para que o filtro de período não exclua o registro.
-          const dataCsRef = a.agenda_criado_em ?? a.visita_em ?? a.created_at;
+          // A Agenda conta os agendamentos pela DATA DA VISITA — usamos a mesma referência
+          // para que o filtro de período do funil bata com os indicadores de lá.
+          const dataCsRef = a.visita_em ?? a.agenda_criado_em ?? a.created_at;
           const base: Omit<BoardLead, "id" | "stage" | "data_c2s"> = {
             nome: a.cliente_nome,
             telefone: a.cliente_telefone,
@@ -156,6 +160,7 @@ export const getBoard = createServerFn({ method: "GET" })
             estagio_imovel: vinculado?.estagio_imovel ?? null,
             documentacao_ok: Boolean(vinculado?.documentacao_ok),
             agenda_lead_id: a.lead_id,
+            agenda_appointment_id: a.id,
             visita_em: a.visita_em,
             visita_realizada: a.status === "realizado",
             visita_status: a.status as BoardLead["visita_status"],
@@ -298,6 +303,92 @@ export const saveLead = createServerFn({ method: "POST" })
       .single();
     if (error) throw new Error(error.message);
     return { ok: true, id: created.id };
+  });
+
+/**
+ * Preenche os indicadores de um card vindo da Agenda.
+ * Quando o contato não existe no C2S, criamos um lead vinculado ao agendamento
+ * (marcado como origem Agenda) para que o corretor consiga registrar valores.
+ * A etapa continua sendo definida exclusivamente pelo projeto Agenda.
+ */
+export const salvarLeadAgenda = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator(
+    (input: {
+      agenda_appointment_id: string;
+      nome: string;
+      telefone?: string | undefined;
+      email?: string | undefined;
+      imovel?: string | undefined;
+      valor?: number | undefined;
+      observacoes?: string | undefined;
+      entrada?: number | undefined;
+      finalidade?: "moradia" | "investimento" | null | undefined;
+      estagio_imovel?: "pronto" | "planta" | null | undefined;
+      documentacao_ok?: boolean | undefined;
+    }) => {
+      if (!input?.agenda_appointment_id) throw new Error("Agendamento inválido");
+      if (!input?.nome?.trim()) throw new Error("Informe o nome do cliente");
+      return input;
+    },
+  )
+  .handler(async ({ data, context }) => {
+    // A RLS garante que o usuário só enxergue os agendamentos dele (ou todos, se gestor).
+    const { data: agendamento, error: erroAg } = await context.supabase
+      .from("agenda_appointments")
+      .select("id, lead_id, corretor_id, cliente_nome, cliente_telefone, status, visita_em, empreendimento")
+      .eq("id", data.agenda_appointment_id)
+      .maybeSingle();
+    if (erroAg) throw new Error(erroAg.message);
+    if (!agendamento) throw new Error("Agendamento não encontrado ou sem permissão.");
+
+    const indicadores = {
+      nome: data.nome.trim(),
+      telefone: data.telefone || agendamento.cliente_telefone || null,
+      email: data.email || null,
+      imovel: data.imovel || agendamento.empreendimento || null,
+      valor: Number(data.valor) || 0,
+      observacoes: data.observacoes ?? null,
+      entrada: Number(data.entrada) || 0,
+      finalidade: data.finalidade ?? null,
+      estagio_imovel: data.estagio_imovel ?? null,
+      documentacao_ok: Boolean(data.documentacao_ok),
+    };
+
+    if (agendamento.lead_id) {
+      const { error } = await context.supabase
+        .from("leads")
+        .update(indicadores)
+        .eq("id", agendamento.lead_id);
+      if (error) throw new Error(error.message);
+      return { ok: true as const, id: agendamento.lead_id, criado: false };
+    }
+
+    // Sem vínculo no C2S: criamos o lead na etapa da Agenda e amarramos ao agendamento.
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: criado, error: erroCriar } = await supabaseAdmin
+      .from("leads")
+      .insert({
+        ...indicadores,
+        corretor_id: agendamento.corretor_id,
+        origem: "Agenda",
+        stage: agendamento.status === "realizado" ? "visita_realizada" : "visita",
+        visita_em: agendamento.visita_em,
+        visita_realizada: agendamento.status === "realizado",
+        agenda_appointment_id: agendamento.id,
+        ultima_interacao: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+    if (erroCriar) throw new Error(erroCriar.message);
+
+    const { error: erroVinculo } = await supabaseAdmin
+      .from("agenda_appointments")
+      .update({ lead_id: criado.id })
+      .eq("id", agendamento.id);
+    if (erroVinculo) throw new Error(erroVinculo.message);
+
+    return { ok: true as const, id: criado.id, criado: true };
   });
 
 export const getIntegrationStatus = createServerFn({ method: "GET" })
