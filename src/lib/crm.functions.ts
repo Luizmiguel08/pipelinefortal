@@ -40,150 +40,147 @@ export type BoardCorretor = {
   c2s_agent_id: string | null;
 };
 
+export type BoardResumoLinha = { stage: StageId; total: number; soma: number };
+export type BoardResumoCorretor = { corretor_id: string | null; total: number; soma: number };
+
 export type Board = {
   isGestor: boolean;
   nome: string;
   meuCorretorId: string | null;
   corretores: BoardCorretor[];
-  leads: BoardLead[];
+  resumo: BoardResumoLinha[];
+  porCorretor: BoardResumoCorretor[];
+  colunas: Record<StageId, BoardLead[]>;
 };
 
-export const getBoard = createServerFn({ method: "GET" })
+export type BoardFiltros = {
+  corretor?: string | null;
+  inicio?: string | null;
+  fim?: string | null;
+  busca?: string | null;
+};
+
+// Quantos cards cada coluna traz na primeira carga (o resto vem sob demanda).
+export const PAGINA_COLUNA = 25;
+
+type CardRow = Record<string, unknown>;
+
+function paraLead(r: CardRow): BoardLead {
+  return {
+    id: String(r['id']),
+    nome: String(r['nome'] ?? ""),
+    telefone: (r['telefone'] as string) ?? null,
+    email: (r['email'] as string) ?? null,
+    imovel: (r['imovel'] as string) ?? null,
+    valor: Number(r['valor'] ?? 0),
+    stage: r['stage'] as StageId,
+    corretor_id: (r['corretor_id'] as string) ?? null,
+    origem: (r['origem'] as string) ?? null,
+    observacoes: (r['observacoes'] as string) ?? null,
+    ultima_interacao: (r['ultima_interacao'] as string) ?? null,
+    c2s_contact_id: (r['c2s_contact_id'] as string) ?? null,
+    created_at: (r['created_at'] as string) ?? null,
+    data_c2s: (r['data_c2s'] as string) ?? null,
+    entrada: Number(r['entrada'] ?? 0),
+    finalidade: (r['finalidade'] as BoardLead["finalidade"]) ?? null,
+    estagio_imovel: (r['estagio_imovel'] as BoardLead["estagio_imovel"]) ?? null,
+    documentacao_ok: Boolean(r['documentacao_ok']),
+    visita_em: (r['visita_em'] as string) ?? null,
+    visita_realizada: Boolean(r['visita_realizada']),
+    visita_status: (r['visita_status'] as BoardLead["visita_status"]) ?? null,
+    visita_motivo: (r['visita_motivo'] as string) ?? null,
+    visita_projeto: (r['visita_projeto'] as string) ?? null,
+    stage_since: (r['stage_since'] as string) ?? null,
+    agenda_record: Boolean(r['agenda_record']),
+    encontrado_c2s: Boolean(r['encontrado_c2s']),
+    corretor_agenda_nome: (r['corretor_agenda_nome'] as string) ?? null,
+  };
+}
+
+function argsFiltro(f: BoardFiltros) {
+  return {
+    p_corretor: f.corretor && f.corretor !== "todos" ? f.corretor : null,
+    p_inicio: f.inicio || null,
+    p_fim: f.fim || null,
+    p_busca: f.busca?.trim() || null,
+  };
+}
+
+// Carrega apenas o que a tela mostra: totais agregados no banco + os primeiros
+// cards de cada coluna. Antes trafegávamos os milhares de leads inteiros.
+export const getBoard = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<BoardWire> => {
+  .inputValidator((input?: BoardFiltros) => input ?? {})
+  .handler(async ({ data, context }): Promise<Board> => {
     const { supabase, userId } = context;
+    const rpc = supabase.rpc.bind(supabase) as unknown as (
+      nome: string,
+      args: Record<string, unknown>,
+    ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
+    const filtros = argsFiltro(data);
 
-    const PAGINA = 1000;
-    const COLUNAS_LEAD =
-      "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, visita_em, visita_realizada, visita_status, visita_motivo, visita_projeto, stage_since";
-    const COLUNAS_AGENDA =
-      "id, cliente_nome, cliente_telefone, corretor_nome, empreendimento, visita_em, status, motivo, lead_id, corretor_id, encontrado_c2s, agenda_criado_em, agenda_atualizado_em, created_at";
-
-    // PostgREST devolve no máximo 1000 linhas: descobrimos o total e buscamos
-    // todas as páginas em paralelo (antes eram chamadas em série, muito lentas).
-    async function carregarTudo<T>(tabela: "leads" | "agenda_appointments", colunas: string, ordem: string) {
-      const primeira = await supabase
-        .from(tabela)
-        .select(colunas, { count: "exact" })
-        .order(ordem, { ascending: false })
-        .range(0, PAGINA - 1);
-      if (primeira.error) throw new Error(primeira.error.message);
-      const linhas = (primeira.data ?? []) as unknown as T[];
-      const total = primeira.count ?? linhas.length;
-      if (total <= PAGINA) return linhas;
-
-      const restantes: PromiseLike<T[]>[] = [];
-      for (let inicio = PAGINA; inicio < total; inicio += PAGINA) {
-        restantes.push(
-          supabase
-            .from(tabela)
-            .select(colunas)
-            .order(ordem, { ascending: false })
-            .range(inicio, inicio + PAGINA - 1)
-            .then(({ data, error }) => {
-              if (error) throw new Error(error.message);
-              return (data ?? []) as unknown as T[];
-            }),
-        );
-      }
-      const lotes = await Promise.all(restantes);
-      for (const lote of lotes) linhas.push(...lote);
-      return linhas;
-    }
-
-    type AgendaRow = {
-      id: string;
-      cliente_nome: string;
-      cliente_telefone: string | null;
-      corretor_nome: string | null;
-      empreendimento: string | null;
-      visita_em: string | null;
-      status: string;
-      motivo: string | null;
-      lead_id: string | null;
-      corretor_id: string | null;
-      encontrado_c2s: boolean;
-      agenda_criado_em: string | null;
-      agenda_atualizado_em: string | null;
-      created_at: string;
-    };
-
-    const carregarLeads = () => carregarTudo<BoardLead>("leads", COLUNAS_LEAD, "updated_at");
-    const carregarAgenda = () => carregarTudo<AgendaRow>("agenda_appointments", COLUNAS_AGENDA, "visita_em");
-
-
-    const [{ data: roles }, { data: profile }, { data: corretores }, leads, agendaRows] = await Promise.all([
+    const [roles, profile, corretores, resumo, porCorretor, ...paginas] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("profiles").select("nome").eq("id", userId).maybeSingle(),
       supabase.from("corretores").select("id, nome, email, c2s_agent_id, user_id").order("nome"),
-      carregarLeads(),
-      carregarAgenda(),
+      rpc("board_resumo", filtros),
+      rpc("board_resumo_corretor", filtros),
+      ...STAGE_IDS.map((stage) =>
+        rpc("board_cards_page", { ...filtros, p_stage: stage, p_limit: PAGINA_COLUNA, p_offset: 0 }),
+      ),
     ]);
 
+    for (const r of [resumo, porCorretor, ...paginas]) {
+      if (r.error) throw new Error(r.error.message);
+    }
 
-    const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
+    const lista = (corretores.data ?? []) as (BoardCorretor & { user_id: string | null })[];
+    const colunas = {} as Record<StageId, BoardLead[]>;
+    STAGE_IDS.forEach((stage, i) => {
+      colunas[stage] = ((paginas[i]?.data ?? []) as CardRow[]).map(paraLead);
+    });
 
     return {
-      isGestor: (roles ?? []).some((r) => r.role === "gestor"),
-      nome: profile?.nome ?? "",
+      isGestor: (roles.data ?? []).some((r) => r.role === "gestor"),
+      nome: profile.data?.nome ?? "",
       meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
       corretores: lista.map(({ user_id: _u, ...c }) => c),
-      leads: ([
-        ...((leads ?? []) as BoardLead[])
-          .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada")
-          .map((l) => ({
-        ...l,
-        valor: Number(l.valor),
-        entrada: Number(l.entrada ?? 0),
-        documentacao_ok: Boolean(l.documentacao_ok),
-        visita_realizada: Boolean(l.visita_realizada),
-          })),
-        ...(agendaRows ?? []).flatMap((a): BoardLead[] => {
-          const base: Omit<BoardLead, "id" | "stage" | "data_c2s"> = {
-            nome: a.cliente_nome,
-            telefone: a.cliente_telefone,
-            email: null,
-            imovel: a.empreendimento,
-            valor: 0,
-            corretor_id: a.corretor_id,
-            origem: "Agenda",
-            observacoes: a.motivo,
-            ultima_interacao: a.agenda_atualizado_em ?? a.visita_em,
-            c2s_contact_id: a.lead_id,
-            created_at: a.created_at,
-            entrada: 0,
-            finalidade: null,
-            estagio_imovel: null,
-            documentacao_ok: false,
-            visita_em: a.visita_em,
-            visita_realizada: a.status === "realizado",
-            visita_status: a.status as BoardLead["visita_status"],
-            visita_motivo: a.motivo,
-            visita_projeto: a.empreendimento,
-            stage_since: a.agenda_atualizado_em ?? a.created_at,
-            agenda_record: true,
-            encontrado_c2s: a.encontrado_c2s,
-            corretor_agenda_nome: a.corretor_nome,
-          };
-          const registros: BoardLead[] = [{
-            ...base,
-            id: `agenda:${a.id}:agendado`,
-            stage: "visita",
-            data_c2s: a.agenda_criado_em ?? a.created_at,
-          }];
-          if (a.status === "realizado") {
-            registros.push({
-              ...base,
-              id: `agenda:${a.id}:realizado`,
-              stage: "visita_realizada",
-              data_c2s: a.visita_em ?? a.agenda_atualizado_em ?? a.created_at,
-            });
-          }
-          return registros;
-        }),
-      ] as BoardLead[]).map(encodeLead),
+      resumo: ((resumo.data ?? []) as CardRow[]).map((r) => ({
+        stage: r['stage'] as StageId,
+        total: Number(r['total'] ?? 0),
+        soma: Number(r['soma'] ?? 0),
+      })),
+      porCorretor: ((porCorretor.data ?? []) as CardRow[]).map((r) => ({
+        corretor_id: (r['corretor_id'] as string) ?? null,
+        total: Number(r['total'] ?? 0),
+        soma: Number(r['soma'] ?? 0),
+      })),
+      colunas,
     };
   });
+
+// Paginação por coluna ("Carregar mais").
+export const getBoardCards = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: BoardFiltros & { stage: StageId; offset: number; limit?: number }) => {
+    if (!STAGE_IDS.includes(input.stage)) throw new Error("Etapa inválida");
+    return input;
+  })
+  .handler(async ({ data, context }): Promise<BoardLead[]> => {
+    const rpc = context.supabase.rpc.bind(context.supabase) as unknown as (
+      nome: string,
+      args: Record<string, unknown>,
+    ) => PromiseLike<{ data: unknown; error: { message: string } | null }>;
+    const { data: linhas, error } = await rpc("board_cards_page", {
+      ...argsFiltro(data),
+      p_stage: data.stage,
+      p_limit: data.limit ?? PAGINA_COLUNA,
+      p_offset: data.offset,
+    });
+    if (error) throw new Error(error.message);
+    return ((linhas ?? []) as CardRow[]).map(paraLead);
+  });
+
 
 
 export const moveLead = createServerFn({ method: "POST" })
