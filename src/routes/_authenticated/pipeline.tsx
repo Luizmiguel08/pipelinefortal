@@ -11,7 +11,6 @@ import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
-import fortalLogo from "@/assets/fortal-logo-light.png";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
 const PAGINA_COLUNA = 25;
@@ -182,7 +181,7 @@ function PipelinePage() {
       return { anterior };
     },
     onError: (e: Error, _vars, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -256,7 +255,7 @@ function PipelinePage() {
       if (!values.id) queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -342,13 +341,7 @@ function PipelinePage() {
         {/* Linha 1: marca + ações */}
         <div className="mx-auto flex max-w-[1600px] flex-wrap items-center gap-3 px-5 py-3">
           <div className="mr-auto flex items-center gap-3">
-            <img
-              src={fortalLogo}
-              alt="Fortal Pipeline"
-              width={220}
-              height={110}
-              className="h-16 w-auto object-contain"
-            />
+            <span className="text-xl font-bold tracking-tight text-foreground">Fortal Pipeline</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-2">
