@@ -597,11 +597,11 @@
       "src_components_ui_carousel_usecarouselparameters"
     ],
     "16": [
-      "clsx",
+      "class_variance_authority",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_clsx",
+      "package_dependencies_class_variance_authority",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
       "package_dependencies_radix_ui_react_context_menu",
@@ -701,8 +701,8 @@
       "src_components_ui_tabs_tabstrigger"
     ],
     "27": [
-      "class_variance_authority",
-      "package_dependencies_class_variance_authority"
+      "clsx",
+      "package_dependencies_clsx"
     ],
     "28": [
       "cmdk",
@@ -1028,6 +1028,11 @@
       "degree": 8
     },
     {
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
+      "degree": 8
+    },
+    {
       "id": "src_lib_c2s_server_fetchc2scontacts",
       "label": "fetchC2SContacts()",
       "degree": 8
@@ -1035,11 +1040,6 @@
     {
       "id": "src_components_ui_input_input",
       "label": "Input",
-      "degree": 8
-    },
-    {
-      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
-      "label": "requireSupabaseAuth",
       "degree": 8
     }
   ],
