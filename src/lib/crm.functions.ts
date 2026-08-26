@@ -408,14 +408,14 @@ export const salvarLeadAgenda = createServerFn({ method: "POST" })
       leadId = criado.id;
     }
 
-
     const { error: erroVinculo } = await supabaseAdmin
       .from("agenda_appointments")
-      .update({ lead_id: criado.id })
+      .update({ lead_id: leadId })
       .eq("id", agendamento.id);
     if (erroVinculo) throw new Error(erroVinculo.message);
 
-    return { ok: true as const, id: criado.id, criado: true };
+    return { ok: true as const, id: leadId, criado: !existente };
+
   });
 
 export const getIntegrationStatus = createServerFn({ method: "GET" })
