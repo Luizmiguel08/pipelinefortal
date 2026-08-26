@@ -52,46 +52,64 @@ export const getBoard = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<Board> => {
     const { supabase, userId } = context;
 
-    // O PostgREST devolve no máximo 1000 linhas por requisição: paginamos para trazer todos os leads.
-    const carregarLeads = async () => {
-      const pagina = 1000;
-      const todos: BoardLead[] = [];
-      for (let inicio = 0; ; inicio += pagina) {
-        const { data, error } = await supabase
-          .from("leads")
-          .select(
-            "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, visita_em, visita_realizada, visita_status, visita_motivo, visita_projeto, stage_since",
-          )
-          .order("updated_at", { ascending: false })
-          .range(inicio, inicio + pagina - 1);
-        if (error) throw new Error(error.message);
-        const lote = (data ?? []) as BoardLead[];
-        todos.push(...lote);
-        if (lote.length < pagina) break;
+    const PAGINA = 1000;
+    const COLUNAS_LEAD =
+      "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, visita_em, visita_realizada, visita_status, visita_motivo, visita_projeto, stage_since";
+    const COLUNAS_AGENDA =
+      "id, cliente_nome, cliente_telefone, corretor_nome, empreendimento, visita_em, status, motivo, lead_id, corretor_id, encontrado_c2s, agenda_criado_em, agenda_atualizado_em, created_at";
+
+    // PostgREST devolve no máximo 1000 linhas: descobrimos o total e buscamos
+    // todas as páginas em paralelo (antes eram chamadas em série, muito lentas).
+    async function carregarTudo<T>(tabela: "leads" | "agenda_appointments", colunas: string, ordem: string) {
+      const primeira = await supabase
+        .from(tabela)
+        .select(colunas, { count: "exact" })
+        .order(ordem, { ascending: false })
+        .range(0, PAGINA - 1);
+      if (primeira.error) throw new Error(primeira.error.message);
+      const linhas = (primeira.data ?? []) as unknown as T[];
+      const total = primeira.count ?? linhas.length;
+      if (total <= PAGINA) return linhas;
+
+      const restantes: Promise<T[]>[] = [];
+      for (let inicio = PAGINA; inicio < total; inicio += PAGINA) {
+        restantes.push(
+          supabase
+            .from(tabela)
+            .select(colunas)
+            .order(ordem, { ascending: false })
+            .range(inicio, inicio + PAGINA - 1)
+            .then(({ data, error }) => {
+              if (error) throw new Error(error.message);
+              return (data ?? []) as unknown as T[];
+            }),
+        );
       }
-      return todos;
+      const lotes = await Promise.all(restantes);
+      for (const lote of lotes) linhas.push(...lote);
+      return linhas;
+    }
+
+    type AgendaRow = {
+      id: string;
+      cliente_nome: string;
+      cliente_telefone: string | null;
+      corretor_nome: string | null;
+      empreendimento: string | null;
+      visita_em: string | null;
+      status: string;
+      motivo: string | null;
+      lead_id: string | null;
+      corretor_id: string | null;
+      encontrado_c2s: boolean;
+      agenda_criado_em: string | null;
+      agenda_atualizado_em: string | null;
+      created_at: string;
     };
 
-    // A agenda também pode passar de 1000 linhas: paginamos para não perder datas antigas ou futuras.
-    const carregarAgenda = async () => {
-      const pagina = 1000;
-      const todos: NonNullable<Awaited<ReturnType<typeof buscarPaginaAgenda>>["data"]> = [];
-      for (let inicio = 0; ; inicio += pagina) {
-        const { data, error } = await buscarPaginaAgenda(inicio, pagina);
-        if (error) throw new Error(error.message);
-        const lote = data ?? [];
-        todos.push(...lote);
-        if (lote.length < pagina) break;
-      }
-      return todos;
-    };
-    function buscarPaginaAgenda(inicio: number, pagina: number) {
-      return supabase
-        .from("agenda_appointments")
-        .select("id, cliente_nome, cliente_telefone, corretor_nome, empreendimento, visita_em, status, motivo, lead_id, corretor_id, encontrado_c2s, agenda_criado_em, agenda_atualizado_em, created_at")
-        .order("visita_em", { ascending: false })
-        .range(inicio, inicio + pagina - 1);
-    }
+    const carregarLeads = () => carregarTudo<BoardLead>("leads", COLUNAS_LEAD, "updated_at");
+    const carregarAgenda = () => carregarTudo<AgendaRow>("agenda_appointments", COLUNAS_AGENDA, "visita_em");
+
 
     const [{ data: roles }, { data: profile }, { data: corretores }, leads, agendaRows] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
