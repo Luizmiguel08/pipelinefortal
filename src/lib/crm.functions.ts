@@ -72,18 +72,35 @@ export const getBoard = createServerFn({ method: "GET" })
       return todos;
     };
 
-    const [{ data: roles }, { data: profile }, { data: corretores }, leads, { data: agendaRows, error: agendaError }] = await Promise.all([
+    // A agenda também pode passar de 1000 linhas: paginamos para não perder datas antigas ou futuras.
+    const carregarAgenda = async () => {
+      const pagina = 1000;
+      const todos: NonNullable<Awaited<ReturnType<typeof buscarPaginaAgenda>>["data"]> = [];
+      for (let inicio = 0; ; inicio += pagina) {
+        const { data, error } = await buscarPaginaAgenda(inicio, pagina);
+        if (error) throw new Error(error.message);
+        const lote = data ?? [];
+        todos.push(...lote);
+        if (lote.length < pagina) break;
+      }
+      return todos;
+    };
+    function buscarPaginaAgenda(inicio: number, pagina: number) {
+      return supabase
+        .from("agenda_appointments")
+        .select("id, cliente_nome, cliente_telefone, corretor_nome, empreendimento, visita_em, status, motivo, lead_id, corretor_id, encontrado_c2s, agenda_criado_em, agenda_atualizado_em, created_at")
+        .order("visita_em", { ascending: false })
+        .range(inicio, inicio + pagina - 1);
+    }
+
+    const [{ data: roles }, { data: profile }, { data: corretores }, leads, agendaRows] = await Promise.all([
       supabase.from("user_roles").select("role").eq("user_id", userId),
       supabase.from("profiles").select("nome").eq("id", userId).maybeSingle(),
       supabase.from("corretores").select("id, nome, email, c2s_agent_id, user_id").order("nome"),
       carregarLeads(),
-      supabase
-        .from("agenda_appointments")
-        .select("id, cliente_nome, cliente_telefone, corretor_nome, empreendimento, visita_em, status, motivo, lead_id, corretor_id, encontrado_c2s, agenda_criado_em, agenda_atualizado_em, created_at")
-        .not("agenda_criado_em", "is", null)
-        .order("visita_em", { ascending: false }),
+      carregarAgenda(),
     ]);
-    if (agendaError) throw new Error(agendaError.message);
+
 
     const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
 
