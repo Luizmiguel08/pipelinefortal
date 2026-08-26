@@ -147,3 +147,12 @@ export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
   if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
   return stage;
 }
+
+/** Monta o link wa.me a partir do telefone (aceita formatos variados, assume Brasil se faltar DDI). */
+export function whatsappLink(telefone: string | null | undefined): string | null {
+  if (!telefone) return null;
+  const digitos = telefone.replace(/\D/g, "");
+  if (digitos.length < 10) return null;
+  const numero = digitos.startsWith("55") && digitos.length > 11 ? digitos : `55${digitos}`;
+  return `https://wa.me/${numero}`;
+}
