@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
+import { decodeBoard } from "@/lib/board-codec";
 import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 
@@ -46,7 +47,7 @@ function PipelinePage() {
   const { data, isLoading } = useQuery({
     queryKey: ["board"],
     // O tempo real já mantém o funil atualizado; a recarga completa é só rede de segurança.
-    queryFn: () => fetchBoard(),
+    queryFn: async (): Promise<Board> => decodeBoard(await fetchBoard()),
     refetchInterval: 5 * 60_000,
     refetchOnWindowFocus: false,
     staleTime: 2 * 60_000,
