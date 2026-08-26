@@ -69,8 +69,22 @@ export async function runAgendaSync(
       (corretoresExistentes ?? []).filter((c) => c.email).map((c) => [c.email?.trim().toLowerCase(), c.id]),
     );
 
+    // Ids já espelhados (paginado: o PostgREST devolve no máximo 1000 linhas).
+    const idsExistentes = new Set<string>();
+    for (let inicio = 0; ; inicio += 1000) {
+      const { data, error } = await supabaseAdmin
+        .from("agenda_appointments")
+        .select("id")
+        .order("id", { ascending: true })
+        .range(inicio, inicio + 999);
+      if (error) throw error;
+      const pagina = data ?? [];
+      for (const linha of pagina) idsExistentes.add(linha.id);
+      if (pagina.length < 1000) break;
+    }
+
     const idsRecebidos: string[] = [];
-    for (const ag of agendamentos) {
+    const payloads = agendamentos.map((ag) => {
       idsRecebidos.push(ag.id);
       const telefone = normalizarTelefone(ag.cliente_telefone);
       const nome = normalizarNome(ag.cliente_nome);
@@ -90,8 +104,10 @@ export async function runAgendaSync(
       if (lead) vinculadosC2s += 1;
       else naoEncontradosC2s += 1;
       if (!corretorId) corretoresNaoReconhecidos += 1;
+      if (idsExistentes.has(ag.id)) atualizados += 1;
+      else criados += 1;
 
-      const payload = {
+      return {
         id: ag.id,
         cliente_nome: ag.cliente_nome,
         cliente_telefone: ag.cliente_telefone,
@@ -108,27 +124,26 @@ export async function runAgendaSync(
         encontrado_c2s: Boolean(lead),
         synced_at: new Date().toISOString(),
       };
+    });
 
-      const { data: existente } = await supabaseAdmin
-        .from("agenda_appointments")
-        .select("id")
-        .eq("id", ag.id)
-        .maybeSingle();
+    for (let inicio = 0; inicio < payloads.length; inicio += 200) {
       const { error: upsertError } = await supabaseAdmin
         .from("agenda_appointments")
-        .upsert(payload, { onConflict: "id" });
+        .upsert(payloads.slice(inicio, inicio + 200), { onConflict: "id" });
       if (upsertError) throw upsertError;
-      if (existente) atualizados += 1;
-      else criados += 1;
     }
 
-    if (reconciliacaoCompleta && idsRecebidos.length > 0) {
+    // Remove do espelho o que não existe mais na agenda, em qualquer data.
+    const recebidos = new Set(idsRecebidos);
+    const obsoletos = [...idsExistentes].filter((id) => !recebidos.has(id));
+    for (let inicio = 0; inicio < obsoletos.length; inicio += 200) {
       const { error: cleanupError } = await supabaseAdmin
         .from("agenda_appointments")
         .delete()
-        .not("id", "in", `(${idsRecebidos.map((id) => `"${id.replaceAll('"', '\\"')}"`).join(",")})`);
+        .in("id", obsoletos.slice(inicio, inicio + 200));
       if (cleanupError) throw cleanupError;
     }
+
   } catch (e) {
     erro = e instanceof Error ? e.message : String(e);
   }
