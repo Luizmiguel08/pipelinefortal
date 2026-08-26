@@ -277,17 +277,15 @@ function PipelinePage() {
       if (corretorFiltro !== "todos" && corretorFiltro !== "meus" && l.corretor_id !== corretorFiltro)
         return false;
       if (inicioMs !== null || fimMs !== null) {
-        // Nas colunas de visita, o período representa a data da visita.
-        // Nas demais etapas, continua representando a data de entrada do lead.
-        const dataRef =
-          (l.stage === "visita" || l.stage === "visita_realizada") && l.visita_em
-            ? l.visita_em
-            : l.data_c2s ?? l.created_at;
+        // O período sempre representa a data de ENTRADA do lead, em qualquer coluna.
+        // Assim um lead entrou hoje e movido para outra etapa continua contando uma única vez.
+        const dataRef = l.data_c2s ?? l.created_at;
         const ref = dataRef ? new Date(dataRef).getTime() : null;
         if (ref === null || Number.isNaN(ref)) return false;
         if (inicioMs !== null && ref < inicioMs) return false;
         if (fimMs !== null && ref > fimMs) return false;
       }
+
       if (!termo) return true;
       return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
     });
