@@ -15,6 +15,9 @@ import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
 const PAGINA_COLUNA = 25;
 
+// Recorte padrão do funil: agosto/2026 em diante.
+const INICIO_PADRAO = "2026-08-01";
+
 export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => ({
     meta: [
