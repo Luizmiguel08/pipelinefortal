@@ -143,6 +143,7 @@ function PipelinePage() {
   // A sincronização com o C2S roda no servidor a cada minuto (rotina automática),
   // por isso o navegador de cada corretor/gestor não dispara mais sync sozinho.
 
+  // Foco atual: leads de agosto/2026 em diante. Datas anteriores só via filtro manual.
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
