@@ -212,9 +212,12 @@ export async function fetchTodosAgendamentos(inicio = "2026-01-01"): Promise<Age
       const lote = await fetchAgendamentos(marco);
       for (const a of lote) porId.set(a.id, a);
     } catch (e) {
-      erros.push(e instanceof Error ? e.message : String(e));
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error(`[agenda] janela ${marco} falhou:`, msg);
+      erros.push(msg);
     }
   }
+  console.log(`[agenda] varredura completa: ${porId.size} agendamentos únicos, ${erros.length} janelas com erro`);
 
   if (porId.size === 0) {
     throw new Error(
