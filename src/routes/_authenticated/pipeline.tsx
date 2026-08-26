@@ -83,7 +83,9 @@ function PipelinePage() {
     placeholderData: (prev) => prev,
   });
 
-  meuCorretorIdRef.current = data?.meuCorretorId ?? null;
+  useEffect(() => {
+    meuCorretorIdRef.current = data?.meuCorretorId ?? null;
+  }, [data?.meuCorretorId]);
 
   // Ao trocar de filtro as páginas extras deixam de valer.
   useEffect(() => {
