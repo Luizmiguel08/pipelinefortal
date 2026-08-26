@@ -526,16 +526,16 @@
       "src_routes_root_route"
     ],
     "16": [
-      "class_variance_authority",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_class_variance_authority",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
+      "package_dependencies_radix_ui_react_accordion",
       "package_dependencies_radix_ui_react_context_menu",
       "package_dependencies_recharts",
       "package_dependencies_tanstack_react_start",
+      "radix_ui_react_accordion",
       "radix_ui_react_context_menu",
       "recharts",
       "tanstack_react_start"
@@ -543,16 +543,17 @@
     "17": [
       "src_components_ui_input",
       "src_components_ui_input_input",
-      "src_integrations_lovable_index",
-      "src_integrations_lovable_index_lovable",
-      "src_integrations_lovable_index_lovableauth",
-      "src_integrations_lovable_index_signinoptions",
-      "src_integrations_supabase_client_supabase",
-      "src_routes_auth",
-      "src_routes_auth_authpage",
-      "src_routes_auth_authpage_handlegoogle",
-      "src_routes_auth_authpage_handlesubmit",
-      "src_routes_auth_route"
+      "src_lib_equipe_functions",
+      "src_lib_equipe_functions_equipe",
+      "src_lib_equipe_functions_equipecorretor",
+      "src_lib_equipe_functions_garantirgestor",
+      "src_lib_equipe_functions_getequipe",
+      "src_lib_equipe_functions_setcorretoremail",
+      "src_lib_equipe_functions_vincularcontas",
+      "src_routes_authenticated_equipe",
+      "src_routes_authenticated_equipe_equipepage",
+      "src_routes_authenticated_equipe_equipepage_copiar",
+      "src_routes_authenticated_equipe_route"
     ],
     "18": [
       "src_components_ui_chart",
@@ -568,19 +569,6 @@
       "src_components_ui_chart_usechart"
     ],
     "19": [
-      "src_lib_equipe_functions",
-      "src_lib_equipe_functions_equipe",
-      "src_lib_equipe_functions_equipecorretor",
-      "src_lib_equipe_functions_garantirgestor",
-      "src_lib_equipe_functions_getequipe",
-      "src_lib_equipe_functions_setcorretoremail",
-      "src_lib_equipe_functions_vincularcontas",
-      "src_routes_authenticated_equipe",
-      "src_routes_authenticated_equipe_equipepage",
-      "src_routes_authenticated_equipe_equipepage_copiar",
-      "src_routes_authenticated_equipe_route"
-    ],
-    "20": [
       "src_components_ui_command",
       "src_components_ui_command_command",
       "src_components_ui_command_commanddialog",
@@ -592,7 +580,7 @@
       "src_components_ui_command_commandseparator",
       "src_components_ui_command_commandshortcut"
     ],
-    "21": [
+    "20": [
       "src_components_ui_dropdown_menu",
       "src_components_ui_dropdown_menu_dropdownmenucheckboxitem",
       "src_components_ui_dropdown_menu_dropdownmenucontent",
@@ -603,6 +591,18 @@
       "src_components_ui_dropdown_menu_dropdownmenushortcut",
       "src_components_ui_dropdown_menu_dropdownmenusubcontent",
       "src_components_ui_dropdown_menu_dropdownmenusubtrigger"
+    ],
+    "21": [
+      "src_integrations_lovable_index",
+      "src_integrations_lovable_index_lovable",
+      "src_integrations_lovable_index_lovableauth",
+      "src_integrations_lovable_index_signinoptions",
+      "src_integrations_supabase_client_supabase",
+      "src_routes_auth",
+      "src_routes_auth_authpage",
+      "src_routes_auth_authpage_handlegoogle",
+      "src_routes_auth_authpage_handlesubmit",
+      "src_routes_auth_route"
     ],
     "22": [
       "src_components_ui_sheet",
@@ -690,32 +690,32 @@
       "src_components_ui_tabs_tabstrigger"
     ],
     "32": [
+      "class_variance_authority",
+      "package_dependencies_class_variance_authority"
+    ],
+    "33": [
       "clsx",
       "package_dependencies_clsx"
     ],
-    "33": [
+    "34": [
       "cmdk",
       "package_dependencies_cmdk"
     ],
-    "34": [
+    "35": [
       "date_fns",
       "package_dependencies_date_fns"
     ],
-    "35": [
+    "36": [
       "embla_carousel_react",
       "package_dependencies_embla_carousel_react"
     ],
-    "36": [
+    "37": [
       "hookform_resolvers",
       "package_dependencies_hookform_resolvers"
     ],
-    "37": [
+    "38": [
       "lucide_react",
       "package_dependencies_lucide_react"
-    ],
-    "38": [
-      "package_dependencies_radix_ui_react_accordion",
-      "radix_ui_react_accordion"
     ],
     "39": [
       "package_dependencies_radix_ui_react_alert_dialog",
@@ -900,7 +900,7 @@
   },
   "cohesion": {
     "0": 0.06265984654731457,
-    "1": 0.06312098188194039,
+    "1": 0.06428988895382817,
     "2": 0.04081632653061224,
     "3": 0.0859465737514518,
     "4": 0.07142857142857142,
@@ -916,11 +916,11 @@
     "14": 0.18681318681318682,
     "15": 0.17582417582417584,
     "16": 0.15384615384615385,
-    "17": 0.21212121212121213,
+    "17": 0.24358974358974358,
     "18": 0.2545454545454545,
-    "19": 0.2909090909090909,
+    "19": 0.2,
     "20": 0.2,
-    "21": 0.2,
+    "21": 0.24444444444444444,
     "22": 0.25,
     "23": 0.2222222222222222,
     "24": 0.2857142857142857,
@@ -1027,13 +1027,13 @@
       "degree": 8
     },
     {
-      "id": "src_lib_c2s_server_fetchc2scontacts",
-      "label": "fetchC2SContacts()",
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
       "degree": 8
     },
     {
-      "id": "src_components_ui_input_input",
-      "label": "Input",
+      "id": "src_lib_c2s_server_fetchc2scontacts",
+      "label": "fetchC2SContacts()",
       "degree": 8
     }
   ],
