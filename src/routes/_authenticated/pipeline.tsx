@@ -448,12 +448,12 @@ function PipelinePage() {
                   onChange={(e) => setDataFim(e.target.value)}
                   className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
                 />
-                {(dataInicio || dataFim) && (
+                {(dataInicio !== INICIO_PADRAO || dataFim) && (
                   <Button
                     variant="ghost"
                     className="h-7 px-2 text-xs"
                     onClick={() => {
-                      setDataInicio("");
+                      setDataInicio(INICIO_PADRAO);
                       setDataFim("");
                     }}
                   >
