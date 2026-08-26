@@ -85,11 +85,11 @@ function PipelinePage() {
 
   const { data, isLoading, isError, error: queryError } = useQuery({
     queryKey: ["board"],
-    // O tempo real já mantém o funil atualizado; a recarga completa é só rede de segurança.
+    // O tempo real cobre a tabela de leads; a agenda chega pela recarga periódica.
     queryFn: () => fetchBoard(),
-    refetchInterval: 5 * 60_000,
-    refetchOnWindowFocus: false,
-    staleTime: 2 * 60_000,
+    refetchInterval: 60_000,
+    refetchOnWindowFocus: true,
+    staleTime: 30_000,
     placeholderData: (prev) => prev,
     retry: 2,
   });
