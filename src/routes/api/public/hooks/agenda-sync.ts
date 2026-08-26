@@ -17,14 +17,25 @@ export const Route = createFileRoute("/api/public/hooks/agenda-sync")({
 
         const expectedApikey =
           process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"];
-        const expectedSecret = process.env["AGENDA_SYNC_SECRET"];
 
-        const autenticado =
-          (expectedApikey && apikey === expectedApikey) ||
-          (expectedSecret && syncSecret === expectedSecret) ||
-          (expectedSecret && bearerToken === expectedSecret);
+        // Busca segredos válidos: env + banco (configurado pela tela)
+        let segredosValidos: string[] = [];
+        try {
+          const { segredosAgenda } = await import("@/lib/integration-settings.server");
+          segredosValidos = await segredosAgenda();
+        } catch {
+          // Fallback: apenas env
+          const envSecret = process.env["AGENDA_SYNC_SECRET"]?.trim();
+          if (envSecret) segredosValidos = [envSecret];
+        }
 
-        if (!autenticado) {
+        const autenticadoPorApikey = Boolean(expectedApikey && apikey === expectedApikey);
+        const autenticadoPorSegredo =
+          segredosValidos.length > 0 &&
+          (segredosValidos.includes(syncSecret ?? "") ||
+            segredosValidos.includes(bearerToken ?? ""));
+
+        if (!autenticadoPorApikey && !autenticadoPorSegredo) {
           return new Response(JSON.stringify({ error: "Não autorizado" }), {
             status: 401,
             headers: { "content-type": "application/json" },

@@ -167,7 +167,7 @@ function IntegracaoPage() {
             2. Peça no chat da Lovable para informar as credenciais do C2S: abre um formulário
             seguro onde você cola a URL base e o token direto no cofre.
           </li>
-          <li>3. Volte aqui, use “Testar conexão” e depois “Sincronizar agora”.</li>
+          <li>3. Volte aqui, use "Testar conexão" e depois "Sincronizar agora".</li>
         </ol>
 
         <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -242,6 +242,8 @@ function IntegracaoPage() {
                           Erro
                         </span>
                       ) : r.status === "sucesso" ? (
+                        "Sucesso"
+                      ) : r.status === "ok" ? (
                         "Sucesso"
                       ) : (
                         "Em andamento"

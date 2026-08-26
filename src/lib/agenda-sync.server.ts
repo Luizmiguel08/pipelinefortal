@@ -28,7 +28,7 @@ export async function runAgendaSync(
       const { data: ultimoRun } = await supabaseAdmin
         .from("agenda_sync_runs")
         .select("started_at")
-        .eq("status", "ok")
+        .eq("status", "sucesso")
         .order("started_at", { ascending: false })
         .limit(1)
         .maybeSingle();
@@ -39,14 +39,14 @@ export async function runAgendaSync(
     total = agendamentos.length;
 
     if (agendamentos.length === 0) {
-      await registrarRun(startedAt, "ok", origem, total, criados, atualizados, null);
+      await registrarRun(startedAt, "sucesso", origem, total, criados, atualizados, null);
       return { total, criados, atualizados, erro: null };
     }
 
     // Carregar todos os leads para fazer o match por telefone e nome.
     const { data: leadsExistentes } = await supabaseAdmin
       .from("leads")
-      .select("id, nome, telefone, visita_em, visita_status");
+      .select("id, nome, telefone, visita_em, visita_status, corretor_id");
     const leads = leadsExistentes ?? [];
 
     // Índices para match: telefone normalizado -> leads, nome normalizado -> leads
@@ -133,7 +133,7 @@ export async function runAgendaSync(
     // Aplicar updates nos leads existentes.
     for (const [leadId, match] of matchesPorLead) {
       const ag = match.agendamento;
-      const updatePayload = {
+      const updatePayload: Record<string, unknown> = {
         visita_em: ag.visita_em,
         visita_status: ag.status,
         visita_realizada: ag.status === "realizado",
@@ -142,11 +142,9 @@ export async function runAgendaSync(
       };
       // Atualizar corretor se identificado e lead ainda não tem.
       if (match.corretorId) {
-        // Só sobrescreve se o lead não tem corretor.
         const lead = leads.find((l) => l.id === leadId);
-        // Nota: não sobrescrevemos corretor se já existe — pode ter sido atribuído manualmente.
-        if (lead && !(lead as Record<string, unknown>)['corretor_id']) {
-          (updatePayload as Record<string, unknown>)['corretor_id'] = match.corretorId;
+        if (lead && !lead.corretor_id) {
+          updatePayload['corretor_id'] = match.corretorId;
         }
       }
 
@@ -183,7 +181,7 @@ export async function runAgendaSync(
     erro = e instanceof Error ? e.message : String(e);
   }
 
-  await registrarRun(startedAt, erro ? "erro" : "ok", origem, total, criados, atualizados, erro);
+  await registrarRun(startedAt, erro ? "erro" : "sucesso", origem, total, criados, atualizados, erro);
   return { total, criados, atualizados, erro };
 }
 
