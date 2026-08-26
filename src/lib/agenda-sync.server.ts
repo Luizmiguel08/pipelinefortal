@@ -162,6 +162,8 @@ export async function runAgendaSync(
         visita_realizada: ag.status === "realizado",
         visita_motivo: ag.motivo,
         visita_projeto: ag.empreendimento,
+        agenda_appointment_id: ag.id,
+        agenda_synced_at: new Date().toISOString(),
       };
       // Atualizar corretor se identificado e lead ainda não tem.
       if (match.corretorId) {
@@ -194,6 +196,8 @@ export async function runAgendaSync(
         visita_realizada: ag.status === "realizado",
         visita_motivo: ag.motivo,
         visita_projeto: ag.empreendimento,
+        agenda_appointment_id: ag.id,
+        agenda_synced_at: new Date().toISOString(),
         ultima_interacao: new Date().toISOString(),
       };
 
