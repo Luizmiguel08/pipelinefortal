@@ -43,16 +43,36 @@ export async function runAgendaSync(
       return { total, criados, atualizados, erro: null };
     }
 
-    // Carregar todos os leads para fazer o match por telefone e nome.
-    const { data: leadsExistentes } = await supabaseAdmin
-      .from("leads")
-      .select("id, nome, telefone, visita_em, visita_status, corretor_id");
-    const leads = leadsExistentes ?? [];
+    // Carregar TODOS os leads (PostgREST devolve no máximo 1000 por requisição,
+    // por isso paginamos — sem isso o match falha e criamos leads duplicados).
+    type LeadRow = {
+      id: string;
+      nome: string;
+      telefone: string | null;
+      visita_em: string | null;
+      visita_status: string | null;
+      corretor_id: string | null;
+      agenda_appointment_id: string | null;
+    };
+    const leads: LeadRow[] = [];
+    const passo = 1000;
+    for (let inicio = 0; ; inicio += passo) {
+      const { data: pagina } = await supabaseAdmin
+        .from("leads")
+        .select("id, nome, telefone, visita_em, visita_status, corretor_id, agenda_appointment_id")
+        .order("created_at", { ascending: true })
+        .range(inicio, inicio + passo - 1);
+      const linhas = (pagina ?? []) as LeadRow[];
+      leads.push(...linhas);
+      if (linhas.length < passo) break;
+    }
 
-    // Índices para match: telefone normalizado -> leads, nome normalizado -> leads
-    const porTelefone = new Map<string, typeof leads>();
-    const porNome = new Map<string, typeof leads>();
+    // Índices para match: agendamento -> lead, telefone normalizado -> leads, nome normalizado -> leads
+    const porAppointment = new Map<string, LeadRow>();
+    const porTelefone = new Map<string, LeadRow[]>();
+    const porNome = new Map<string, LeadRow[]>();
     for (const lead of leads) {
+      if (lead.agenda_appointment_id) porAppointment.set(lead.agenda_appointment_id, lead);
       const tel = normalizarTelefone(lead.telefone);
       if (tel) {
         const arr = porTelefone.get(tel) ?? [];
@@ -66,6 +86,7 @@ export async function runAgendaSync(
         porNome.set(nome, arr);
       }
     }
+
 
     // Carregar corretores para vincular por nome/email do corretor do agendamento.
     const { data: corretoresExistentes } = await supabaseAdmin
@@ -94,12 +115,14 @@ export async function runAgendaSync(
       const telAg = normalizarTelefone(ag.cliente_telefone);
       const nomeAg = normalizarNome(ag.cliente_nome);
 
-      // Tentar match por telefone primeiro (mais confiável).
-      let candidatos = telAg ? (porTelefone.get(telAg) ?? []) : [];
-      // Se não encontrou por telefone, tentar por nome exato.
+      // 1) Match pelo ID do agendamento (à prova de mudança de nome/telefone).
+      const porId = porAppointment.get(ag.id);
+      // 2) Telefone. 3) Nome exato.
+      let candidatos = porId ? [porId] : telAg ? (porTelefone.get(telAg) ?? []) : [];
       if (candidatos.length === 0 && nomeAg) {
         candidatos = porNome.get(nomeAg) ?? [];
       }
+
 
       // Resolver corretor do agendamento.
       let corretorId: string | null = null;
@@ -139,6 +162,8 @@ export async function runAgendaSync(
         visita_realizada: ag.status === "realizado",
         visita_motivo: ag.motivo,
         visita_projeto: ag.empreendimento,
+        agenda_appointment_id: ag.id,
+        agenda_synced_at: new Date().toISOString(),
       };
       // Atualizar corretor se identificado e lead ainda não tem.
       if (match.corretorId) {
@@ -171,6 +196,8 @@ export async function runAgendaSync(
         visita_realizada: ag.status === "realizado",
         visita_motivo: ag.motivo,
         visita_projeto: ag.empreendimento,
+        agenda_appointment_id: ag.id,
+        agenda_synced_at: new Date().toISOString(),
         ultima_interacao: new Date().toISOString(),
       };
 
