@@ -64,7 +64,7 @@ async function resolverCorretores(supabaseAdmin: AdminClient) {
 
 export async function runAgendaSync(
   origem: "manual" | "automatico" = "manual",
-  desde?: string,
+  desde?: string | null,
 ): Promise<AgendaSyncResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const inicio = Date.now();
@@ -89,8 +89,8 @@ export async function runAgendaSync(
   const result: AgendaSyncResult = { total: 0, criados: 0, atualizados: 0 };
 
   // Modo incremental: se não veio data, pega desde a última sync com sucesso.
-  let janela = desde;
-  if (!janela) {
+  let janela = desde ?? undefined;
+  if (desde === undefined) {
     const { data: ultima } = await supabaseAdmin
       .from("agenda_sync_runs")
       .select("started_at")

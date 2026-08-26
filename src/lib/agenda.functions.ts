@@ -37,5 +37,5 @@ export const syncAgenda = createServerFn({ method: "POST" })
     const { runAgendaSync } = await import("./agenda-sync.server");
     // A execução manual relê todo o histórico. O endpoint da agenda interpreta
     // o parâmetro de data como "alterado desde", não como data da visita.
-    return await runAgendaSync("manual", "1970-01-01T00:00:00.000Z");
+    return await runAgendaSync("manual", null);
   });
