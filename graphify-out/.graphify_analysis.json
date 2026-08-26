@@ -1027,13 +1027,13 @@
       "degree": 8
     },
     {
-      "id": "src_routes_authenticated_pipeline_pipelinepage",
-      "label": "PipelinePage()",
+      "id": "src_lib_c2s_server_fetchc2scontacts",
+      "label": "fetchC2SContacts()",
       "degree": 8
     },
     {
-      "id": "src_lib_c2s_server_fetchc2scontacts",
-      "label": "fetchC2SContacts()",
+      "id": "src_components_ui_input_input",
+      "label": "Input",
       "degree": 8
     }
   ],
@@ -1061,37 +1061,37 @@
       "why": "bridges separate communities; peripheral node `MenubarShortcut()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "Pagination()",
+      "source": "CommandShortcut()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/pagination.tsx",
+        "src/components/ui/command.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `Pagination()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `CommandShortcut()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "PaginationEllipsis()",
+      "source": "DropdownMenuShortcut()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/pagination.tsx",
+        "src/components/ui/dropdown-menu.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `PaginationEllipsis()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `DropdownMenuShortcut()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "PaginationNext()",
+      "source": "SheetFooter()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/pagination.tsx",
+        "src/components/ui/sheet.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `PaginationNext()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `SheetFooter()` unexpectedly reaches hub `cn()`"
     }
   ],
   "tokens": {
