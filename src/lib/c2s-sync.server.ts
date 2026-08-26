@@ -34,15 +34,20 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
   );
 
   // Carrega de uma vez os leads já existentes para evitar uma consulta por contato.
-  const existentes = new Map<string, { id: string; stage: StageId }>();
+  const existentes = new Map<string, { id: string; stage: StageId; valor: number }>();
   const ids = contatos.map((c) => c.c2s_contact_id);
   for (let i = 0; i < ids.length; i += 200) {
     const { data } = await supabaseAdmin
       .from("leads")
-      .select("id, stage, c2s_contact_id")
+      .select("id, stage, valor, c2s_contact_id")
       .in("c2s_contact_id", ids.slice(i, i + 200));
     for (const l of data ?? []) {
-      if (l.c2s_contact_id) existentes.set(l.c2s_contact_id, { id: l.id, stage: l.stage as StageId });
+      if (l.c2s_contact_id)
+        existentes.set(l.c2s_contact_id, {
+          id: l.id,
+          stage: l.stage as StageId,
+          valor: Number(l.valor ?? 0),
+        });
     }
   }
 
@@ -97,7 +102,14 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
     }
 
     // Atualiza somente dados do contato, preservando a etapa definida no painel.
-    atualizados.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: existente.stage });
+    // O valor da negociação digitado pelo corretor no funil nunca é zerado pelo C2S:
+    // só sobrescrevemos quando o C2S traz um valor maior que zero.
+    atualizados.push({
+      ...base,
+      valor: Number(contato.valor) > 0 ? contato.valor : existente.valor,
+      c2s_contact_id: contato.c2s_contact_id,
+      stage: existente.stage,
+    });
     result.atualizados += 1;
 
 
