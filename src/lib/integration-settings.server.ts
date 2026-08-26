@@ -1,67 +1,84 @@
 /**
- * Cofre interno de configurações da integração (tabela public.integration_settings).
- * Só o servidor lê/escreve, sempre via supabaseAdmin — o navegador nunca recebe os valores.
+ * Gerencia configurações de integração armazenadas na tabela integration_settings.
+ * Todas as funções aqui usam o supabaseAdmin (service role) para leitura/escrita.
  */
+import { supabaseAdmin } from "@/integrations/supabase/client.server";
 
-export const AGENDA_SECRET_KEY = "agenda_sync_secret";
-export const AGENDA_BASE_URL_KEY = "agenda_base_url";
-export const AGENDA_PATH_KEY = "agenda_path";
+// ─── Chaves de configuração ────────────────────────────────────────────────────
+export const AGENDA_SECRET_KEY = "AGENDA_SYNC_SECRET";
+export const AGENDA_BASE_URL_KEY = "AGENDA_BASE_URL";
+export const AGENDA_PATH_KEY = "AGENDA_PATH";
 
+// ─── Leitura genérica ──────────────────────────────────────────────────────────
 export async function lerConfig(chave: string): Promise<string | null> {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const { data, error } = await supabaseAdmin
     .from("integration_settings")
     .select("valor")
     .eq("chave", chave)
     .maybeSingle();
-  if (error) return null;
-  const valor = (data as { valor?: string } | null)?.valor?.trim();
-  return valor ? valor : null;
+  if (error || !data) return null;
+  return (data as { valor: string }).valor || null;
 }
 
-export async function gravarConfig(chave: string, valor: string, userId?: string) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+// ─── Gravação genérica ─────────────────────────────────────────────────────────
+export async function gravarConfig(
+  chave: string,
+  valor: string,
+  userId?: string,
+): Promise<void> {
+  const { error } = await supabaseAdmin.from("integration_settings").upsert(
+    {
+      chave,
+      valor,
+      atualizado_em: new Date().toISOString(),
+      atualizado_por: userId ?? null,
+    },
+    { onConflict: "chave" },
+  );
+  if (error) throw new Error(`Falha ao gravar config "${chave}": ${error.message}`);
+}
+
+// ─── Apagar configuração ───────────────────────────────────────────────────────
+export async function apagarConfig(chave: string): Promise<void> {
   const { error } = await supabaseAdmin
     .from("integration_settings")
-    .upsert(
-      {
-        chave,
-        valor,
-        atualizado_em: new Date().toISOString(),
-        atualizado_por: userId ?? null,
-      },
-      { onConflict: "chave" },
-    );
-  if (error) throw new Error(`Não consegui salvar a configuração: ${error.message}`);
+    .delete()
+    .eq("chave", chave);
+  if (error) throw new Error(`Falha ao apagar config "${chave}": ${error.message}`);
 }
 
-export async function apagarConfig(chave: string) {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-  await supabaseAdmin.from("integration_settings").delete().eq("chave", chave);
+// ─── Segredo da agenda (singular) — retorna valor + origem ─────────────────────
+export async function segredoAgenda(): Promise<{
+  valor: string | null;
+  origem: "tela" | "ambiente" | null;
+}> {
+  const valorBanco = await lerConfig(AGENDA_SECRET_KEY);
+  if (valorBanco) return { valor: valorBanco, origem: "tela" };
+
+  const valorEnv = process.env["AGENDA_SYNC_SECRET"]?.trim() || null;
+  if (valorEnv) return { valor: valorEnv, origem: "ambiente" };
+
+  return { valor: null, origem: null };
 }
 
-/** Mostra só o começo e o fim do segredo. */
-export function mascarar(valor: string | null): string | null {
-  if (!valor) return null;
-  if (valor.length <= 8) return `${valor.slice(0, 2)}••••`;
-  return `${valor.slice(0, 4)}••••${valor.slice(-4)}`;
-}
-
-/** Segredo efetivo: o salvo na tela vence o que estiver no ambiente. */
-export async function segredoAgenda(): Promise<{ valor: string | null; origem: "tela" | "ambiente" | null }> {
-  const doBanco = await lerConfig(AGENDA_SECRET_KEY);
-  if (doBanco) return { valor: doBanco, origem: "tela" };
-  const doEnv = process.env["AGENDA_SYNC_SECRET"]?.trim();
-  return doEnv ? { valor: doEnv, origem: "ambiente" } : { valor: null, origem: null };
-}
-
-/**
- * Chaves candidatas para leitura da agenda. A configuração da tela continua
- * sendo testada primeiro, mas uma edição incorreta não interrompe a rotina se
- * a chave segura do ambiente ainda estiver válida.
- */
+// ─── Segredos da agenda (plural) — lista de segredos válidos ───────────────────
+// Retorna todos os segredos configurados (banco + env) para tentar múltiplas
+// autenticações contra o app de agenda.
 export async function segredosAgenda(): Promise<string[]> {
-  const doBanco = await lerConfig(AGENDA_SECRET_KEY);
-  const doEnv = process.env["AGENDA_SYNC_SECRET"]?.trim() ?? null;
-  return [...new Set([doBanco, doEnv].filter((valor): valor is string => Boolean(valor)))];
+  const resultado: string[] = [];
+
+  const valorBanco = await lerConfig(AGENDA_SECRET_KEY);
+  if (valorBanco) resultado.push(valorBanco);
+
+  const valorEnv = process.env["AGENDA_SYNC_SECRET"]?.trim();
+  if (valorEnv && !resultado.includes(valorEnv)) resultado.push(valorEnv);
+
+  return resultado;
+}
+
+// ─── Mascarar segredo para exibição ────────────────────────────────────────────
+export function mascarar(valor: string | null | undefined): string | null {
+  if (!valor) return null;
+  if (valor.length <= 6) return "••••••";
+  return valor.slice(0, 3) + "•".repeat(Math.min(valor.length - 6, 20)) + valor.slice(-3);
 }
