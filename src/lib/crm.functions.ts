@@ -105,6 +105,7 @@ export const getBoard = createServerFn({ method: "GET" })
 
 
     const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
+    const porId = new Map((leads ?? []).map((l) => [l.id, l] as const));
 
     return {
       isGestor: (roles ?? []).some((r) => r.role === "gestor"),
