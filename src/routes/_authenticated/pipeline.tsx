@@ -144,8 +144,16 @@ function PipelinePage() {
           if (lead === null) removidos.add(id);
           else atualizados.set(id, lead);
         }
+        // Um cliente aparece em uma única coluna: se já existe card da Agenda vinculado
+        // ao lead, o registro do C2S não pode voltar pelo tempo real.
+        const comAgenda = new Set(
+          old.leads
+            .filter((l) => l.agenda_record && l.agenda_lead_id)
+            .map((l) => l.agenda_lead_id as string),
+        );
+        for (const id of comAgenda) atualizados.delete(id);
         const leads = old.leads
-          .filter((l) => !removidos.has(l.id))
+          .filter((l) => !removidos.has(l.id) && !(!l.agenda_record && comAgenda.has(l.id)))
           .map((l) => {
             const novo = atualizados.get(l.id);
             if (!novo) return l;
@@ -154,6 +162,7 @@ function PipelinePage() {
           });
         const novos = Array.from(atualizados.values());
         return { ...old, leads: novos.length ? [...novos, ...leads] : leads };
+
       });
     };
 
