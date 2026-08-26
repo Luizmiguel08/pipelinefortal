@@ -597,11 +597,11 @@
       "src_components_ui_carousel_usecarouselparameters"
     ],
     "16": [
-      "date_fns",
+      "clsx",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_date_fns",
+      "package_dependencies_clsx",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
       "package_dependencies_radix_ui_react_context_menu",
@@ -705,12 +705,12 @@
       "package_dependencies_class_variance_authority"
     ],
     "28": [
-      "clsx",
-      "package_dependencies_clsx"
-    ],
-    "29": [
       "cmdk",
       "package_dependencies_cmdk"
+    ],
+    "29": [
+      "date_fns",
+      "package_dependencies_date_fns"
     ],
     "30": [
       "embla_carousel_react",
@@ -1033,71 +1033,71 @@
       "degree": 8
     },
     {
-      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
-      "label": "requireSupabaseAuth",
+      "id": "src_components_ui_input_input",
+      "label": "Input",
       "degree": 8
     },
     {
-      "id": "src_components_ui_input_input",
-      "label": "Input",
+      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
+      "label": "requireSupabaseAuth",
       "degree": 8
     }
   ],
   "surprises": [
     {
-      "source": "ResizableHandle()",
+      "source": "Chip()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/resizable.tsx",
+        "src/components/crm/LeadDialog.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `ResizableHandle()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `Chip()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "ResizablePanelGroup()",
+      "source": "AlertDialogFooter()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/resizable.tsx",
+        "src/components/ui/alert-dialog.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `ResizablePanelGroup()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `AlertDialogFooter()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "MenubarShortcut()",
+      "source": "AlertDialogHeader()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/menubar.tsx",
+        "src/components/ui/alert-dialog.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `MenubarShortcut()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `AlertDialogHeader()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "SheetFooter()",
+      "source": "Pagination()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/sheet.tsx",
+        "src/components/ui/pagination.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `SheetFooter()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `Pagination()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "DrawerFooter()",
+      "source": "PaginationEllipsis()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/drawer.tsx",
+        "src/components/ui/pagination.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `DrawerFooter()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `PaginationEllipsis()` unexpectedly reaches hub `cn()`"
     }
   ],
   "tokens": {

@@ -2454,7 +2454,7 @@
       "file_type": "code",
       "norm_label": "getintegrationstatus",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L394"
+      "source_location": "L396"
     },
     {
       "id": "src_lib_crm_functions_getsynchistory",
@@ -2464,7 +2464,7 @@
       "file_type": "code",
       "norm_label": "getsynchistory",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L442"
+      "source_location": "L444"
     },
     {
       "id": "src_lib_crm_functions_movelead",
@@ -2474,7 +2474,7 @@
       "file_type": "code",
       "norm_label": "movelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L195"
+      "source_location": "L197"
     },
     {
       "id": "src_lib_crm_functions_salvarleadagenda",
@@ -2484,7 +2484,7 @@
       "file_type": "code",
       "norm_label": "salvarleadagenda",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L314"
+      "source_location": "L316"
     },
     {
       "id": "src_lib_crm_functions_savelead",
@@ -2494,7 +2494,7 @@
       "file_type": "code",
       "norm_label": "savelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L220"
+      "source_location": "L222"
     },
     {
       "id": "src_lib_crm_functions_syncnow",
@@ -2504,7 +2504,7 @@
       "file_type": "code",
       "norm_label": "syncnow",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L479"
+      "source_location": "L481"
     },
     {
       "id": "src_lib_crm_functions_testc2sconnection",
@@ -2514,7 +2514,7 @@
       "file_type": "code",
       "norm_label": "testc2sconnection",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L426"
+      "source_location": "L428"
     },
     {
       "id": "src_lib_stages",
@@ -2764,7 +2764,7 @@
       "file_type": "code",
       "norm_label": "importc2scorretores",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L506"
+      "source_location": "L508"
     },
     {
       "id": "src_lib_integration_settings_server",
@@ -3597,14 +3597,14 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_date_fns",
-      "label": "date-fns",
+      "id": "package_dependencies_clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 16,
       "file_type": "code",
-      "norm_label": "date-fns",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L55"
+      "source_location": "L53"
     },
     {
       "id": "package_dependencies_input_otp",
@@ -3657,14 +3657,14 @@
       "source_location": "L50"
     },
     {
-      "id": "date_fns",
-      "label": "date-fns",
+      "id": "clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 16,
       "file_type": "concept",
-      "norm_label": "date-fns",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L55"
+      "source_location": "L53"
     },
     {
       "id": "input_otp",
@@ -4807,30 +4807,10 @@
       "source_location": "L52"
     },
     {
-      "id": "package_dependencies_clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 28,
-      "file_type": "code",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L53"
-    },
-    {
-      "id": "clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 28,
-      "file_type": "concept",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L53"
-    },
-    {
       "id": "package_dependencies_cmdk",
       "label": "cmdk",
       "_origin": "ast",
-      "community": 29,
+      "community": 28,
       "file_type": "code",
       "norm_label": "cmdk",
       "source_file": "package.json",
@@ -4840,11 +4820,31 @@
       "id": "cmdk",
       "label": "cmdk",
       "_origin": "ast",
-      "community": 29,
+      "community": 28,
       "file_type": "concept",
       "norm_label": "cmdk",
       "source_file": "package.json",
       "source_location": "L54"
+    },
+    {
+      "id": "package_dependencies_date_fns",
+      "label": "date-fns",
+      "_origin": "ast",
+      "community": 29,
+      "file_type": "code",
+      "norm_label": "date-fns",
+      "source_file": "package.json",
+      "source_location": "L55"
+    },
+    {
+      "id": "date_fns",
+      "label": "date-fns",
+      "_origin": "ast",
+      "community": 29,
+      "file_type": "concept",
+      "norm_label": "date-fns",
+      "source_file": "package.json",
+      "source_location": "L55"
     },
     {
       "id": "src_components_ui_avatar",
@@ -10805,7 +10805,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L210",
+      "source_location": "L212",
       "weight": 1.0
     },
     {
@@ -10817,7 +10817,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L269",
+      "source_location": "L271",
       "weight": 1.0
     },
     {
@@ -10829,7 +10829,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L292",
+      "source_location": "L294",
       "weight": 1.0
     },
     {
@@ -11345,7 +11345,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L515",
+      "source_location": "L517",
       "weight": 1.0
     },
     {
@@ -11358,7 +11358,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L516",
+      "source_location": "L518",
       "weight": 1.0
     },
     {
@@ -11371,7 +11371,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L368",
+      "source_location": "L370",
       "weight": 1.0
     },
     {
@@ -11384,7 +11384,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L490",
+      "source_location": "L492",
       "weight": 1.0
     },
     {
@@ -11397,7 +11397,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L437",
+      "source_location": "L439",
       "weight": 1.0
     },
     {
@@ -21057,7 +21057,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L195",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -21068,7 +21068,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L220",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -21079,7 +21079,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L314",
+      "source_location": "L316",
       "weight": 1.0
     },
     {
@@ -21101,7 +21101,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L394",
+      "source_location": "L396",
       "weight": 1.0
     },
     {
@@ -21112,7 +21112,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L426",
+      "source_location": "L428",
       "weight": 1.0
     },
     {
@@ -21123,7 +21123,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L442",
+      "source_location": "L444",
       "weight": 1.0
     },
     {
@@ -21145,7 +21145,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L479",
+      "source_location": "L481",
       "weight": 1.0
     },
     {
@@ -21167,7 +21167,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L506",
+      "source_location": "L508",
       "weight": 1.0
     },
     {
@@ -22835,5 +22835,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "0884e49452cceec16348b6022298818ebaa635bb"
+  "built_at_commit": "33f88bb2f34cde897b472259be0225c16babd7a3"
 }
