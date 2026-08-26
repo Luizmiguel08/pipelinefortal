@@ -35,14 +35,7 @@ export const syncAgenda = createServerFn({ method: "POST" })
     if (!isGestor) throw new Error("Apenas gestores podem sincronizar a agenda");
 
     const { runAgendaSync } = await import("./agenda-sync.server");
-    // A execução manual reprocessa o dia inteiro em São Paulo. Isso recupera
-    // mudanças de status ocorridas durante uma falha temporária da rotina.
-    const agora = new Date();
-    const dataLocal = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "America/Sao_Paulo",
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-    }).format(agora);
-    return await runAgendaSync("manual", `${dataLocal}T00:00:00-03:00`);
+    // A execução manual relê todo o histórico. O endpoint da agenda interpreta
+    // o parâmetro de data como "alterado desde", não como data da visita.
+    return await runAgendaSync("manual", "1970-01-01T00:00:00.000Z");
   });
