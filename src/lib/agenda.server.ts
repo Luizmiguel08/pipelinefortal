@@ -81,11 +81,11 @@ function extrairLista(json: unknown): unknown[] {
  * POST + Authorization: Bearer <segredo> e GET + x-sync-secret.
  */
 export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointment[]> {
-  const { segredoAgenda, lerConfig, AGENDA_BASE_URL_KEY, AGENDA_PATH_KEY } = await import(
+  const { segredosAgenda, lerConfig, AGENDA_BASE_URL_KEY, AGENDA_PATH_KEY } = await import(
     "./integration-settings.server"
   );
-  const { valor: secret } = await segredoAgenda();
-  if (!secret)
+  const secrets = await segredosAgenda();
+  if (secrets.length === 0)
     throw new Error(
       "Segredo da agenda não configurado. Abra Configurações da agenda e salve o AGENDA_SYNC_SECRET.",
     );
@@ -101,7 +101,7 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
   const alvo = `${base}${caminho.startsWith("/") ? caminho : `/${caminho}`}`;
 
 
-  const tentativas: Array<{ url: string; init: RequestInit }> = [
+  const tentativas: Array<{ url: string; init: RequestInit }> = secrets.flatMap((secret) => [
     {
       url: alvo,
       init: {
@@ -138,7 +138,7 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
         },
       },
     },
-  ];
+  ]);
 
   let ultimoErro = "";
   for (const tentativa of tentativas) {

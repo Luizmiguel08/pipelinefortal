@@ -144,7 +144,9 @@ export async function runAgendaSync(
         visita_status: ag.status,
         visita_motivo: ag.status === "desmarcado" ? ag.motivo : null,
         visita_projeto: ag.empreendimento,
-        visita_em: ag.status === "desmarcado" ? null : ag.visita_em,
+        // Mantém a data que estava marcada para permitir contar e filtrar
+        // cancelamentos no dia correto.
+        visita_em: ag.visita_em,
         visita_realizada: ag.status === "realizado",
         agenda_synced_at: agora,
         ultima_interacao: agora,
