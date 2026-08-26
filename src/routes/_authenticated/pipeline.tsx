@@ -383,6 +383,12 @@ function PipelinePage() {
             )}
             {data?.isGestor && (
               <Button variant="secondary" asChild>
+                <Link to="/reconciliacao-agenda">Reconciliação agenda</Link>
+              </Button>
+            )}
+
+            {data?.isGestor && (
+              <Button variant="secondary" asChild>
                 <Link to="/equipe">Equipe</Link>
               </Button>
             )}

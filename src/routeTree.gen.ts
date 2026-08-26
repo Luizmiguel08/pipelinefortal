@@ -17,6 +17,7 @@ import { Route as AuthenticatedConfiguracoesAgendaRouteImport } from './routes/_
 import { Route as AuthenticatedEquipeRouteImport } from './routes/_authenticated/equipe'
 import { Route as AuthenticatedIntegracaoRouteImport } from './routes/_authenticated/integracao'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
+import { Route as AuthenticatedReconciliacaoAgendaRouteImport } from './routes/_authenticated/reconciliacao-agenda'
 import { Route as ApiPublicHooksAgendaSyncRouteImport } from './routes/api/public/hooks/agenda-sync'
 import { Route as ApiPublicHooksC2sSyncRouteImport } from './routes/api/public/hooks/c2s-sync'
 
@@ -60,6 +61,12 @@ const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
   path: '/pipeline',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReconciliacaoAgendaRoute =
+  AuthenticatedReconciliacaoAgendaRouteImport.update({
+    id: '/reconciliacao-agenda',
+    path: '/reconciliacao-agenda',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const ApiPublicHooksAgendaSyncRoute =
   ApiPublicHooksAgendaSyncRouteImport.update({
     id: '/api/public/hooks/agenda-sync',
@@ -80,6 +87,7 @@ export interface FileRoutesByFullPath {
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
+  '/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
@@ -91,6 +99,7 @@ export interface FileRoutesByTo {
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
+  '/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
@@ -104,6 +113,7 @@ export interface FileRoutesById {
   '/_authenticated/equipe': typeof AuthenticatedEquipeRoute
   '/_authenticated/integracao': typeof AuthenticatedIntegracaoRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
+  '/_authenticated/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
 }
@@ -117,6 +127,7 @@ export interface FileRouteTypes {
     | '/equipe'
     | '/integracao'
     | '/pipeline'
+    | '/reconciliacao-agenda'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
   fileRoutesByTo: FileRoutesByTo
@@ -128,6 +139,7 @@ export interface FileRouteTypes {
     | '/equipe'
     | '/integracao'
     | '/pipeline'
+    | '/reconciliacao-agenda'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
   id:
@@ -140,6 +152,7 @@ export interface FileRouteTypes {
     | '/_authenticated/equipe'
     | '/_authenticated/integracao'
     | '/_authenticated/pipeline'
+    | '/_authenticated/reconciliacao-agenda'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
   fileRoutesById: FileRoutesById
@@ -210,6 +223,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPipelineRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/reconciliacao-agenda': {
+      id: '/_authenticated/reconciliacao-agenda'
+      path: '/reconciliacao-agenda'
+      fullPath: '/reconciliacao-agenda'
+      preLoaderRoute: typeof AuthenticatedReconciliacaoAgendaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/api/public/hooks/agenda-sync': {
       id: '/api/public/hooks/agenda-sync'
       path: '/api/public/hooks/agenda-sync'
@@ -233,6 +253,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEquipeRoute: typeof AuthenticatedEquipeRoute
   AuthenticatedIntegracaoRoute: typeof AuthenticatedIntegracaoRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
+  AuthenticatedReconciliacaoAgendaRoute: typeof AuthenticatedReconciliacaoAgendaRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -241,6 +262,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEquipeRoute: AuthenticatedEquipeRoute,
   AuthenticatedIntegracaoRoute: AuthenticatedIntegracaoRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
+  AuthenticatedReconciliacaoAgendaRoute: AuthenticatedReconciliacaoAgendaRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
