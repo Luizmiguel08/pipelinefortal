@@ -43,6 +43,8 @@ export type LeadFormValues = {
   forcar_stage?: boolean;
   /** Card espelhado da Agenda: salva os indicadores sem alterar a etapa. */
   preservar_stage?: boolean;
+  /** Id do agendamento na Agenda, quando o card vem do espelho. */
+  agenda_appointment_id?: string | null;
 };
 
 const empty: LeadFormValues = {
@@ -177,6 +179,7 @@ export function LeadDialog({
             documentacao_ok: Boolean(lead.documentacao_ok),
             visita_em: lead.visita_em ?? null,
             visita_realizada: Boolean(lead.visita_realizada),
+            agenda_appointment_id: lead.agenda_appointment_id ?? null,
           }
         : { ...empty, corretor_id: defaultCorretorId },
     );

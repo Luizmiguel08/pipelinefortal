@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, salvarLeadAgenda, type Board, type BoardLead } from "@/lib/crm.functions";
 import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 
@@ -79,6 +79,7 @@ function PipelinePage() {
   const fetchBoard = useServerFn(getBoard);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
+  const persistAgenda = useServerFn(salvarLeadAgenda);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
@@ -225,7 +226,7 @@ function PipelinePage() {
       return { anterior };
     },
     onError: (e: Error, _vars, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -233,7 +234,23 @@ function PipelinePage() {
 
   const saveMutation = useMutation({
     mutationFn: (values: LeadFormValues) =>
-      persist({
+      values.agenda_appointment_id
+        ? persistAgenda({
+            data: {
+              agenda_appointment_id: values.agenda_appointment_id,
+              nome: values.nome,
+              telefone: values.telefone,
+              email: values.email,
+              imovel: values.imovel,
+              valor: values.valor,
+              observacoes: values.observacoes,
+              entrada: values.entrada,
+              finalidade: values.finalidade,
+              estagio_imovel: values.estagio_imovel,
+              documentacao_ok: values.documentacao_ok,
+            },
+          })
+        : persist({
         data: {
           id: values.id,
           nome: values.nome,
@@ -257,7 +274,7 @@ function PipelinePage() {
     // Atualização otimista: o card muda de coluna na hora (ex.: documentação recebida).
     onMutate: async (values) => {
       setDialogOpen(false);
-      if (!values.id) return { anterior: undefined };
+      if (!values.id || values.agenda_appointment_id) return { anterior: undefined };
       await queryClient.cancelQueries({ queryKey: ["board"] });
       const anterior = queryClient.getQueryData<Board>(["board"]);
       if (values.preservar_stage) return { anterior: undefined };
@@ -298,10 +315,11 @@ function PipelinePage() {
     onSuccess: (_r, values) => {
       toast.success("Lead salvo");
       // Só recarregamos o funil inteiro quando o lead é novo; edições já foram aplicadas localmente.
-      if (!values.id || values.preservar_stage) queryClient.invalidateQueries({ queryKey: ["board"] });
+      if (!values.id || values.preservar_stage || values.agenda_appointment_id)
+        queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -354,12 +372,9 @@ function PipelinePage() {
 
   const abrirLead = useCallback((l: BoardLead) => {
     if (l.agenda_record) {
-      // Cards da Agenda podem ter os indicadores preenchidos, desde que o contato exista no C2S.
-      if (!l.agenda_lead_id) {
-        toast.info("Contato sem vínculo no C2S: não há lead para preencher indicadores.");
-        return;
-      }
-      setLeadAtual({ ...l, id: l.agenda_lead_id });
+      // Cards da Agenda sempre abrem para preencher indicadores — inclusive contatos
+      // sem vínculo no C2S (nesse caso o lead é criado e amarrado ao agendamento).
+      setLeadAtual({ ...l, id: l.agenda_lead_id ?? "" });
       setDialogOpen(true);
       return;
     }

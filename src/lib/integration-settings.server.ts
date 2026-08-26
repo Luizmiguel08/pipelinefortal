@@ -11,13 +11,14 @@ export const AGENDA_PATH_KEY = "AGENDA_PATH";
 
 // ─── Leitura genérica ──────────────────────────────────────────────────────────
 export async function lerConfig(chave: string): Promise<string | null> {
+  // A chave pode ter sido gravada em maiúsculas ou minúsculas: comparamos sem diferenciar.
   const { data, error } = await supabaseAdmin
     .from("integration_settings")
-    .select("valor")
-    .eq("chave", chave)
-    .maybeSingle();
-  if (error || !data) return null;
-  return (data as { valor: string }).valor || null;
+    .select("chave, valor")
+    .ilike("chave", chave);
+  if (error || !data || data.length === 0) return null;
+  const linha = (data as { chave: string; valor: string }[])[0];
+  return linha?.valor || null;
 }
 
 // ─── Gravação genérica ─────────────────────────────────────────────────────────
