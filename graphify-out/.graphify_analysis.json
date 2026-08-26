@@ -1019,13 +1019,13 @@
       "degree": 8
     },
     {
-      "id": "src_lib_c2s_server_fetchc2scontacts",
-      "label": "fetchC2SContacts()",
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
       "degree": 8
     },
     {
-      "id": "src_components_ui_input_input",
-      "label": "Input",
+      "id": "src_lib_c2s_server_fetchc2scontacts",
+      "label": "fetchC2SContacts()",
       "degree": 8
     }
   ],
