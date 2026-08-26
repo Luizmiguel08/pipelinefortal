@@ -35,7 +35,23 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
       }`}
     >
       <div className="flex items-start justify-between gap-2">
-        <h4 className="text-sm font-semibold leading-tight">{lead.nome}</h4>
+        <h4 className="flex items-center gap-1.5 text-sm font-semibold leading-tight">
+          <span>{lead.nome}</span>
+          {waLink && (
+            <a
+              href={waLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Abrir conversa no WhatsApp"
+              aria-label={`Conversar com ${lead.nome} no WhatsApp`}
+              onClick={(e) => e.stopPropagation()}
+              onDragStart={(e) => e.preventDefault()}
+              className="shrink-0 text-[oklch(0.7_0.18_150)] opacity-70 transition-opacity hover:opacity-100"
+            >
+              <WhatsappIcon size={15} />
+            </a>
+          )}
+        </h4>
         <span className="shrink-0 text-sm font-semibold text-primary">{formatBRL(lead.valor)}</span>
       </div>
       {sla && emAlerta && (
