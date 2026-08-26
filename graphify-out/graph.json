@@ -3685,16 +3685,6 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 16,
-      "file_type": "code",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L53"
-    },
-    {
       "id": "package_dependencies_input_otp",
       "label": "input-otp",
       "_origin": "ast",
@@ -3713,6 +3703,16 @@
       "norm_label": "@lovable.dev/cloud-auth-js",
       "source_file": "package.json",
       "source_location": "L19"
+    },
+    {
+      "id": "package_dependencies_lucide_react",
+      "label": "lucide-react",
+      "_origin": "ast",
+      "community": 16,
+      "file_type": "code",
+      "norm_label": "lucide-react",
+      "source_file": "package.json",
+      "source_location": "L58"
     },
     {
       "id": "package_dependencies_radix_ui_react_context_menu",
@@ -3745,16 +3745,6 @@
       "source_location": "L50"
     },
     {
-      "id": "clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 16,
-      "file_type": "concept",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L53"
-    },
-    {
       "id": "input_otp",
       "label": "input-otp",
       "_origin": "ast",
@@ -3773,6 +3763,16 @@
       "norm_label": "@lovable.dev/cloud-auth-js",
       "source_file": "package.json",
       "source_location": "L19"
+    },
+    {
+      "id": "lucide_react",
+      "label": "lucide-react",
+      "_origin": "ast",
+      "community": 16,
+      "file_type": "concept",
+      "norm_label": "lucide-react",
+      "source_file": "package.json",
+      "source_location": "L58"
     },
     {
       "id": "radix_ui_react_context_menu",
@@ -4825,10 +4825,30 @@
       "source_location": "L52"
     },
     {
+      "id": "package_dependencies_clsx",
+      "label": "clsx",
+      "_origin": "ast",
+      "community": 27,
+      "file_type": "code",
+      "norm_label": "clsx",
+      "source_file": "package.json",
+      "source_location": "L53"
+    },
+    {
+      "id": "clsx",
+      "label": "clsx",
+      "_origin": "ast",
+      "community": 27,
+      "file_type": "concept",
+      "norm_label": "clsx",
+      "source_file": "package.json",
+      "source_location": "L53"
+    },
+    {
       "id": "package_dependencies_cmdk",
       "label": "cmdk",
       "_origin": "ast",
-      "community": 27,
+      "community": 28,
       "file_type": "code",
       "norm_label": "cmdk",
       "source_file": "package.json",
@@ -4838,7 +4858,7 @@
       "id": "cmdk",
       "label": "cmdk",
       "_origin": "ast",
-      "community": 27,
+      "community": 28,
       "file_type": "concept",
       "norm_label": "cmdk",
       "source_file": "package.json",
@@ -4848,7 +4868,7 @@
       "id": "package_dependencies_date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 28,
+      "community": 29,
       "file_type": "code",
       "norm_label": "date-fns",
       "source_file": "package.json",
@@ -4858,31 +4878,11 @@
       "id": "date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 28,
+      "community": 29,
       "file_type": "concept",
       "norm_label": "date-fns",
       "source_file": "package.json",
       "source_location": "L55"
-    },
-    {
-      "id": "package_dependencies_embla_carousel_react",
-      "label": "embla-carousel-react",
-      "_origin": "ast",
-      "community": 29,
-      "file_type": "code",
-      "norm_label": "embla-carousel-react",
-      "source_file": "package.json",
-      "source_location": "L56"
-    },
-    {
-      "id": "embla_carousel_react",
-      "label": "embla-carousel-react",
-      "_origin": "ast",
-      "community": 29,
-      "file_type": "concept",
-      "norm_label": "embla-carousel-react",
-      "source_file": "package.json",
-      "source_location": "L56"
     },
     {
       "id": "src_components_ui_separator",
@@ -5265,10 +5265,30 @@
       "source_location": "L1"
     },
     {
+      "id": "package_dependencies_embla_carousel_react",
+      "label": "embla-carousel-react",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "code",
+      "norm_label": "embla-carousel-react",
+      "source_file": "package.json",
+      "source_location": "L56"
+    },
+    {
+      "id": "embla_carousel_react",
+      "label": "embla-carousel-react",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "concept",
+      "norm_label": "embla-carousel-react",
+      "source_file": "package.json",
+      "source_location": "L56"
+    },
+    {
       "id": "package_dependencies_hookform_resolvers",
       "label": "@hookform/resolvers",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "code",
       "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
@@ -5278,31 +5298,11 @@
       "id": "hookform_resolvers",
       "label": "@hookform/resolvers",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "concept",
       "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
       "source_location": "L18"
-    },
-    {
-      "id": "package_dependencies_lucide_react",
-      "label": "lucide-react",
-      "_origin": "ast",
-      "community": 31,
-      "file_type": "code",
-      "norm_label": "lucide-react",
-      "source_file": "package.json",
-      "source_location": "L58"
-    },
-    {
-      "id": "lucide_react",
-      "label": "lucide-react",
-      "_origin": "ast",
-      "community": 31,
-      "file_type": "concept",
-      "norm_label": "lucide-react",
-      "source_file": "package.json",
-      "source_location": "L58"
     },
     {
       "id": "package_dependencies_radix_ui_react_accordion",
@@ -22142,5 +22142,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "64ccb0dcae76fca9ee330fd2940e3149380d25d3"
+  "built_at_commit": "5e6b2c4b67120f5609b45ea5219ac9b6255aeb45"
 }
