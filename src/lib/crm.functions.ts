@@ -80,7 +80,7 @@ export const getBoard = createServerFn({ method: "GET" })
       supabase
         .from("agenda_appointments")
         .select("id, cliente_nome, cliente_telefone, corretor_nome, empreendimento, visita_em, status, motivo, lead_id, corretor_id, encontrado_c2s, agenda_criado_em, agenda_atualizado_em, created_at")
-        .in("status", ["agendado", "realizado"])
+        .not("agenda_criado_em", "is", null)
         .order("visita_em", { ascending: false }),
     ]);
     if (agendaError) throw new Error(agendaError.message);
@@ -102,37 +102,49 @@ export const getBoard = createServerFn({ method: "GET" })
         documentacao_ok: Boolean(l.documentacao_ok),
         visita_realizada: Boolean(l.visita_realizada),
           })),
-        ...(agendaRows ?? []).map((a): BoardLead => ({
-          id: `agenda:${a.id}`,
-          nome: a.cliente_nome,
-          telefone: a.cliente_telefone,
-          email: null,
-          imovel: a.empreendimento,
-          valor: 0,
-          stage: a.status === "realizado" ? "visita_realizada" : "visita",
-          corretor_id: a.corretor_id,
-          origem: "Agenda",
-          observacoes: a.motivo,
-          ultima_interacao: a.agenda_atualizado_em ?? a.visita_em,
-          c2s_contact_id: a.lead_id,
-          created_at: a.created_at,
-          data_c2s: a.status === "agendado"
-            ? (a.agenda_criado_em ?? a.created_at)
-            : (a.visita_em ?? a.agenda_atualizado_em ?? a.created_at),
-          entrada: 0,
-          finalidade: null,
-          estagio_imovel: null,
-          documentacao_ok: false,
-          visita_em: a.visita_em,
-          visita_realizada: a.status === "realizado",
-          visita_status: a.status as BoardLead["visita_status"],
-          visita_motivo: a.motivo,
-          visita_projeto: a.empreendimento,
-          stage_since: a.agenda_atualizado_em ?? a.created_at,
-          agenda_record: true,
-          encontrado_c2s: a.encontrado_c2s,
-          corretor_agenda_nome: a.corretor_nome,
-        })),
+        ...(agendaRows ?? []).flatMap((a): BoardLead[] => {
+          const base: Omit<BoardLead, "id" | "stage" | "data_c2s"> = {
+            nome: a.cliente_nome,
+            telefone: a.cliente_telefone,
+            email: null,
+            imovel: a.empreendimento,
+            valor: 0,
+            corretor_id: a.corretor_id,
+            origem: "Agenda",
+            observacoes: a.motivo,
+            ultima_interacao: a.agenda_atualizado_em ?? a.visita_em,
+            c2s_contact_id: a.lead_id,
+            created_at: a.created_at,
+            entrada: 0,
+            finalidade: null,
+            estagio_imovel: null,
+            documentacao_ok: false,
+            visita_em: a.visita_em,
+            visita_realizada: a.status === "realizado",
+            visita_status: a.status as BoardLead["visita_status"],
+            visita_motivo: a.motivo,
+            visita_projeto: a.empreendimento,
+            stage_since: a.agenda_atualizado_em ?? a.created_at,
+            agenda_record: true,
+            encontrado_c2s: a.encontrado_c2s,
+            corretor_agenda_nome: a.corretor_nome,
+          };
+          const registros: BoardLead[] = [{
+            ...base,
+            id: `agenda:${a.id}:agendado`,
+            stage: "visita",
+            data_c2s: a.agenda_criado_em ?? a.created_at,
+          }];
+          if (a.status === "realizado") {
+            registros.push({
+              ...base,
+              id: `agenda:${a.id}:realizado`,
+              stage: "visita_realizada",
+              data_c2s: a.visita_em ?? a.agenda_atualizado_em ?? a.created_at,
+            });
+          }
+          return registros;
+        }),
       ],
     };
   });

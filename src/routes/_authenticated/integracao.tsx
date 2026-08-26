@@ -214,9 +214,8 @@ function IntegracaoPage() {
           </Button>
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
-          Agendamentos, visitas realizadas e desmarcações são puxados a cada minuto e cruzados com
-          os leads do C2S por telefone ou nome. Sem correspondência, o lead é criado com origem
-          Agenda.
+          Cada registro é espelhado da Agenda e cruzado com o C2S por telefone ou nome. Contatos
+          sem correspondência ficam identificados, sem criar leads artificiais no C2S.
         </p>
         {agendaRuns && agendaRuns.length > 0 && (
           <div className="mt-4 overflow-x-auto">
