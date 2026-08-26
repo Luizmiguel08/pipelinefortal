@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -8,17 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
-import {
-  PAGINA_COLUNA,
-  getBoard,
-  getBoardCards,
-  moveLead,
-  saveLead,
-  type Board,
-  type BoardLead,
-} from "@/lib/crm.functions";
+import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
 import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
+
+// Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
+const PAGINA_COLUNA = 25;
+
+// Recorte padrão do funil: agosto/2026 em diante.
+const INICIO_PADRAO = "2026-08-01";
 
 export const Route = createFileRoute("/_authenticated/pipeline")({
   head: () => ({
@@ -43,68 +41,101 @@ function PipelinePage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const fetchBoard = useServerFn(getBoard);
-  const fetchCards = useServerFn(getBoardCards);
   const move = useServerFn(moveLead);
   const persist = useServerFn(saveLead);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
-  const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
-  const [dataInicio, setDataInicio] = useState("");
-  const [dataFim, setDataFim] = useState("");
-  const [buscaInput, setBuscaInput] = useState("");
-  const [busca, setBusca] = useState("");
-  const [dragging, setDragging] = useState<BoardLead | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
-  const [extras, setExtras] = useState<Partial<Record<StageId, BoardLead[]>>>({});
-  const [carregandoMais, setCarregandoMais] = useState<StageId | null>(null);
 
-  const meuCorretorIdRef = useRef<string | null>(null);
-
-  const filtros = useMemo(
-    () => ({
-      corretor:
-        corretorFiltro === "meus" ? meuCorretorIdRef.current : corretorFiltro === "todos" ? null : corretorFiltro,
-      inicio: dataInicio ? `${dataInicio}T00:00:00` : null,
-      fim: dataFim ? `${dataFim}T23:59:59.999` : null,
-      busca: busca || null,
-    }),
-    [corretorFiltro, dataInicio, dataFim, busca],
-  );
-
-  const chave = ["board", filtros.corretor, filtros.inicio, filtros.fim, filtros.busca] as const;
-
-  const { data, isLoading } = useQuery<Board>({
-    queryKey: chave,
-    queryFn: () => fetchBoard({ data: filtros }),
-    refetchInterval: 60_000,
+  const { data, isLoading } = useQuery({
+    queryKey: ["board"],
+    // O tempo real já mantém o funil atualizado; a recarga completa é só rede de segurança.
+    queryFn: () => fetchBoard(),
+    refetchInterval: 5 * 60_000,
     refetchOnWindowFocus: false,
-    staleTime: 30_000,
+    staleTime: 2 * 60_000,
     placeholderData: (prev) => prev,
   });
 
+  // Tempo real: aplicamos as mudanças direto no cache, em lotes, sem recarregar o funil.
   useEffect(() => {
-    meuCorretorIdRef.current = data?.meuCorretorId ?? null;
-  }, [data?.meuCorretorId]);
+    const normalizar = (r: Record<string, unknown>): BoardLead => ({
+      id: String(r['id']),
+      nome: String(r['nome'] ?? ""),
+      telefone: (r['telefone'] as string) ?? null,
+      email: (r['email'] as string) ?? null,
+      imovel: (r['imovel'] as string) ?? null,
+      valor: Number(r['valor'] ?? 0),
+      stage: r['stage'] as StageId,
+      corretor_id: (r['corretor_id'] as string) ?? null,
+      origem: (r['origem'] as string) ?? null,
+      observacoes: (r['observacoes'] as string) ?? null,
+      ultima_interacao: (r['ultima_interacao'] as string) ?? null,
+      c2s_contact_id: (r['c2s_contact_id'] as string) ?? null,
+      created_at: (r['created_at'] as string) ?? null,
+      data_c2s: (r['data_c2s'] as string) ?? null,
+      entrada: Number(r['entrada'] ?? 0),
+      finalidade: (r['finalidade'] as BoardLead["finalidade"]) ?? null,
+      estagio_imovel: (r['estagio_imovel'] as BoardLead["estagio_imovel"]) ?? null,
+      documentacao_ok: Boolean(r['documentacao_ok']),
+      visita_em: (r['visita_em'] as string) ?? null,
+      visita_realizada: Boolean(r['visita_realizada']),
+      visita_status: (r['visita_status'] as BoardLead["visita_status"]) ?? null,
+      visita_motivo: (r['visita_motivo'] as string) ?? null,
+      visita_projeto: (r['visita_projeto'] as string) ?? null,
+      stage_since: (r['stage_since'] as string) ?? null,
+      agenda_record: Boolean(r['agenda_record']),
+      encontrado_c2s: Boolean(r['encontrado_c2s']),
+      corretor_agenda_nome: (r['corretor_agenda_nome'] as string) ?? null,
+    });
 
-  // Ao trocar de filtro as páginas extras deixam de valer.
-  useEffect(() => {
-    setExtras({});
-  }, [filtros.corretor, filtros.inicio, filtros.fim, filtros.busca]);
-
-  // Tempo real: recarregamos o funil (agora leve) em lotes, sem travar a tela.
-  useEffect(() => {
+    // Durante uma sincronização grande chegam centenas de eventos por segundo:
+    // acumulamos e aplicamos em blocos para a tela não travar.
+    const pendentes = new Map<string, BoardLead | null>();
     let timer: ReturnType<typeof setTimeout> | null = null;
+
+    const aplicar = () => {
+      timer = null;
+      if (pendentes.size === 0) return;
+      const lote = new Map(pendentes);
+      pendentes.clear();
+      queryClient.setQueryData<Board>(["board"], (old) => {
+        if (!old) return old;
+        const removidos = new Set<string>();
+        const atualizados = new Map<string, BoardLead>();
+        for (const [id, lead] of lote) {
+          if (lead === null) removidos.add(id);
+          else atualizados.set(id, lead);
+        }
+        const leads = old.leads
+          .filter((l) => !removidos.has(l.id))
+          .map((l) => {
+            const novo = atualizados.get(l.id);
+            if (!novo) return l;
+            atualizados.delete(l.id);
+            return { ...l, ...novo };
+          });
+        const novos = Array.from(atualizados.values());
+        return { ...old, leads: novos.length ? [...novos, ...leads] : leads };
+      });
+    };
+
     const agendar = () => {
       if (timer) return;
-      timer = setTimeout(() => {
-        timer = null;
-        queryClient.invalidateQueries({ queryKey: ["board"] });
-      }, 1500);
+      timer = setTimeout(aplicar, 400);
     };
+
     const channel = supabase
       .channel("leads-tempo-real")
-      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, agendar)
+      .on("postgres_changes", { event: "*", schema: "public", table: "leads" }, (payload) => {
+        if (payload.eventType === "DELETE") {
+          const id = (payload.old as { id?: string })?.id;
+          if (id) pendentes.set(id, null);
+        } else {
+          const novo = normalizar(payload.new as Record<string, unknown>);
+          pendentes.set(novo.id, novo);
+        }
+        agendar();
+      })
       .subscribe();
     return () => {
       if (timer) clearTimeout(timer);
@@ -112,6 +143,21 @@ function PipelinePage() {
     };
   }, [queryClient]);
 
+  // A sincronização com o C2S roda no servidor a cada minuto (rotina automática),
+  // por isso o navegador de cada corretor/gestor não dispara mais sync sozinho.
+
+  // Foco atual: leads de agosto/2026 em diante. Datas anteriores só via filtro manual.
+
+
+  const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
+  const [dataInicio, setDataInicio] = useState(INICIO_PADRAO);
+  const [dataFim, setDataFim] = useState("");
+  const [buscaInput, setBuscaInput] = useState("");
+  const [busca, setBusca] = useState("");
+  const [dragging, setDragging] = useState<BoardLead | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [leadAtual, setLeadAtual] = useState<BoardLead | null>(null);
+  const [visiveis, setVisiveis] = useState<Partial<Record<StageId, number>>>({});
   // Relógio para recalcular os alertas de prazo sem depender de novas buscas.
   const [agora, setAgora] = useState(() => Date.now());
   useEffect(() => {
@@ -119,68 +165,34 @@ function PipelinePage() {
     return () => clearInterval(id);
   }, []);
 
-  // Busca com debounce: digitar não dispara uma consulta a cada tecla.
+  // Busca com debounce: digitar não re-renderiza milhares de cards a cada tecla.
   useEffect(() => {
-    const id = setTimeout(() => setBusca(buscaInput.trim()), 350);
+    const id = setTimeout(() => setBusca(buscaInput), 250);
     return () => clearTimeout(id);
   }, [buscaInput]);
 
   // Auto-scroll horizontal durante drag
   const { containerRef, containerProps, stopScroll } = useDragAutoscroll();
 
-  // Aplica uma alteração de lead direto no cache (atualização otimista).
-  const patchCache = useCallback(
-    (id: string, mudanca: Partial<BoardLead> & { stage?: StageId }) => {
-      queryClient.setQueryData<Board>(chave, (old) => {
-        if (!old) return old;
-        let atual: BoardLead | null = null;
-        const colunas = {} as Record<StageId, BoardLead[]>;
-        for (const [stage, lista] of Object.entries(old.colunas) as [StageId, BoardLead[]][]) {
-          colunas[stage] = lista.filter((l) => {
-            if (l.id !== id) return true;
-            atual = l;
-            return false;
-          });
-        }
-        if (!atual) return old;
-        const novo = { ...(atual as BoardLead), ...mudanca };
-        colunas[novo.stage] = [novo, ...(colunas[novo.stage] ?? [])];
-        const anteriorStage = (atual as BoardLead).stage;
-        const resumo = old.resumo.map((r) => {
-          if (r.stage === anteriorStage && anteriorStage !== novo.stage)
-            return { ...r, total: Math.max(0, r.total - 1), soma: r.soma - (atual as BoardLead).valor };
-          if (r.stage === novo.stage && anteriorStage !== novo.stage)
-            return { ...r, total: r.total + 1, soma: r.soma + novo.valor };
-          if (r.stage === novo.stage) return { ...r, soma: r.soma - (atual as BoardLead).valor + novo.valor };
-          return r;
-        });
-        if (anteriorStage !== novo.stage && !resumo.some((r) => r.stage === novo.stage))
-          resumo.push({ stage: novo.stage, total: 1, soma: novo.valor });
-        return { ...old, colunas, resumo };
-      });
-      setExtras((prev) => {
-        const copia: Partial<Record<StageId, BoardLead[]>> = {};
-        for (const [stage, lista] of Object.entries(prev) as [StageId, BoardLead[]][])
-          copia[stage] = lista.filter((l) => l.id !== id);
-        return copia;
-      });
-    },
-    [queryClient, chave],
-  );
-
   const moveMutation = useMutation({
     mutationFn: (vars: { id: string; stage: StageId }) => move({ data: vars }),
+    // Atualização otimista: o card muda de coluna na hora, sem esperar o servidor.
     onMutate: async (vars) => {
-      await queryClient.cancelQueries({ queryKey: chave });
-      const anterior = queryClient.getQueryData<Board>(chave);
-      patchCache(vars.id, { stage: vars.stage, stage_since: new Date().toISOString() });
+      await queryClient.cancelQueries({ queryKey: ["board"] });
+      const anterior = queryClient.getQueryData<Board>(["board"]);
+      queryClient.setQueryData<Board>(["board"], (old) =>
+        old
+          ? { ...old, leads: old.leads.map((l) => (l.id === vars.id ? { ...l, stage: vars.stage } : l)) }
+          : old,
+      );
       return { anterior };
     },
     onError: (e: Error, _vars, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(chave, ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
   });
+
 
   const saveMutation = useMutation({
     mutationFn: (values: LeadFormValues) =>
@@ -204,37 +216,53 @@ function PipelinePage() {
           forcar_stage: values.forcar_stage,
         },
       }),
+    // Atualização otimista: o card muda de coluna na hora (ex.: documentação recebida).
     onMutate: async (values) => {
       setDialogOpen(false);
       if (!values.id) return { anterior: undefined };
-      await queryClient.cancelQueries({ queryKey: chave });
-      const anterior = queryClient.getQueryData<Board>(chave);
-      const stageFinal: StageId = values.forcar_stage ? values.stage : resolverEtapa(values, values.stage);
-      patchCache(values.id, {
-        nome: values.nome,
-        telefone: values.telefone ?? null,
-        email: values.email ?? null,
-        imovel: values.imovel ?? null,
-        valor: values.valor,
-        corretor_id: values.corretor_id,
-        observacoes: values.observacoes ?? null,
-        entrada: values.entrada ?? 0,
-        finalidade: values.finalidade ?? null,
-        estagio_imovel: values.estagio_imovel ?? null,
-        documentacao_ok: Boolean(values.documentacao_ok),
-        visita_em: values.visita_em ?? null,
-        visita_realizada: Boolean(values.visita_realizada),
-        stage: stageFinal,
-        stage_since: new Date().toISOString(),
-      });
+      await queryClient.cancelQueries({ queryKey: ["board"] });
+      const anterior = queryClient.getQueryData<Board>(["board"]);
+      const stageFinal: StageId = values.forcar_stage
+        ? values.stage
+        : resolverEtapa(values, values.stage);
+      queryClient.setQueryData<Board>(["board"], (old) =>
+        old
+          ? {
+              ...old,
+              leads: old.leads.map((l) =>
+                l.id === values.id
+                  ? {
+                      ...l,
+                      nome: values.nome,
+                      telefone: values.telefone ?? null,
+                      email: values.email ?? null,
+                      imovel: values.imovel ?? null,
+                      valor: values.valor,
+                      corretor_id: values.corretor_id,
+                      observacoes: values.observacoes ?? null,
+                      entrada: values.entrada ?? 0,
+                      finalidade: values.finalidade ?? null,
+                      estagio_imovel: values.estagio_imovel ?? null,
+                      documentacao_ok: Boolean(values.documentacao_ok),
+                      visita_em: values.visita_em ?? null,
+                      visita_realizada: Boolean(values.visita_realizada),
+                      stage: stageFinal,
+                      stage_since: l.stage === stageFinal ? l.stage_since : new Date().toISOString(),
+                    }
+                  : l,
+              ),
+            }
+          : old,
+      );
       return { anterior };
     },
     onSuccess: (_r, values) => {
       toast.success("Lead salvo");
+      // Só recarregamos o funil inteiro quando o lead é novo; edições já foram aplicadas localmente.
       if (!values.id) queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(chave, ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -247,50 +275,40 @@ function PipelinePage() {
 
   const meuCorretorId = data?.meuCorretorId ?? null;
 
-  const resumoPorEtapa = useMemo(() => {
-    const mapa = {} as Record<StageId, { total: number; soma: number }>;
-    for (const stage of STAGES) mapa[stage.id] = { total: 0, soma: 0 };
-    for (const r of data?.resumo ?? []) if (mapa[r.stage]) mapa[r.stage] = { total: r.total, soma: r.soma };
-    return mapa;
-  }, [data?.resumo]);
+  const leadsFiltrados = useMemo(() => {
+    const termo = busca.trim().toLowerCase();
+    const inicioMs = dataInicio ? new Date(`${dataInicio}T00:00:00`).getTime() : null;
+    const fimMs = dataFim ? new Date(`${dataFim}T23:59:59.999`).getTime() : null;
+    return (data?.leads ?? []).filter((l) => {
+      if (corretorFiltro === "meus" && l.corretor_id !== meuCorretorId) return false;
+      if (corretorFiltro !== "todos" && corretorFiltro !== "meus" && l.corretor_id !== corretorFiltro)
+        return false;
+      if (inicioMs !== null || fimMs !== null) {
+        // O período sempre representa a data de ENTRADA do lead, em qualquer coluna.
+        // Assim um lead entrou hoje e movido para outra etapa continua contando uma única vez.
+        const dataRef = l.data_c2s ?? l.created_at;
+        const ref = dataRef ? new Date(dataRef).getTime() : null;
+        if (ref === null || Number.isNaN(ref)) return false;
+        if (inicioMs !== null && ref < inicioMs) return false;
+        if (fimMs !== null && ref > fimMs) return false;
+      }
 
+      if (!termo) return true;
+      return `${l.nome} ${l.imovel ?? ""} ${l.email ?? ""}`.toLowerCase().includes(termo);
+    });
+  }, [data?.leads, corretorFiltro, busca, meuCorretorId, dataInicio, dataFim]);
+
+  // Agrupamos uma única vez por etapa em vez de varrer a lista inteira por coluna.
   const colunas = useMemo(() => {
-    const mapa = {} as Record<StageId, BoardLead[]>;
-    for (const stage of STAGES) {
-      const base = data?.colunas?.[stage.id] ?? [];
-      const extra = extras[stage.id] ?? [];
-      mapa[stage.id] = extra.length ? [...base, ...extra] : base;
-    }
+    const mapa = Object.fromEntries(STAGES.map((s) => [s.id, [] as BoardLead[]])) as Record<StageId, BoardLead[]>;
+    for (const lead of leadsFiltrados) mapa[lead.stage]?.push(lead);
     return mapa;
-  }, [data?.colunas, extras]);
+  }, [leadsFiltrados]);
 
-  const totalLeads = useMemo(
-    () => STAGES.reduce((acc, s) => acc + (resumoPorEtapa[s.id]?.total ?? 0), 0),
-    [resumoPorEtapa],
-  );
-  const totalGeral = useMemo(
-    () => STAGES.reduce((acc, s) => acc + (resumoPorEtapa[s.id]?.soma ?? 0), 0),
-    [resumoPorEtapa],
-  );
-  const emAndamento = useMemo(
-    () =>
-      STAGES.filter((s) => s.id !== "fechamento").reduce((acc, s) => acc + (resumoPorEtapa[s.id]?.soma ?? 0), 0),
-    [resumoPorEtapa],
-  );
-
-  async function carregarMais(stage: StageId) {
-    setCarregandoMais(stage);
-    try {
-      const novos = await fetchCards({
-        data: { ...filtros, stage, offset: colunas[stage].length, limit: PAGINA_COLUNA },
-      });
-      setExtras((prev) => ({ ...prev, [stage]: [...(prev[stage] ?? []), ...novos] }));
-    } catch (e) {
-      toast.error((e as Error).message);
-    } finally {
-      setCarregandoMais(null);
-    }
-  }
+  const totalGeral = leadsFiltrados.reduce((acc, l) => acc + l.valor, 0);
+  const emAndamento = leadsFiltrados
+    .filter((l) => l.stage !== "fechamento")
+    .reduce((acc, l) => acc + l.valor, 0);
 
   const abrirLead = useCallback((l: BoardLead) => {
     if (l.agenda_record) {
@@ -300,7 +318,6 @@ function PipelinePage() {
     setLeadAtual(l);
     setDialogOpen(true);
   }, []);
-
 
   function handleDrop(stage: StageId) {
     stopScroll();
@@ -435,12 +452,12 @@ function PipelinePage() {
                   onChange={(e) => setDataFim(e.target.value)}
                   className="h-7 w-[132px] border-0 px-1 text-xs shadow-none focus-visible:ring-0"
                 />
-                {(dataInicio || dataFim) && (
+                {(dataInicio !== INICIO_PADRAO || dataFim) && (
                   <Button
                     variant="ghost"
                     className="h-7 px-2 text-xs"
                     onClick={() => {
-                      setDataInicio("");
+                      setDataInicio(INICIO_PADRAO);
                       setDataFim("");
                     }}
                   >
@@ -456,8 +473,8 @@ function PipelinePage() {
       <main className="mx-auto max-w-[1600px] px-5 py-6">
         <section className="grid gap-3 sm:grid-cols-3">
           <FunnelSummaryCard
-            total={totalLeads}
-            resumo={resumoPorEtapa}
+            total={leadsFiltrados.length}
+            colunas={colunas}
           />
           <SummaryCard label="Em andamento" value={formatBRL(emAndamento)} hint="Exclui a coluna Fechamento" />
           <SummaryCard label="Volume total" value={formatBRL(totalGeral)} hint="Somatório de todas as colunas" />
@@ -466,9 +483,8 @@ function PipelinePage() {
         {corretorFiltro === "todos" && data?.isGestor && corretores.length > 0 && (
           <section className="mt-4 flex flex-wrap gap-2">
             {corretores.map((c) => {
-              const agregado = (data?.porCorretor ?? []).find((r) => r.corretor_id === c.id);
-              const total = agregado?.soma ?? 0;
-              const qtd = agregado?.total ?? 0;
+              const leadsDoCorretor = leadsFiltrados.filter((l) => l.corretor_id === c.id);
+              const total = leadsDoCorretor.reduce((acc, l) => acc + l.valor, 0);
               return (
                 <button
                   key={c.id}
@@ -477,7 +493,7 @@ function PipelinePage() {
                 >
                   <span className="font-semibold">{c.nome}</span>
                   <span className="ml-2 text-muted-foreground">
-                    {qtd} leads · {formatCompactBRL(total)}
+                    {leadsDoCorretor.length} leads · {formatCompactBRL(total)}
                   </span>
                 </button>
               );
@@ -499,10 +515,9 @@ function PipelinePage() {
           >
             {STAGES.map((stage) => {
               const leadsColuna = colunas[stage.id];
-              const agregado = resumoPorEtapa[stage.id] ?? { total: 0, soma: 0 };
-              const totalColuna = agregado.soma;
-              const mostrados = leadsColuna;
-              const restantes = Math.max(0, agregado.total - mostrados.length);
+              const totalColuna = leadsColuna.reduce((acc, l) => acc + l.valor, 0);
+              const limite = visiveis[stage.id] ?? PAGINA_COLUNA;
+              const mostrados = leadsColuna.slice(0, limite);
               return (
                 <section
                   key={stage.id}
@@ -525,7 +540,7 @@ function PipelinePage() {
                       <p className="text-[11px] text-muted-foreground">{stage.hint}</p>
                     </div>
                     <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
-                      {agregado.total}
+                      {leadsColuna.length}
                     </span>
                   </div>
 
@@ -542,17 +557,18 @@ function PipelinePage() {
                         onOpen={abrirLead}
                       />
                     ))}
-                    {restantes > 0 && (
+                    {leadsColuna.length > mostrados.length && (
                       <Button
                         variant="secondary"
                         className="h-8 text-xs"
-                        disabled={carregandoMais === stage.id}
-                        onClick={() => carregarMais(stage.id)}
+                        onClick={() =>
+                          setVisiveis((v) => ({ ...v, [stage.id]: (v[stage.id] ?? PAGINA_COLUNA) + PAGINA_COLUNA }))
+                        }
                       >
-                        {carregandoMais === stage.id ? "Carregando..." : `Carregar mais (${restantes} restantes)`}
+                        Carregar mais ({leadsColuna.length - mostrados.length} restantes)
                       </Button>
                     )}
-                    {agregado.total === 0 && (
+                    {leadsColuna.length === 0 && (
                       <p className="rounded-lg border border-dashed border-border px-3 py-6 text-center text-xs text-muted-foreground">
                         Arraste um lead para cá
                       </p>
@@ -591,10 +607,10 @@ function SummaryCard({ label, value, hint }: { label: string; value: string; hin
 
 function FunnelSummaryCard({
   total,
-  resumo,
+  colunas,
 }: {
   total: number;
-  resumo: Record<StageId, { total: number; soma: number }>;
+  colunas: Record<StageId, BoardLead[]>;
 }) {
   return (
     <div className="panel p-4">
@@ -602,7 +618,7 @@ function FunnelSummaryCard({
       <p className="mt-1 text-2xl font-semibold">{total}</p>
       <div className="mt-2 flex flex-wrap gap-x-3 gap-y-1">
         {STAGES.map((stage) => {
-          const count = resumo[stage.id]?.total ?? 0;
+          const count = colunas[stage.id].length;
           if (count === 0) return null;
           return (
             <span
