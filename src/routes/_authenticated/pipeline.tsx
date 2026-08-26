@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, type Board, type BoardLead } from "@/lib/crm.functions";
-import { MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
+import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -318,6 +318,10 @@ function PipelinePage() {
   function handleDrop(stage: StageId) {
     stopScroll();
     if (!dragging || dragging.stage === stage) return setDragging(null);
+    if (ETAPAS_AGENDA.includes(stage)) {
+      toast.error(MENSAGEM_AGENDA);
+      return setDragging(null);
+    }
     if (dragging.agenda_record) {
       toast.error("Agendamentos e visitas realizadas devem ser alterados no projeto Agenda.");
       return setDragging(null);
