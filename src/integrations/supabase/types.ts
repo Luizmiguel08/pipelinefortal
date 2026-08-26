@@ -14,42 +14,123 @@ export type Database = {
   }
   public: {
     Tables: {
+      agenda_appointments: {
+        Row: {
+          agenda_atualizado_em: string | null
+          cliente_nome: string
+          cliente_telefone: string | null
+          corretor_email: string | null
+          corretor_id: string | null
+          corretor_nome: string | null
+          created_at: string
+          empreendimento: string | null
+          encontrado_c2s: boolean
+          id: string
+          lead_id: string | null
+          motivo: string | null
+          status: string
+          synced_at: string
+          updated_at: string
+          visita_em: string | null
+        }
+        Insert: {
+          agenda_atualizado_em?: string | null
+          cliente_nome: string
+          cliente_telefone?: string | null
+          corretor_email?: string | null
+          corretor_id?: string | null
+          corretor_nome?: string | null
+          created_at?: string
+          empreendimento?: string | null
+          encontrado_c2s?: boolean
+          id: string
+          lead_id?: string | null
+          motivo?: string | null
+          status: string
+          synced_at?: string
+          updated_at?: string
+          visita_em?: string | null
+        }
+        Update: {
+          agenda_atualizado_em?: string | null
+          cliente_nome?: string
+          cliente_telefone?: string | null
+          corretor_email?: string | null
+          corretor_id?: string | null
+          corretor_nome?: string | null
+          created_at?: string
+          empreendimento?: string | null
+          encontrado_c2s?: boolean
+          id?: string
+          lead_id?: string | null
+          motivo?: string | null
+          status?: string
+          synced_at?: string
+          updated_at?: string
+          visita_em?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agenda_appointments_corretor_id_fkey"
+            columns: ["corretor_id"]
+            isOneToOne: false
+            referencedRelation: "corretores"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "agenda_appointments_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       agenda_sync_runs: {
         Row: {
           atualizados: number
+          corretores_nao_reconhecidos: number
           created_at: string
           criados: number
           erro: string | null
           finished_at: string | null
           id: string
+          nao_encontrados_c2s: number
           origem: string
           started_at: string
           status: string
           total: number
+          vinculados_c2s: number
         }
         Insert: {
           atualizados?: number
+          corretores_nao_reconhecidos?: number
           created_at?: string
           criados?: number
           erro?: string | null
           finished_at?: string | null
           id?: string
+          nao_encontrados_c2s?: number
           origem?: string
           started_at?: string
           status?: string
           total?: number
+          vinculados_c2s?: number
         }
         Update: {
           atualizados?: number
+          corretores_nao_reconhecidos?: number
           created_at?: string
           criados?: number
           erro?: string | null
           finished_at?: string | null
           id?: string
+          nao_encontrados_c2s?: number
           origem?: string
           started_at?: string
           status?: string
           total?: number
+          vinculados_c2s?: number
         }
         Relationships: []
       }
