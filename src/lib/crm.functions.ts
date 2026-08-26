@@ -30,6 +30,8 @@ export type BoardLead = {
   agenda_record?: boolean;
   encontrado_c2s?: boolean;
   corretor_agenda_nome?: string | null;
+  /** Lead do C2S vinculado ao agendamento — permite editar os indicadores sem mover de coluna. */
+  agenda_lead_id?: string | null;
 };
 
 export type BoardCorretor = {
@@ -103,6 +105,7 @@ export const getBoard = createServerFn({ method: "GET" })
 
 
     const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
+    const porId = new Map((leads ?? []).map((l) => [l.id, l] as const));
 
     return {
       isGestor: (roles ?? []).some((r) => r.role === "gestor"),
@@ -120,22 +123,25 @@ export const getBoard = createServerFn({ method: "GET" })
         visita_realizada: Boolean(l.visita_realizada),
           })),
         ...(agendaRows ?? []).flatMap((a): BoardLead[] => {
+          // Indicadores vêm do lead do C2S vinculado, para o corretor poder preenchê-los aqui.
+          const vinculado = a.lead_id ? porId.get(a.lead_id) : undefined;
           const base: Omit<BoardLead, "id" | "stage" | "data_c2s"> = {
             nome: a.cliente_nome,
             telefone: a.cliente_telefone,
-            email: null,
-            imovel: a.empreendimento,
-            valor: 0,
+            email: vinculado?.email ?? null,
+            imovel: vinculado?.imovel ?? a.empreendimento,
+            valor: Number(vinculado?.valor ?? 0),
             corretor_id: a.corretor_id,
             origem: "Agenda",
-            observacoes: a.motivo,
+            observacoes: vinculado?.observacoes ?? a.motivo,
             ultima_interacao: a.agenda_atualizado_em ?? a.visita_em,
             c2s_contact_id: a.lead_id,
             created_at: a.created_at,
-            entrada: 0,
-            finalidade: null,
-            estagio_imovel: null,
-            documentacao_ok: false,
+            entrada: Number(vinculado?.entrada ?? 0),
+            finalidade: vinculado?.finalidade ?? null,
+            estagio_imovel: vinculado?.estagio_imovel ?? null,
+            documentacao_ok: Boolean(vinculado?.documentacao_ok),
+            agenda_lead_id: a.lead_id,
             visita_em: a.visita_em,
             visita_realizada: a.status === "realizado",
             visita_status: a.status as BoardLead["visita_status"],
@@ -212,6 +218,8 @@ export const saveLead = createServerFn({ method: "POST" })
       visita_em?: string | null | undefined;
       visita_realizada?: boolean | undefined;
       forcar_stage?: boolean | undefined;
+      /** Edição de card da Agenda: salva indicadores sem mexer na etapa do lead. */
+      preservar_stage?: boolean | undefined;
     }) => {
 
 
@@ -252,6 +260,15 @@ export const saveLead = createServerFn({ method: "POST" })
             data.stage,
           ),
     };
+    // Cards da Agenda: o corretor pode preencher os indicadores, mas a etapa continua
+    // sendo definida exclusivamente pelo projeto Agenda.
+    if (data.preservar_stage && data.id) {
+      const { stage: _ignorado, ...semStage } = payload;
+      const { error } = await context.supabase.from("leads").update(semStage).eq("id", data.id);
+      if (error) throw new Error(error.message);
+      return { ok: true, id: data.id };
+    }
+
     if (ETAPAS_AGENDA.includes(payload.stage as StageId)) throw new Error(MENSAGEM_AGENDA);
     if (!podeMoverPara(payload.stage as StageId, payload)) throw new Error(MENSAGEM_TRAVA);
 
