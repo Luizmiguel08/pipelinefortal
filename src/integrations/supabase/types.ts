@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.15"
+    PostgrestVersion: "14.17"
   }
   public: {
     Tables: {
@@ -425,9 +425,118 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      board_cards: {
+        Row: {
+          agenda_record: boolean | null
+          c2s_contact_id: string | null
+          corretor_agenda_nome: string | null
+          corretor_id: string | null
+          created_at: string | null
+          data_c2s: string | null
+          data_entrada: string | null
+          documentacao_ok: boolean | null
+          email: string | null
+          encontrado_c2s: boolean | null
+          entrada: number | null
+          estagio_imovel: string | null
+          finalidade: string | null
+          id: string | null
+          imovel: string | null
+          lead_id: string | null
+          nome: string | null
+          observacoes: string | null
+          ordem: string | null
+          origem: string | null
+          stage: string | null
+          stage_since: string | null
+          telefone: string | null
+          ultima_interacao: string | null
+          valor: number | null
+          visita_em: string | null
+          visita_motivo: string | null
+          visita_projeto: string | null
+          visita_realizada: boolean | null
+          visita_status: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      board_cards_page: {
+        Args: {
+          p_busca?: string
+          p_corretor?: string
+          p_fim?: string
+          p_inicio?: string
+          p_limit?: number
+          p_offset?: number
+          p_stage: string
+        }
+        Returns: {
+          agenda_record: boolean | null
+          c2s_contact_id: string | null
+          corretor_agenda_nome: string | null
+          corretor_id: string | null
+          created_at: string | null
+          data_c2s: string | null
+          data_entrada: string | null
+          documentacao_ok: boolean | null
+          email: string | null
+          encontrado_c2s: boolean | null
+          entrada: number | null
+          estagio_imovel: string | null
+          finalidade: string | null
+          id: string | null
+          imovel: string | null
+          lead_id: string | null
+          nome: string | null
+          observacoes: string | null
+          ordem: string | null
+          origem: string | null
+          stage: string | null
+          stage_since: string | null
+          telefone: string | null
+          ultima_interacao: string | null
+          valor: number | null
+          visita_em: string | null
+          visita_motivo: string | null
+          visita_projeto: string | null
+          visita_realizada: boolean | null
+          visita_status: string | null
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "board_cards"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
+      board_resumo: {
+        Args: {
+          p_busca?: string
+          p_corretor?: string
+          p_fim?: string
+          p_inicio?: string
+        }
+        Returns: {
+          soma: number
+          stage: string
+          total: number
+        }[]
+      }
+      board_resumo_corretor: {
+        Args: {
+          p_busca?: string
+          p_corretor?: string
+          p_fim?: string
+          p_inicio?: string
+        }
+        Returns: {
+          corretor_id: string
+          soma: number
+          total: number
+        }[]
+      }
       escalate_stale_leads: { Args: never; Returns: undefined }
       has_role: {
         Args: {
