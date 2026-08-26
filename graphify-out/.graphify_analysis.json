@@ -1032,8 +1032,8 @@
       "degree": 8
     },
     {
-      "id": "src_lib_c2s_server_fetchc2scontacts",
-      "label": "fetchC2SContacts()",
+      "id": "src_lib_agenda_sync_server_runagendasync",
+      "label": "runAgendaSync()",
       "degree": 8
     }
   ],
@@ -1050,48 +1050,48 @@
       "why": "bridges separate communities; peripheral node `Chip()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "DrawerFooter()",
+      "source": "MenubarShortcut()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/drawer.tsx",
+        "src/components/ui/menubar.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `DrawerFooter()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `MenubarShortcut()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "DrawerHeader()",
+      "source": "Pagination()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/drawer.tsx",
+        "src/components/ui/pagination.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `DrawerHeader()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `Pagination()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "AlertDescription",
+      "source": "PaginationEllipsis()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/alert.tsx",
+        "src/components/ui/pagination.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `AlertDescription` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `PaginationEllipsis()` unexpectedly reaches hub `cn()`"
     },
     {
-      "source": "AlertTitle",
+      "source": "PaginationNext()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/alert.tsx",
+        "src/components/ui/pagination.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `AlertTitle` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `PaginationNext()` unexpectedly reaches hub `cn()`"
     }
   ],
   "tokens": {
