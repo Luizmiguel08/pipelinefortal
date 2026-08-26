@@ -15,7 +15,8 @@ export const Route = createFileRoute("/api/public/hooks/agenda-sync")({
         const authHeader = request.headers.get("authorization");
         const bearerToken = authHeader?.startsWith("Bearer ") ? authHeader.slice(7) : null;
 
-        const expectedApikey = process.env["SUPABASE_PUBLISHABLE_KEY"];
+        const expectedApikey =
+          process.env["SUPABASE_PUBLISHABLE_KEY"] ?? process.env["SUPABASE_ANON_KEY"];
         const expectedSecret = process.env["AGENDA_SYNC_SECRET"];
 
         const autenticado =

@@ -35,5 +35,7 @@ export const syncAgenda = createServerFn({ method: "POST" })
     if (!isGestor) throw new Error("Apenas gestores podem sincronizar a agenda");
 
     const { runAgendaSync } = await import("./agenda-sync.server");
-    return await runAgendaSync("manual");
+    // A execução manual relê todo o histórico. O endpoint da agenda interpreta
+    // o parâmetro de data como "alterado desde", não como data da visita.
+    return await runAgendaSync("manual", null);
   });

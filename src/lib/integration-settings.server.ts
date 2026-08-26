@@ -54,3 +54,14 @@ export async function segredoAgenda(): Promise<{ valor: string | null; origem: "
   const doEnv = process.env["AGENDA_SYNC_SECRET"]?.trim();
   return doEnv ? { valor: doEnv, origem: "ambiente" } : { valor: null, origem: null };
 }
+
+/**
+ * Chaves candidatas para leitura da agenda. A configuração da tela continua
+ * sendo testada primeiro, mas uma edição incorreta não interrompe a rotina se
+ * a chave segura do ambiente ainda estiver válida.
+ */
+export async function segredosAgenda(): Promise<string[]> {
+  const doBanco = await lerConfig(AGENDA_SECRET_KEY);
+  const doEnv = process.env["AGENDA_SYNC_SECRET"]?.trim() ?? null;
+  return [...new Set([doBanco, doEnv].filter((valor): valor is string => Boolean(valor)))];
+}

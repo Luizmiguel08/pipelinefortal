@@ -64,7 +64,7 @@ async function resolverCorretores(supabaseAdmin: AdminClient) {
 
 export async function runAgendaSync(
   origem: "manual" | "automatico" = "manual",
-  desde?: string,
+  desde?: string | null,
 ): Promise<AgendaSyncResult> {
   const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
   const inicio = Date.now();
@@ -89,8 +89,8 @@ export async function runAgendaSync(
   const result: AgendaSyncResult = { total: 0, criados: 0, atualizados: 0 };
 
   // Modo incremental: se não veio data, pega desde a última sync com sucesso.
-  let janela = desde;
-  if (!janela) {
+  let janela = desde ?? undefined;
+  if (desde === undefined) {
     const { data: ultima } = await supabaseAdmin
       .from("agenda_sync_runs")
       .select("started_at")
@@ -144,7 +144,9 @@ export async function runAgendaSync(
         visita_status: ag.status,
         visita_motivo: ag.status === "desmarcado" ? ag.motivo : null,
         visita_projeto: ag.empreendimento,
-        visita_em: ag.status === "desmarcado" ? null : ag.visita_em,
+        // Mantém a data que estava marcada para permitir contar e filtrar
+        // cancelamentos no dia correto.
+        visita_em: ag.visita_em,
         visita_realizada: ag.status === "realizado",
         agenda_synced_at: agora,
         ultima_interacao: agora,
