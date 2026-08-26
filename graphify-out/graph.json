@@ -1022,7 +1022,7 @@
       "file_type": "code",
       "norm_label": "handledragend()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L406"
+      "source_location": "L415"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledrop",
@@ -1033,7 +1033,7 @@
       "file_type": "code",
       "norm_label": "handledrop()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L385"
+      "source_location": "L394"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_sair",
@@ -1044,7 +1044,7 @@
       "file_type": "code",
       "norm_label": "sair()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L412"
+      "source_location": "L421"
     },
     {
       "id": "src_routes_authenticated_pipeline_summarycard",
@@ -10961,7 +10961,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L213",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -10973,7 +10973,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L283",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -10985,7 +10985,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L559",
+      "source_location": "L568",
       "weight": 1.0
     },
     {
@@ -10997,7 +10997,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L576",
+      "source_location": "L585",
       "weight": 1.0
     },
     {
@@ -11009,7 +11009,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L397",
+      "source_location": "L406",
       "weight": 1.0
     },
     {
@@ -11141,7 +11141,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L385",
+      "source_location": "L394",
       "weight": 1.0
     },
     {
@@ -21860,7 +21860,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L406",
+      "source_location": "L415",
       "weight": 1.0
     },
     {
@@ -21871,7 +21871,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L412",
+      "source_location": "L421",
       "weight": 1.0
     },
     {
@@ -22835,5 +22835,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4ff7694a5757b5378e56ae2bec0cae62e4cee3ce"
+  "built_at_commit": "5d73aa1039f140bcfc39b69150bdcd1f05b7bf66"
 }
