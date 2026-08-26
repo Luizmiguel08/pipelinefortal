@@ -44,7 +44,7 @@ function PipelinePage() {
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading } = useQuery<Board>({
     queryKey: ["board"],
     // O tempo real já mantém o funil atualizado; a recarga completa é só rede de segurança.
     queryFn: async (): Promise<Board> => decodeBoard(await fetchBoard()),
