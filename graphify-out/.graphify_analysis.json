@@ -558,17 +558,17 @@
       "src_components_ui_carousel_usecarouselparameters"
     ],
     "16": [
-      "class_variance_authority",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_class_variance_authority",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
       "package_dependencies_radix_ui_react_context_menu",
+      "package_dependencies_radix_ui_react_switch",
       "package_dependencies_recharts",
       "package_dependencies_tanstack_react_start",
       "radix_ui_react_context_menu",
+      "radix_ui_react_switch",
       "recharts",
       "tanstack_react_start"
     ],
@@ -685,112 +685,112 @@
       "src_components_ui_tabs_tabstrigger"
     ],
     "29": [
+      "class_variance_authority",
+      "package_dependencies_class_variance_authority"
+    ],
+    "30": [
       "clsx",
       "package_dependencies_clsx"
     ],
-    "30": [
+    "31": [
       "cmdk",
       "package_dependencies_cmdk"
     ],
-    "31": [
+    "32": [
       "date_fns",
       "package_dependencies_date_fns"
     ],
-    "32": [
+    "33": [
       "embla_carousel_react",
       "package_dependencies_embla_carousel_react"
     ],
-    "33": [
+    "34": [
       "hookform_resolvers",
       "package_dependencies_hookform_resolvers"
     ],
-    "34": [
+    "35": [
       "lucide_react",
       "package_dependencies_lucide_react"
     ],
-    "35": [
+    "36": [
       "package_dependencies_radix_ui_react_accordion",
       "radix_ui_react_accordion"
     ],
-    "36": [
+    "37": [
       "package_dependencies_radix_ui_react_alert_dialog",
       "radix_ui_react_alert_dialog"
     ],
-    "37": [
+    "38": [
       "package_dependencies_radix_ui_react_aspect_ratio",
       "radix_ui_react_aspect_ratio"
     ],
-    "38": [
+    "39": [
       "package_dependencies_radix_ui_react_avatar",
       "radix_ui_react_avatar"
     ],
-    "39": [
+    "40": [
       "package_dependencies_radix_ui_react_checkbox",
       "radix_ui_react_checkbox"
     ],
-    "40": [
+    "41": [
       "package_dependencies_radix_ui_react_collapsible",
       "radix_ui_react_collapsible"
     ],
-    "41": [
+    "42": [
       "package_dependencies_radix_ui_react_dialog",
       "radix_ui_react_dialog"
     ],
-    "42": [
+    "43": [
       "package_dependencies_radix_ui_react_dropdown_menu",
       "radix_ui_react_dropdown_menu"
     ],
-    "43": [
+    "44": [
       "package_dependencies_radix_ui_react_hover_card",
       "radix_ui_react_hover_card"
     ],
-    "44": [
+    "45": [
       "package_dependencies_radix_ui_react_label",
       "radix_ui_react_label"
     ],
-    "45": [
+    "46": [
       "package_dependencies_radix_ui_react_menubar",
       "radix_ui_react_menubar"
     ],
-    "46": [
+    "47": [
       "package_dependencies_radix_ui_react_navigation_menu",
       "radix_ui_react_navigation_menu"
     ],
-    "47": [
+    "48": [
       "package_dependencies_radix_ui_react_popover",
       "radix_ui_react_popover"
     ],
-    "48": [
+    "49": [
       "package_dependencies_radix_ui_react_progress",
       "radix_ui_react_progress"
     ],
-    "49": [
+    "50": [
       "package_dependencies_radix_ui_react_radio_group",
       "radix_ui_react_radio_group"
     ],
-    "50": [
+    "51": [
       "package_dependencies_radix_ui_react_scroll_area",
       "radix_ui_react_scroll_area"
     ],
-    "51": [
+    "52": [
       "package_dependencies_radix_ui_react_select",
       "radix_ui_react_select"
     ],
-    "52": [
+    "53": [
       "package_dependencies_radix_ui_react_separator",
       "radix_ui_react_separator"
     ],
-    "53": [
+    "54": [
       "package_dependencies_radix_ui_react_slider",
       "radix_ui_react_slider"
     ],
-    "54": [
+    "55": [
       "package_dependencies_radix_ui_react_slot",
       "radix_ui_react_slot"
-    ],
-    "55": [
-      "package_dependencies_radix_ui_react_switch",
-      "radix_ui_react_switch"
     ],
     "56": [
       "package_dependencies_radix_ui_react_tabs",
