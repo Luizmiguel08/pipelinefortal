@@ -976,7 +976,7 @@
       "file_type": "code",
       "norm_label": "pipelinepage()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L38"
+      "source_location": "L37"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledragend",
@@ -987,7 +987,7 @@
       "file_type": "code",
       "norm_label": "handledragend()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L327"
+      "source_location": "L326"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledrop",
@@ -998,7 +998,7 @@
       "file_type": "code",
       "norm_label": "handledrop()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L314"
+      "source_location": "L313"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_sair",
@@ -1009,7 +1009,7 @@
       "file_type": "code",
       "norm_label": "sair()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L333"
+      "source_location": "L332"
     },
     {
       "id": "src_routes_authenticated_pipeline_summarycard",
@@ -1020,7 +1020,7 @@
       "file_type": "code",
       "norm_label": "summarycard()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L579"
+      "source_location": "L572"
     },
     {
       "id": "src_integrations_supabase_auth_middleware_createsupabasefetch",
@@ -3369,14 +3369,14 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "package_dependencies_clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 16,
       "file_type": "code",
-      "norm_label": "class-variance-authority",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
       "id": "package_dependencies_input_otp",
@@ -3429,14 +3429,14 @@
       "source_location": "L50"
     },
     {
-      "id": "class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 16,
       "file_type": "concept",
-      "norm_label": "class-variance-authority",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
       "id": "input_otp",
@@ -3826,7 +3826,7 @@
       "file_type": "code",
       "norm_label": "route",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L19"
+      "source_location": "L18"
     },
     {
       "id": "src_routes_authenticated_route",
@@ -5109,24 +5109,24 @@
       "source_location": "L79"
     },
     {
-      "id": "package_dependencies_clsx",
-      "label": "clsx",
+      "id": "package_dependencies_class_variance_authority",
+      "label": "class-variance-authority",
       "_origin": "ast",
       "community": 30,
       "file_type": "code",
-      "norm_label": "clsx",
+      "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L53"
+      "source_location": "L52"
     },
     {
-      "id": "clsx",
-      "label": "clsx",
+      "id": "class_variance_authority",
+      "label": "class-variance-authority",
       "_origin": "ast",
       "community": 30,
       "file_type": "concept",
-      "norm_label": "clsx",
+      "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L53"
+      "source_location": "L52"
     },
     {
       "id": "package_dependencies_cmdk",
@@ -10803,7 +10803,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L169",
+      "source_location": "L168",
       "weight": 1.0
     },
     {
@@ -10815,7 +10815,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L221",
+      "source_location": "L220",
       "weight": 1.0
     },
     {
@@ -10827,7 +10827,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L460",
+      "source_location": "L453",
       "weight": 1.0
     },
     {
@@ -10839,7 +10839,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L477",
+      "source_location": "L470",
       "weight": 1.0
     },
     {
@@ -10851,7 +10851,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L318",
+      "source_location": "L317",
       "weight": 1.0
     },
     {
@@ -10971,7 +10971,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L314",
+      "source_location": "L313",
       "weight": 1.0
     },
     {
@@ -21339,7 +21339,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L19",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -21350,7 +21350,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L579",
+      "source_location": "L572",
       "weight": 1.0
     },
     {
@@ -21361,7 +21361,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L327",
+      "source_location": "L326",
       "weight": 1.0
     },
     {
@@ -21372,7 +21372,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L333",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -22225,7 +22225,7 @@
       "confidence_score": 0.85,
       "context": "collection",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L35",
+      "source_location": "L34",
       "weight": 1.0
     },
     {
@@ -22278,5 +22278,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d39138aa864ace21cca40e5709ab3590919f0c3b"
+  "built_at_commit": "23fb4ba62fdddef474ee03e82f985212647f67f3"
 }
