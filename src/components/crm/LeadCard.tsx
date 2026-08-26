@@ -36,6 +36,16 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
       )}
 
       {lead.imovel && <p className="mt-1 text-xs text-muted-foreground">{lead.imovel}</p>}
+      {lead.agenda_record && (
+        <p className={`mt-1 text-[11px] font-medium ${lead.encontrado_c2s ? "text-primary" : "text-destructive"}`}>
+          {lead.encontrado_c2s ? "Contato encontrado no C2S" : "Não encontrado no C2S"}
+        </p>
+      )}
+      {lead.agenda_record && !lead.corretor_id && (
+        <p className="mt-1 text-[11px] font-medium text-destructive">
+          Corretor não vinculado{lead.corretor_agenda_nome ? ` · ${lead.corretor_agenda_nome}` : ""}
+        </p>
+      )}
 
       {(lead.entrada > 0 ||
         lead.finalidade ||

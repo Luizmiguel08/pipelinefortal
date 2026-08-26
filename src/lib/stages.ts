@@ -1,7 +1,7 @@
 export const STAGES = [
   { id: "novo", label: "Lead novo", hint: "Responder em até 5 min", color: "var(--stage-novo)" },
   { id: "atendimento", label: "Em atendimento", hint: "Avanço em até 1 dia", color: "var(--stage-atendimento)" },
-  { id: "visita", label: "Visita agendada", hint: "Agendamento e visita ao imóvel", color: "var(--stage-visita)" },
+  { id: "visita", label: "Agendado", hint: "Agendamentos confirmados na Agenda", color: "var(--stage-visita)" },
   { id: "visita_realizada", label: "Visita realizada", hint: "Cliente compareceu à visita", color: "var(--stage-visita-realizada)" },
   { id: "dia1", label: "Dia 1", hint: "Sem retorno há 1 dia", color: "var(--stage-dia1)" },
   { id: "dia2", label: "Dia 2", hint: "Sem retorno há 2 dias", color: "var(--stage-dia2)" },

@@ -11,6 +11,9 @@ export type AgendaRun = {
   criados: number;
   atualizados: number;
   erro: string | null;
+  vinculados_c2s: number;
+  nao_encontrados_c2s: number;
+  corretores_nao_reconhecidos: number;
 };
 
 export const getAgendaRuns = createServerFn({ method: "GET" })
@@ -18,7 +21,7 @@ export const getAgendaRuns = createServerFn({ method: "GET" })
   .handler(async ({ context }): Promise<AgendaRun[]> => {
     const { data, error } = await context.supabase
       .from("agenda_sync_runs")
-      .select("id, started_at, finished_at, status, origem, total, criados, atualizados, erro")
+      .select("id, started_at, finished_at, status, origem, total, criados, atualizados, erro, vinculados_c2s, nao_encontrados_c2s, corretores_nao_reconhecidos")
       .order("started_at", { ascending: false })
       .limit(20);
     if (error) return [];
@@ -37,5 +40,5 @@ export const syncAgenda = createServerFn({ method: "POST" })
     const { runAgendaSync } = await import("./agenda-sync.server");
     // A execução manual relê todo o histórico. O endpoint da agenda interpreta
     // o parâmetro de data como "alterado desde", não como data da visita.
-    return await runAgendaSync("manual", null);
+    return await runAgendaSync("manual", null, true);
   });

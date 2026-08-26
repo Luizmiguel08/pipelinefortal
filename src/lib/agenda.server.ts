@@ -14,6 +14,7 @@ export type AgendaAppointment = {
   status: "agendado" | "realizado" | "desmarcado";
   motivo: string | null;
   atualizado_em: string | null;
+  criado_em: string | null;
 };
 
 const BASE_PADRAO = "https://crmfortal.lovable.app";
@@ -62,6 +63,11 @@ function mapear(raw: Record<string, unknown>): AgendaAppointment | null {
     status: normalizarStatus(raw["status"]),
     motivo: texto(raw["motivo"]) ?? texto(raw["cancellation_reason"]),
     atualizado_em: texto(raw["atualizado_em"]) ?? texto(raw["updated_at"]),
+    criado_em:
+      texto(raw["criado_em"]) ??
+      texto(raw["created_at"]) ??
+      texto(raw["agendado_em"]) ??
+      texto(raw["scheduled_at"]),
   };
 }
 

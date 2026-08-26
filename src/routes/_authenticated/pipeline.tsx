@@ -80,6 +80,9 @@ function PipelinePage() {
       visita_motivo: (r['visita_motivo'] as string) ?? null,
       visita_projeto: (r['visita_projeto'] as string) ?? null,
       stage_since: (r['stage_since'] as string) ?? null,
+      agenda_record: Boolean(r['agenda_record']),
+      encontrado_c2s: Boolean(r['encontrado_c2s']),
+      corretor_agenda_nome: (r['corretor_agenda_nome'] as string) ?? null,
     });
 
     // Durante uma sincronização grande chegam centenas de eventos por segundo:
@@ -304,6 +307,10 @@ function PipelinePage() {
     .reduce((acc, l) => acc + l.valor, 0);
 
   const abrirLead = useCallback((l: BoardLead) => {
+    if (l.agenda_record) {
+      toast.info("Este registro é controlado pela Agenda e não pode ser editado aqui.");
+      return;
+    }
     setLeadAtual(l);
     setDialogOpen(true);
   }, []);
@@ -311,6 +318,10 @@ function PipelinePage() {
   function handleDrop(stage: StageId) {
     stopScroll();
     if (!dragging || dragging.stage === stage) return setDragging(null);
+    if (dragging.agenda_record) {
+      toast.error("Agendamentos e visitas realizadas devem ser alterados no projeto Agenda.");
+      return setDragging(null);
+    }
     // Trava: sem indicador preenchido o lead não sai das colunas frias.
     if (!podeMoverPara(stage, dragging)) {
       toast.error(MENSAGEM_TRAVA);

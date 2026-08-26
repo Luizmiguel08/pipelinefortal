@@ -228,6 +228,9 @@ function IntegracaoPage() {
                   <th className="pb-2 pr-4 font-medium">Agendamentos</th>
                   <th className="pb-2 pr-4 font-medium">Novos</th>
                   <th className="pb-2 font-medium">Atualizados</th>
+                   <th className="pb-2 pl-4 font-medium">No C2S</th>
+                   <th className="pb-2 pl-4 font-medium">Fora do C2S</th>
+                   <th className="pb-2 pl-4 font-medium">Corretor não vinculado</th>
                 </tr>
               </thead>
               <tbody>
@@ -252,6 +255,9 @@ function IntegracaoPage() {
                     <td className="py-2 pr-4">{r.total}</td>
                     <td className="py-2 pr-4">{r.criados}</td>
                     <td className="py-2">{r.atualizados}</td>
+                    <td className="py-2 pl-4">{r.vinculados_c2s}</td>
+                    <td className="py-2 pl-4">{r.nao_encontrados_c2s}</td>
+                    <td className="py-2 pl-4">{r.corretores_nao_reconhecidos}</td>
                   </tr>
                 ))}
               </tbody>
