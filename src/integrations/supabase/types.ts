@@ -524,6 +524,19 @@ export type Database = {
           total: number
         }[]
       }
+      board_resumo_corretor: {
+        Args: {
+          p_busca?: string
+          p_corretor?: string
+          p_fim?: string
+          p_inicio?: string
+        }
+        Returns: {
+          corretor_id: string
+          soma: number
+          total: number
+        }[]
+      }
       escalate_stale_leads: { Args: never; Returns: undefined }
       has_role: {
         Args: {
