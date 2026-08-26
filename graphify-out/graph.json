@@ -965,7 +965,7 @@
       "file_type": "code",
       "norm_label": "handledragend()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L322"
+      "source_location": "L327"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledrop",
@@ -976,7 +976,7 @@
       "file_type": "code",
       "norm_label": "handledrop()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L309"
+      "source_location": "L314"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_sair",
@@ -987,7 +987,7 @@
       "file_type": "code",
       "norm_label": "sair()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L328"
+      "source_location": "L333"
     },
     {
       "id": "src_routes_authenticated_pipeline_summarycard",
@@ -998,7 +998,7 @@
       "file_type": "code",
       "norm_label": "summarycard()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L574"
+      "source_location": "L579"
     },
     {
       "id": "src_components_ui_context_menu_contextmenushortcut",
@@ -3778,14 +3778,14 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "package_dependencies_hookform_resolvers",
+      "label": "@hookform/resolvers",
       "_origin": "ast",
       "community": 17,
       "file_type": "code",
-      "norm_label": "class-variance-authority",
+      "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L18"
     },
     {
       "id": "package_dependencies_input_otp",
@@ -3838,14 +3838,14 @@
       "source_location": "L50"
     },
     {
-      "id": "class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "hookform_resolvers",
+      "label": "@hookform/resolvers",
       "_origin": "ast",
       "community": 17,
       "file_type": "concept",
-      "norm_label": "class-variance-authority",
+      "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L18"
     },
     {
       "id": "input_otp",
@@ -5008,10 +5008,30 @@
       "source_location": "L6"
     },
     {
+      "id": "package_dependencies_class_variance_authority",
+      "label": "class-variance-authority",
+      "_origin": "ast",
+      "community": 28,
+      "file_type": "code",
+      "norm_label": "class-variance-authority",
+      "source_file": "package.json",
+      "source_location": "L52"
+    },
+    {
+      "id": "class_variance_authority",
+      "label": "class-variance-authority",
+      "_origin": "ast",
+      "community": 28,
+      "file_type": "concept",
+      "norm_label": "class-variance-authority",
+      "source_file": "package.json",
+      "source_location": "L52"
+    },
+    {
       "id": "package_dependencies_clsx",
       "label": "clsx",
       "_origin": "ast",
-      "community": 28,
+      "community": 29,
       "file_type": "code",
       "norm_label": "clsx",
       "source_file": "package.json",
@@ -5021,31 +5041,11 @@
       "id": "clsx",
       "label": "clsx",
       "_origin": "ast",
-      "community": 28,
+      "community": 29,
       "file_type": "concept",
       "norm_label": "clsx",
       "source_file": "package.json",
       "source_location": "L53"
-    },
-    {
-      "id": "package_dependencies_cmdk",
-      "label": "cmdk",
-      "_origin": "ast",
-      "community": 29,
-      "file_type": "code",
-      "norm_label": "cmdk",
-      "source_file": "package.json",
-      "source_location": "L54"
-    },
-    {
-      "id": "cmdk",
-      "label": "cmdk",
-      "_origin": "ast",
-      "community": 29,
-      "file_type": "concept",
-      "norm_label": "cmdk",
-      "source_file": "package.json",
-      "source_location": "L54"
     },
     {
       "id": "src_integrations_lovable_index",
@@ -5358,10 +5358,30 @@
       "source_location": "L262"
     },
     {
+      "id": "package_dependencies_cmdk",
+      "label": "cmdk",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "code",
+      "norm_label": "cmdk",
+      "source_file": "package.json",
+      "source_location": "L54"
+    },
+    {
+      "id": "cmdk",
+      "label": "cmdk",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "concept",
+      "norm_label": "cmdk",
+      "source_file": "package.json",
+      "source_location": "L54"
+    },
+    {
       "id": "package_dependencies_date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "code",
       "norm_label": "date-fns",
       "source_file": "package.json",
@@ -5371,7 +5391,7 @@
       "id": "date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "concept",
       "norm_label": "date-fns",
       "source_file": "package.json",
@@ -5381,7 +5401,7 @@
       "id": "package_dependencies_embla_carousel_react",
       "label": "embla-carousel-react",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "file_type": "code",
       "norm_label": "embla-carousel-react",
       "source_file": "package.json",
@@ -5391,31 +5411,11 @@
       "id": "embla_carousel_react",
       "label": "embla-carousel-react",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "file_type": "concept",
       "norm_label": "embla-carousel-react",
       "source_file": "package.json",
       "source_location": "L56"
-    },
-    {
-      "id": "package_dependencies_hookform_resolvers",
-      "label": "@hookform/resolvers",
-      "_origin": "ast",
-      "community": 32,
-      "file_type": "code",
-      "norm_label": "@hookform/resolvers",
-      "source_file": "package.json",
-      "source_location": "L18"
-    },
-    {
-      "id": "hookform_resolvers",
-      "label": "@hookform/resolvers",
-      "_origin": "ast",
-      "community": 32,
-      "file_type": "concept",
-      "norm_label": "@hookform/resolvers",
-      "source_file": "package.json",
-      "source_location": "L18"
     },
     {
       "id": "package_dependencies_lucide_react",
@@ -10804,7 +10804,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L455",
+      "source_location": "L460",
       "weight": 1.0
     },
     {
@@ -10816,7 +10816,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L472",
+      "source_location": "L477",
       "weight": 1.0
     },
     {
@@ -10828,7 +10828,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L313",
+      "source_location": "L318",
       "weight": 1.0
     },
     {
@@ -10948,7 +10948,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L309",
+      "source_location": "L314",
       "weight": 1.0
     },
     {
@@ -21316,7 +21316,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L574",
+      "source_location": "L579",
       "weight": 1.0
     },
     {
@@ -21327,7 +21327,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L322",
+      "source_location": "L327",
       "weight": 1.0
     },
     {
@@ -21338,7 +21338,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L328",
+      "source_location": "L333",
       "weight": 1.0
     },
     {
@@ -22244,5 +22244,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "f4fe85a149196bc8d4efc13ede602b6bfdbf1763"
+  "built_at_commit": "5775efec9ecd877e537448fc4cbccb95952e5f96"
 }
