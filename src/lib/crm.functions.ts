@@ -373,21 +373,41 @@ export const salvarLeadAgenda = createServerFn({ method: "POST" })
 
     // Sem vínculo no C2S: criamos o lead na etapa da Agenda e amarramos ao agendamento.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const { data: criado, error: erroCriar } = await supabaseAdmin
+
+    // O lead pode já existir apontando para este agendamento (vínculo perdido em
+    // agenda_appointments.lead_id). Nesse caso atualizamos em vez de inserir,
+    // evitando violar o índice único leads_agenda_appointment_idx.
+    const { data: existente, error: erroExistente } = await supabaseAdmin
       .from("leads")
-      .insert({
-        ...indicadores,
-        corretor_id: agendamento.corretor_id,
-        origem: "Agenda",
-        stage: agendamento.status === "realizado" ? "visita_realizada" : "visita",
-        visita_em: agendamento.visita_em,
-        visita_realizada: agendamento.status === "realizado",
-        agenda_appointment_id: agendamento.id,
-        ultima_interacao: new Date().toISOString(),
-      })
       .select("id")
-      .single();
-    if (erroCriar) throw new Error(erroCriar.message);
+      .eq("agenda_appointment_id", agendamento.id)
+      .maybeSingle();
+    if (erroExistente) throw new Error(erroExistente.message);
+
+    let leadId: string;
+    if (existente) {
+      const { error } = await supabaseAdmin.from("leads").update(indicadores).eq("id", existente.id);
+      if (error) throw new Error(error.message);
+      leadId = existente.id;
+    } else {
+      const { data: criado, error: erroCriar } = await supabaseAdmin
+        .from("leads")
+        .insert({
+          ...indicadores,
+          corretor_id: agendamento.corretor_id,
+          origem: "Agenda",
+          stage: agendamento.status === "realizado" ? "visita_realizada" : "visita",
+          visita_em: agendamento.visita_em,
+          visita_realizada: agendamento.status === "realizado",
+          agenda_appointment_id: agendamento.id,
+          ultima_interacao: new Date().toISOString(),
+        })
+        .select("id")
+        .single();
+      if (erroCriar) throw new Error(erroCriar.message);
+      leadId = criado.id;
+    }
+
 
     const { error: erroVinculo } = await supabaseAdmin
       .from("agenda_appointments")
