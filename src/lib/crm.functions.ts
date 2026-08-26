@@ -71,7 +71,7 @@ export const getBoard = createServerFn({ method: "GET" })
       const total = primeira.count ?? linhas.length;
       if (total <= PAGINA) return linhas;
 
-      const restantes: Promise<T[]>[] = [];
+      const restantes: PromiseLike<T[]>[] = [];
       for (let inicio = PAGINA; inicio < total; inicio += PAGINA) {
         restantes.push(
           supabase
