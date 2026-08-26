@@ -218,6 +218,8 @@ export const saveLead = createServerFn({ method: "POST" })
       visita_em?: string | null | undefined;
       visita_realizada?: boolean | undefined;
       forcar_stage?: boolean | undefined;
+      /** Edição de card da Agenda: salva indicadores sem mexer na etapa do lead. */
+      preservar_stage?: boolean | undefined;
     }) => {
 
 
@@ -258,6 +260,15 @@ export const saveLead = createServerFn({ method: "POST" })
             data.stage,
           ),
     };
+    // Cards da Agenda: o corretor pode preencher os indicadores, mas a etapa continua
+    // sendo definida exclusivamente pelo projeto Agenda.
+    if (data.preservar_stage && data.id) {
+      const { stage: _ignorado, ...semStage } = payload;
+      const { error } = await context.supabase.from("leads").update(semStage).eq("id", data.id);
+      if (error) throw new Error(error.message);
+      return { ok: true, id: data.id };
+    }
+
     if (ETAPAS_AGENDA.includes(payload.stage as StageId)) throw new Error(MENSAGEM_AGENDA);
     if (!podeMoverPara(payload.stage as StageId, payload)) throw new Error(MENSAGEM_TRAVA);
 
