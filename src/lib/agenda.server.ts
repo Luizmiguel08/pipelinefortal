@@ -143,7 +143,9 @@ export async function fetchAgendamentos(desde?: string): Promise<AgendaAppointme
         body: JSON.stringify(desde ? { de: desde, desde } : {}),
       },
     }];
-    return desde ? [...posts, getCompleto] : [getCompleto, ...posts];
+    // O GET com "?desde=" é o único formato em que a Agenda respeita o período;
+    // o POST ignora o corpo e devolve apenas a janela padrão.
+    return [getCompleto, ...posts];
   });
 
   let ultimoErro = "";
