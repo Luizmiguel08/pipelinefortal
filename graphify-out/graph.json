@@ -37,7 +37,7 @@
       "file_type": "code",
       "norm_label": "board",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L42"
+      "source_location": "L44"
     },
     {
       "id": "src_lib_crm_functions_boardcorretor",
@@ -49,7 +49,7 @@
       "file_type": "code",
       "norm_label": "boardcorretor",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L35"
+      "source_location": "L37"
     },
     {
       "id": "src_lib_crm_functions_boardlead",
@@ -791,7 +791,7 @@
       "file_type": "code",
       "norm_label": "campovalor()",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L100"
+      "source_location": "L102"
     },
     {
       "id": "src_components_crm_leaddialog_chip",
@@ -802,7 +802,7 @@
       "file_type": "code",
       "norm_label": "chip()",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L75"
+      "source_location": "L77"
     },
     {
       "id": "src_components_crm_leaddialog_leaddialog",
@@ -813,7 +813,7 @@
       "file_type": "code",
       "norm_label": "leaddialog()",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L137"
+      "source_location": "L139"
     },
     {
       "id": "src_components_crm_leaddialog_parainputlocal",
@@ -824,7 +824,7 @@
       "file_type": "code",
       "norm_label": "parainputlocal()",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L64"
+      "source_location": "L66"
     },
     {
       "id": "src_components_ui_dialog_dialogfooter",
@@ -978,7 +978,7 @@
       "file_type": "code",
       "norm_label": "funnelsummarycard()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L608"
+      "source_location": "L616"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage",
@@ -1000,7 +1000,7 @@
       "file_type": "code",
       "norm_label": "handledragend()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L343"
+      "source_location": "L351"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_handledrop",
@@ -1011,7 +1011,7 @@
       "file_type": "code",
       "norm_label": "handledrop()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L322"
+      "source_location": "L330"
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage_sair",
@@ -1022,7 +1022,7 @@
       "file_type": "code",
       "norm_label": "sair()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L349"
+      "source_location": "L357"
     },
     {
       "id": "src_routes_authenticated_pipeline_summarycard",
@@ -1033,7 +1033,7 @@
       "file_type": "code",
       "norm_label": "summarycard()",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L598"
+      "source_location": "L606"
     },
     {
       "id": "src_components_ui_resizable_resizablehandle",
@@ -2283,7 +2283,7 @@
       "file_type": "code",
       "norm_label": "atalhos_entrada",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L73"
+      "source_location": "L75"
     },
     {
       "id": "src_components_crm_leaddialog_atalhos_valor",
@@ -2293,7 +2293,7 @@
       "file_type": "code",
       "norm_label": "atalhos_valor",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L72"
+      "source_location": "L74"
     },
     {
       "id": "src_components_crm_leaddialog_empty",
@@ -2303,7 +2303,7 @@
       "file_type": "code",
       "norm_label": "empty",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L46"
+      "source_location": "L48"
     },
     {
       "id": "src_components_ui_dialog",
@@ -2423,7 +2423,7 @@
       "file_type": "code",
       "norm_label": "getboard",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L50"
+      "source_location": "L52"
     },
     {
       "id": "src_lib_crm_functions_getintegrationstatus",
@@ -2433,7 +2433,7 @@
       "file_type": "code",
       "norm_label": "getintegrationstatus",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L272"
+      "source_location": "L289"
     },
     {
       "id": "src_lib_crm_functions_getsynchistory",
@@ -2443,7 +2443,7 @@
       "file_type": "code",
       "norm_label": "getsynchistory",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L320"
+      "source_location": "L337"
     },
     {
       "id": "src_lib_crm_functions_importc2scorretores",
@@ -2453,7 +2453,7 @@
       "file_type": "code",
       "norm_label": "importc2scorretores",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L384"
+      "source_location": "L401"
     },
     {
       "id": "src_lib_crm_functions_movelead",
@@ -2463,7 +2463,7 @@
       "file_type": "code",
       "norm_label": "movelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L170"
+      "source_location": "L176"
     },
     {
       "id": "src_lib_crm_functions_savelead",
@@ -2473,7 +2473,7 @@
       "file_type": "code",
       "norm_label": "savelead",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L195"
+      "source_location": "L201"
     },
     {
       "id": "src_lib_crm_functions_syncnow",
@@ -2483,7 +2483,7 @@
       "file_type": "code",
       "norm_label": "syncnow",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L357"
+      "source_location": "L374"
     },
     {
       "id": "src_lib_crm_functions_testc2sconnection",
@@ -2493,7 +2493,7 @@
       "file_type": "code",
       "norm_label": "testc2sconnection",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L304"
+      "source_location": "L321"
     },
     {
       "id": "src_lib_stages",
@@ -3886,14 +3886,14 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_hookform_resolvers",
-      "label": "@hookform/resolvers",
+      "id": "package_dependencies_class_variance_authority",
+      "label": "class-variance-authority",
       "_origin": "ast",
       "community": 16,
       "file_type": "code",
-      "norm_label": "@hookform/resolvers",
+      "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L18"
+      "source_location": "L52"
     },
     {
       "id": "package_dependencies_input_otp",
@@ -3946,14 +3946,14 @@
       "source_location": "L50"
     },
     {
-      "id": "hookform_resolvers",
-      "label": "@hookform/resolvers",
+      "id": "class_variance_authority",
+      "label": "class-variance-authority",
       "_origin": "ast",
       "community": 16,
       "file_type": "concept",
-      "norm_label": "@hookform/resolvers",
+      "norm_label": "class-variance-authority",
       "source_file": "package.json",
-      "source_location": "L18"
+      "source_location": "L52"
     },
     {
       "id": "input_otp",
@@ -4936,24 +4936,24 @@
       "source_location": "L6"
     },
     {
-      "id": "package_dependencies_class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "package_dependencies_clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 29,
       "file_type": "code",
-      "norm_label": "class-variance-authority",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
-      "id": "class_variance_authority",
-      "label": "class-variance-authority",
+      "id": "clsx",
+      "label": "clsx",
       "_origin": "ast",
       "community": 29,
       "file_type": "concept",
-      "norm_label": "class-variance-authority",
+      "norm_label": "clsx",
       "source_file": "package.json",
-      "source_location": "L52"
+      "source_location": "L53"
     },
     {
       "id": "src_components_ui_sonner",
@@ -5226,30 +5226,10 @@
       "source_location": "L284"
     },
     {
-      "id": "package_dependencies_clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 30,
-      "file_type": "code",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L53"
-    },
-    {
-      "id": "clsx",
-      "label": "clsx",
-      "_origin": "ast",
-      "community": 30,
-      "file_type": "concept",
-      "norm_label": "clsx",
-      "source_file": "package.json",
-      "source_location": "L53"
-    },
-    {
       "id": "package_dependencies_cmdk",
       "label": "cmdk",
       "_origin": "ast",
-      "community": 31,
+      "community": 30,
       "file_type": "code",
       "norm_label": "cmdk",
       "source_file": "package.json",
@@ -5259,7 +5239,7 @@
       "id": "cmdk",
       "label": "cmdk",
       "_origin": "ast",
-      "community": 31,
+      "community": 30,
       "file_type": "concept",
       "norm_label": "cmdk",
       "source_file": "package.json",
@@ -5269,7 +5249,7 @@
       "id": "package_dependencies_date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 32,
+      "community": 31,
       "file_type": "code",
       "norm_label": "date-fns",
       "source_file": "package.json",
@@ -5279,7 +5259,7 @@
       "id": "date_fns",
       "label": "date-fns",
       "_origin": "ast",
-      "community": 32,
+      "community": 31,
       "file_type": "concept",
       "norm_label": "date-fns",
       "source_file": "package.json",
@@ -5289,7 +5269,7 @@
       "id": "package_dependencies_embla_carousel_react",
       "label": "embla-carousel-react",
       "_origin": "ast",
-      "community": 33,
+      "community": 32,
       "file_type": "code",
       "norm_label": "embla-carousel-react",
       "source_file": "package.json",
@@ -5299,11 +5279,31 @@
       "id": "embla_carousel_react",
       "label": "embla-carousel-react",
       "_origin": "ast",
-      "community": 33,
+      "community": 32,
       "file_type": "concept",
       "norm_label": "embla-carousel-react",
       "source_file": "package.json",
       "source_location": "L56"
+    },
+    {
+      "id": "package_dependencies_hookform_resolvers",
+      "label": "@hookform/resolvers",
+      "_origin": "ast",
+      "community": 33,
+      "file_type": "code",
+      "norm_label": "@hookform/resolvers",
+      "source_file": "package.json",
+      "source_location": "L18"
+    },
+    {
+      "id": "hookform_resolvers",
+      "label": "@hookform/resolvers",
+      "_origin": "ast",
+      "community": 33,
+      "file_type": "concept",
+      "norm_label": "@hookform/resolvers",
+      "source_file": "package.json",
+      "source_location": "L18"
     },
     {
       "id": "package_dependencies_lucide_react",
@@ -7784,7 +7784,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L129",
+      "source_location": "L131",
       "weight": 1.0
     },
     {
@@ -7796,7 +7796,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L88",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -7808,7 +7808,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L183",
+      "source_location": "L188",
       "weight": 1.0
     },
     {
@@ -7820,7 +7820,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L184",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -7832,7 +7832,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L185",
+      "source_location": "L192",
       "weight": 1.0
     },
     {
@@ -7844,7 +7844,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L210",
+      "source_location": "L217",
       "weight": 1.0
     },
     {
@@ -7856,7 +7856,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L217",
+      "source_location": "L224",
       "weight": 1.0
     },
     {
@@ -10772,7 +10772,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L185",
+      "source_location": "L191",
       "weight": 1.0
     },
     {
@@ -10784,7 +10784,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L242",
+      "source_location": "L250",
       "weight": 1.0
     },
     {
@@ -10796,7 +10796,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L256",
+      "source_location": "L273",
       "weight": 1.0
     },
     {
@@ -10940,7 +10940,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L227",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
@@ -10952,7 +10952,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L479",
+      "source_location": "L487",
       "weight": 1.0
     },
     {
@@ -10964,7 +10964,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L496",
+      "source_location": "L504",
       "weight": 1.0
     },
     {
@@ -10976,7 +10976,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L334",
+      "source_location": "L342",
       "weight": 1.0
     },
     {
@@ -11108,7 +11108,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L322",
+      "source_location": "L330",
       "weight": 1.0
     },
     {
@@ -11312,7 +11312,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L393",
+      "source_location": "L410",
       "weight": 1.0
     },
     {
@@ -11325,7 +11325,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L394",
+      "source_location": "L411",
       "weight": 1.0
     },
     {
@@ -11338,7 +11338,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L368",
+      "source_location": "L385",
       "weight": 1.0
     },
     {
@@ -11351,7 +11351,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L315",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -17538,7 +17538,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L100",
+      "source_location": "L102",
       "weight": 1.0
     },
     {
@@ -17549,7 +17549,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L137",
+      "source_location": "L139",
       "weight": 1.0
     },
     {
@@ -17571,7 +17571,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L46",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -17582,7 +17582,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L64",
+      "source_location": "L66",
       "weight": 1.0
     },
     {
@@ -17593,7 +17593,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L72",
+      "source_location": "L74",
       "weight": 1.0
     },
     {
@@ -17604,7 +17604,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L73",
+      "source_location": "L75",
       "weight": 1.0
     },
     {
@@ -17615,7 +17615,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/components/crm/LeadDialog.tsx",
-      "source_location": "L75",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -21003,7 +21003,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L170",
+      "source_location": "L176",
       "weight": 1.0
     },
     {
@@ -21014,7 +21014,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L195",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -21025,7 +21025,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L272",
+      "source_location": "L289",
       "weight": 1.0
     },
     {
@@ -21036,7 +21036,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L304",
+      "source_location": "L321",
       "weight": 1.0
     },
     {
@@ -21047,7 +21047,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L320",
+      "source_location": "L337",
       "weight": 1.0
     },
     {
@@ -21058,7 +21058,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L35",
+      "source_location": "L37",
       "weight": 1.0
     },
     {
@@ -21069,7 +21069,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L357",
+      "source_location": "L374",
       "weight": 1.0
     },
     {
@@ -21080,7 +21080,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L384",
+      "source_location": "L401",
       "weight": 1.0
     },
     {
@@ -21091,7 +21091,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L42",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -21113,7 +21113,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/crm.functions.ts",
-      "source_location": "L50",
+      "source_location": "L52",
       "weight": 1.0
     },
     {
@@ -21773,7 +21773,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L598",
+      "source_location": "L606",
       "weight": 1.0
     },
     {
@@ -21784,7 +21784,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L608",
+      "source_location": "L616",
       "weight": 1.0
     },
     {
@@ -21795,7 +21795,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L343",
+      "source_location": "L351",
       "weight": 1.0
     },
     {
@@ -21806,7 +21806,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/routes/_authenticated/pipeline.tsx",
-      "source_location": "L349",
+      "source_location": "L357",
       "weight": 1.0
     },
     {
@@ -22779,5 +22779,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "65ff52e1df69e7b09991166508bf72593a003df9"
+  "built_at_commit": "3161382640ed8f9feb06dd475975c6895be07702"
 }
