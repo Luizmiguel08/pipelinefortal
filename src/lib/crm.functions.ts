@@ -1,5 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import { encodeLead, type BoardWire } from "./board-codec";
 import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGE_IDS, podeMoverPara, resolverEtapa, type StageId } from "./stages";
 
 export type BoardLead = {
@@ -49,7 +50,7 @@ export type Board = {
 
 export const getBoard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<Board> => {
+  .handler(async ({ context }): Promise<BoardWire> => {
     const { supabase, userId } = context;
 
     const PAGINA = 1000;
@@ -127,7 +128,7 @@ export const getBoard = createServerFn({ method: "GET" })
       nome: profile?.nome ?? "",
       meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
       corretores: lista.map(({ user_id: _u, ...c }) => c),
-      leads: [
+      leads: ([
         ...((leads ?? []) as BoardLead[])
           .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada")
           .map((l) => ({
@@ -180,7 +181,7 @@ export const getBoard = createServerFn({ method: "GET" })
           }
           return registros;
         }),
-      ],
+      ] as BoardLead[]).map(encodeLead),
     };
   });
 
