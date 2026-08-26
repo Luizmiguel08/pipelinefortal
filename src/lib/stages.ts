@@ -119,9 +119,16 @@ export function indicadoresPreenchidos(q: Qualificacao) {
  * visita ou documentação).
  */
 export function podeMoverPara(stage: StageId, q: Qualificacao) {
+  if (ETAPAS_AGENDA.includes(stage)) return false;
   if (ETAPAS_FRIAS.includes(stage)) return true;
   return indicadoresPreenchidos(q);
 }
+
+/** Etapas espelhadas do projeto Agenda: não podem ser preenchidas manualmente. */
+export const ETAPAS_AGENDA: StageId[] = ["visita", "visita_realizada"];
+
+export const MENSAGEM_AGENDA =
+  "As colunas Agendado e Visita realizada são espelhadas do projeto Agenda. Faça o agendamento lá e o lead aparece aqui automaticamente.";
 
 export const MENSAGEM_TRAVA =
   "Preencha ao menos um indicador (valor, entrada, finalidade, pronto/planta, visita ou documentação) para avançar o lead.";
@@ -136,10 +143,7 @@ export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
   if (q.documentacao_ok && stage !== "documentacao" && stage !== "fechamento") return "documentacao";
   if (!q.documentacao_ok && stage === "documentacao") return "negociacao";
   const frias = ETAPAS_FRIAS;
-  const moveVisita = frias.includes(stage) || stage === "atendimento" || stage === "visita";
-  // Visita realizada tem prioridade sobre a visita apenas agendada.
-  if (q.visita_realizada && moveVisita) return "visita_realizada";
-  if (q.visita_em && moveVisita) return "visita";
+  // Agendado / Visita realizada são espelhados da Agenda: nunca resolvidos manualmente.
   if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
   return stage;
 }

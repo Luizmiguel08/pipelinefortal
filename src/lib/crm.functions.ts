@@ -1,6 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
-import { MENSAGEM_TRAVA, STAGE_IDS, podeMoverPara, resolverEtapa, type StageId } from "./stages";
+import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGE_IDS, podeMoverPara, resolverEtapa, type StageId } from "./stages";
 
 export type BoardLead = {
   id: string;
@@ -174,6 +174,7 @@ export const moveLead = createServerFn({ method: "POST" })
     return input;
   })
   .handler(async ({ data, context }) => {
+    if (ETAPAS_AGENDA.includes(data.stage)) throw new Error(MENSAGEM_AGENDA);
     // Trava do funil: o lead só sai das etapas frias com algum indicador preenchido.
     const { data: atual, error: erroLead } = await context.supabase
       .from("leads")
@@ -251,6 +252,7 @@ export const saveLead = createServerFn({ method: "POST" })
             data.stage,
           ),
     };
+    if (ETAPAS_AGENDA.includes(payload.stage as StageId)) throw new Error(MENSAGEM_AGENDA);
     if (!podeMoverPara(payload.stage as StageId, payload)) throw new Error(MENSAGEM_TRAVA);
 
     if (data.id) {
