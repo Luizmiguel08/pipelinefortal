@@ -142,7 +142,9 @@ export const getBoard = createServerFn({ method: "GET" })
           // depois created_at como fallbacks para que o filtro de período não exclua o registro.
           // A Agenda conta os agendamentos pela DATA DA VISITA — usamos a mesma referência
           // para que o filtro de período do funil bata com os indicadores de lá.
-          const dataCsRef = a.visita_em ?? a.agenda_criado_em ?? a.created_at;
+          // O card "Agendado" entra no funil pela data em que o agendamento foi criado
+          // (assim visitas marcadas para datas futuras não somem quando há filtro de período).
+          const dataCsRef = a.agenda_criado_em ?? a.visita_em ?? a.created_at;
           const base: Omit<BoardLead, "id" | "stage" | "data_c2s"> = {
             nome: a.cliente_nome,
             telefone: a.cliente_telefone,
