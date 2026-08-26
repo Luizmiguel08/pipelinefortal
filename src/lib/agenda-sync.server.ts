@@ -115,12 +115,14 @@ export async function runAgendaSync(
       const telAg = normalizarTelefone(ag.cliente_telefone);
       const nomeAg = normalizarNome(ag.cliente_nome);
 
-      // Tentar match por telefone primeiro (mais confiável).
-      let candidatos = telAg ? (porTelefone.get(telAg) ?? []) : [];
-      // Se não encontrou por telefone, tentar por nome exato.
+      // 1) Match pelo ID do agendamento (à prova de mudança de nome/telefone).
+      const porId = porAppointment.get(ag.id);
+      // 2) Telefone. 3) Nome exato.
+      let candidatos = porId ? [porId] : telAg ? (porTelefone.get(telAg) ?? []) : [];
       if (candidatos.length === 0 && nomeAg) {
         candidatos = porNome.get(nomeAg) ?? [];
       }
+
 
       // Resolver corretor do agendamento.
       let corretorId: string | null = null;
