@@ -267,31 +267,18 @@ export function LeadDialog({
               </div>
             </div>
 
-            <div className="space-y-2 rounded-lg border border-border bg-background p-3">
-              <Label htmlFor="lead-visita">Visita ao imóvel</Label>
-              <Input
-                id="lead-visita"
-                type="datetime-local"
-                value={paraInputLocal(values.visita_em)}
-                onChange={(e) =>
-                  set({
-                    visita_em: e.target.value ? new Date(e.target.value).toISOString() : null,
-                    ...(e.target.value ? {} : { visita_realizada: false }),
-                  })
-                }
-              />
-              <label htmlFor="lead-visita-ok" className="flex items-center gap-2 text-sm">
-                <input
-                  id="lead-visita-ok"
-                  type="checkbox"
-                  className="h-4 w-4 accent-[hsl(var(--primary))]"
-                  checked={values.visita_realizada}
-                  onChange={(e) => set({ visita_realizada: e.target.checked })}
-                />
-                Visita realizada
-              </label>
+            <div className="space-y-2 rounded-lg border border-border bg-muted/40 p-3">
+              <Label>Visita ao imóvel</Label>
+              <p className="text-sm">
+                {values.visita_realizada
+                  ? "Visita realizada (Agenda)"
+                  : values.visita_em
+                    ? `Agendada para ${new Date(values.visita_em).toLocaleString("pt-BR", { day: "2-digit", month: "2-digit", hour: "2-digit", minute: "2-digit" })}`
+                    : "Sem agendamento na Agenda"}
+              </p>
               <p className="text-xs text-muted-foreground">
-                Ao agendar, o lead vai para a coluna Visita agendada.
+                As colunas Agendado e Visita realizada são espelhadas do projeto Agenda. Faça o
+                agendamento lá e o lead aparece aqui automaticamente.
               </p>
             </div>
 
