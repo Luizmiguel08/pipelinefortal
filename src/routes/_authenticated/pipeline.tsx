@@ -181,7 +181,7 @@ function PipelinePage() {
       return { anterior };
     },
     onError: (e: Error, _vars, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
   });
@@ -255,7 +255,7 @@ function PipelinePage() {
       if (!values.id) queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData("board", ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
   });

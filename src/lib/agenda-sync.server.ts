@@ -116,7 +116,7 @@ export async function runAgendaSync(
       }
 
       // Se há mais de um candidato, pegar o primeiro (geralmente há só um).
-      const leadId = candidatos[0].id;
+      const leadId = candidatos[0]!.id;
       const existente = matchesPorLead.get(leadId);
       if (existente) {
         // Manter o agendamento com a visita mais recente.
@@ -133,7 +133,7 @@ export async function runAgendaSync(
     // Aplicar updates nos leads existentes.
     for (const [leadId, match] of matchesPorLead) {
       const ag = match.agendamento;
-      const updatePayload: Record<string, unknown> = {
+      const updatePayload = {
         visita_em: ag.visita_em,
         visita_status: ag.status,
         visita_realizada: ag.status === "realizado",
@@ -145,14 +145,14 @@ export async function runAgendaSync(
         // Só sobrescreve se o lead não tem corretor.
         const lead = leads.find((l) => l.id === leadId);
         // Nota: não sobrescrevemos corretor se já existe — pode ter sido atribuído manualmente.
-        if (lead && !(lead as Record<string, unknown>)["corretor_id"]) {
-          updatePayload.corretor_id = match.corretorId;
+        if (lead && !(lead as Record<string, unknown>)['corretor_id']) {
+          (updatePayload as Record<string, unknown>)['corretor_id'] = match.corretorId;
         }
       }
 
       const { error: updateErr } = await supabaseAdmin
         .from("leads")
-        .update(updatePayload)
+        .update(updatePayload as never)
         .eq("id", leadId);
       if (!updateErr) atualizados += 1;
     }
@@ -165,7 +165,7 @@ export async function runAgendaSync(
         telefone: ag.cliente_telefone,
         imovel: ag.empreendimento,
         valor: 0,
-        stage: ag.status === "realizado" ? "visita_realizada" : "visita",
+        stage: (ag.status === "realizado" ? "visita_realizada" : "visita") as "visita" | "visita_realizada",
         corretor_id: match.corretorId,
         origem: "Agenda",
         visita_em: ag.visita_em,
@@ -176,7 +176,7 @@ export async function runAgendaSync(
         ultima_interacao: new Date().toISOString(),
       };
 
-      const { error: insertErr } = await supabaseAdmin.from("leads").insert(insertPayload);
+      const { error: insertErr } = await supabaseAdmin.from("leads").insert(insertPayload as never);
       if (!insertErr) criados += 1;
     }
   } catch (e) {
