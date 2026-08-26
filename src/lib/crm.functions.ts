@@ -119,6 +119,11 @@ export const getBoard = createServerFn({ method: "GET" })
 
     const lista = (corretores ?? []) as (BoardCorretor & { user_id: string | null })[];
     const porId = new Map((leads ?? []).map((l) => [l.id, l] as const));
+    // Um cliente aparece em uma única coluna: se já existe agendamento na Agenda,
+    // o card do C2S some das colunas anteriores e vale o registro da Agenda.
+    const comAgenda = new Set(
+      (agendaRows ?? []).map((a) => a.lead_id).filter((id): id is string => Boolean(id)),
+    );
 
     return {
       isGestor: (roles ?? []).some((r) => r.role === "gestor"),
@@ -127,7 +132,7 @@ export const getBoard = createServerFn({ method: "GET" })
       corretores: lista.map(({ user_id: _u, ...c }) => c),
       leads: [
         ...((leads ?? []) as BoardLead[])
-          .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada")
+          .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada" && !comAgenda.has(l.id))
           .map((l) => ({
         ...l,
         valor: Number(l.valor),
