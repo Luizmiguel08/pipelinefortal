@@ -16,8 +16,8 @@ type LeadMatch = { id: string; nome: string; telefone: string | null; agenda_app
 
 export async function runAgendaSync(
   origem: string = "cron",
-  desde: string | null = null,
-  reconciliacaoCompleta = false,
+  _desde: string | null = null,
+  _reconciliacaoCompleta = true,
 ): Promise<SyncResult> {
   const startedAt = new Date().toISOString();
   let total = 0;
@@ -29,20 +29,11 @@ export async function runAgendaSync(
   let erro: string | null = null;
 
   try {
-    let desdeEfetivo = reconciliacaoCompleta ? null : desde;
-    if (!desdeEfetivo) {
-      const { data: ultimoRun } = await supabaseAdmin
-        .from("agenda_sync_runs")
-        .select("started_at")
-        .eq("status", "sucesso")
-        .order("started_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-      if (!reconciliacaoCompleta) desdeEfetivo = ultimoRun?.started_at ?? null;
-    }
-
-    const agendamentos = await fetchAgendamentos(desdeEfetivo ?? undefined);
+    // Espelho fiel: sempre lemos a agenda inteira (datas passadas, de hoje e futuras)
+    // para refletir criações, mudanças de status e cancelamentos em qualquer data.
+    const agendamentos = await fetchAgendamentos();
     total = agendamentos.length;
+
 
     const leads: LeadMatch[] = [];
     for (let inicio = 0; ; inicio += 1000) {
