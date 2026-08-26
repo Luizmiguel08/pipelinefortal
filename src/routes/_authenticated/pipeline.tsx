@@ -214,6 +214,7 @@ function PipelinePage() {
           visita_em: values.visita_em,
           visita_realizada: values.visita_realizada,
           forcar_stage: values.forcar_stage,
+          preservar_stage: values.preservar_stage,
         },
       }),
     // Atualização otimista: o card muda de coluna na hora (ex.: documentação recebida).
@@ -222,6 +223,7 @@ function PipelinePage() {
       if (!values.id) return { anterior: undefined };
       await queryClient.cancelQueries({ queryKey: ["board"] });
       const anterior = queryClient.getQueryData<Board>(["board"]);
+      if (values.preservar_stage) return { anterior: undefined };
       const stageFinal: StageId = values.forcar_stage
         ? values.stage
         : resolverEtapa(values, values.stage);
@@ -259,7 +261,7 @@ function PipelinePage() {
     onSuccess: (_r, values) => {
       toast.success("Lead salvo");
       // Só recarregamos o funil inteiro quando o lead é novo; edições já foram aplicadas localmente.
-      if (!values.id) queryClient.invalidateQueries({ queryKey: ["board"] });
+      if (!values.id || values.preservar_stage) queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
       if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
@@ -312,7 +314,13 @@ function PipelinePage() {
 
   const abrirLead = useCallback((l: BoardLead) => {
     if (l.agenda_record) {
-      toast.info("Este registro é controlado pela Agenda e não pode ser editado aqui.");
+      // Cards da Agenda podem ter os indicadores preenchidos, desde que o contato exista no C2S.
+      if (!l.agenda_lead_id) {
+        toast.info("Contato sem vínculo no C2S: não há lead para preencher indicadores.");
+        return;
+      }
+      setLeadAtual({ ...l, id: l.agenda_lead_id });
+      setDialogOpen(true);
       return;
     }
     setLeadAtual(l);

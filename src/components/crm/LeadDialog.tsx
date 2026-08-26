@@ -41,6 +41,8 @@ export type LeadFormValues = {
   visita_realizada: boolean;
   /** Salva exatamente na etapa escolhida, ignorando a automação por indicadores. */
   forcar_stage?: boolean;
+  /** Card espelhado da Agenda: salva os indicadores sem alterar a etapa. */
+  preservar_stage?: boolean;
 };
 
 const empty: LeadFormValues = {
@@ -180,9 +182,14 @@ export function LeadDialog({
     );
   }, [open, lead, defaultCorretorId]);
 
-  const etapaFinal = useMemo(() => resolverEtapa(values, values.stage), [values]);
+  // Registro espelhado da Agenda: os campos ficam liberados, mas a etapa é da Agenda.
+  const daAgenda = Boolean(lead?.agenda_record);
+  const etapaFinal = useMemo(
+    () => (daAgenda ? values.stage : resolverEtapa(values, values.stage)),
+    [values, daAgenda],
+  );
   const qualificado = indicadoresPreenchidos(values);
-  const travado = !podeMoverPara(etapaFinal, values);
+  const travado = daAgenda ? false : !podeMoverPara(etapaFinal, values);
   const set = (patch: Partial<LeadFormValues>) => setValues((v) => ({ ...v, ...patch }));
 
   return (
@@ -307,6 +314,7 @@ export function LeadDialog({
               <Label htmlFor="lead-stage">Etapa</Label>
               <select
                 id="lead-stage"
+                disabled={daAgenda}
                 value={values.stage}
                 onChange={(e) => set({ stage: e.target.value as StageId })}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
@@ -317,6 +325,11 @@ export function LeadDialog({
                   </option>
                 ))}
               </select>
+              {daAgenda && (
+                <p className="text-xs text-muted-foreground">
+                  Etapa controlada pelo projeto Agenda.
+                </p>
+              )}
             </div>
             <div className="space-y-2">
               <Label htmlFor="lead-corretor">Corretor responsável</Label>
@@ -424,7 +437,10 @@ export function LeadDialog({
           <Button variant="secondary" onClick={() => onOpenChange(false)}>
             Cancelar
           </Button>
-          <Button onClick={() => onSave(values)} disabled={saving || travado}>
+          <Button
+            onClick={() => onSave(daAgenda ? { ...values, preservar_stage: true } : values)}
+            disabled={saving || travado}
+          >
             {saving ? "Salvando..." : `Salvar · ${stageLabel(etapaFinal)}`}
           </Button>
           </div>
