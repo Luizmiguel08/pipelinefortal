@@ -146,7 +146,7 @@ function PipelinePage() {
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
-  const [dataInicio, setDataInicio] = useState("");
+  const [dataInicio, setDataInicio] = useState(INICIO_PADRAO);
   const [dataFim, setDataFim] = useState("");
   const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
