@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, salvarLeadAgenda, type Board, type BoardLead } from "@/lib/crm.functions";
-import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
+import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, alertaSLA, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
@@ -625,6 +625,9 @@ function PipelinePage() {
             {STAGES.map((stage) => {
               const leadsColuna = colunas[stage.id];
               const totalColuna = leadsColuna.reduce((acc, l) => acc + l.valor, 0);
+              const emRisco = leadsColuna.filter(
+                (l) => alertaSLA(l.stage, l.stage_since, l.ultima_interacao, agora)?.alerta,
+              ).length;
               const limite = visiveis[stage.id] ?? PAGINA_COLUNA;
               const mostrados = leadsColuna.slice(0, limite);
               return (
@@ -648,10 +651,21 @@ function PipelinePage() {
                       <h2 className="text-sm font-semibold">{stage.label}</h2>
                       <p className="text-[11px] text-muted-foreground">{stage.hint}</p>
                     </div>
-                    <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
-                      {leadsColuna.length}
-                    </span>
+                    <div className="flex shrink-0 flex-col items-end gap-1">
+                      <span className="rounded-full bg-secondary px-2 py-0.5 text-xs font-semibold text-secondary-foreground">
+                        {leadsColuna.length}
+                      </span>
+                      {emRisco > 0 && (
+                        <span
+                          className="rounded-full bg-destructive/10 px-2 py-0.5 text-[10px] font-semibold text-destructive"
+                          title="Leads com prazo da etapa estourando"
+                        >
+                          {emRisco} em risco
+                        </span>
+                      )}
+                    </div>
                   </div>
+
 
                   <div className="scroll-slim mt-3 flex max-h-[62vh] flex-col gap-2 overflow-y-auto pr-0.5">
                     {mostrados.map((lead) => (

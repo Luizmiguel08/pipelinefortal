@@ -33,7 +33,7 @@ export function alertaSLA(
   stageSince: string | null,
   ultimaInteracao: string | null,
   agora: number,
-): { alerta: boolean; restanteMs: number } | null {
+): { alerta: boolean; restanteMs: number; limiteMs: number } | null {
   const limite = LIMITE_ETAPA[stage];
   if (!limite || !stageSince) return null;
   const base = Math.max(
@@ -42,7 +42,29 @@ export function alertaSLA(
   );
   if (Number.isNaN(base)) return null;
   const restanteMs = base + limite - agora;
-  return { alerta: restanteMs <= limite * 0.2, restanteMs };
+  return { alerta: restanteMs <= limite * 0.2, restanteMs, limiteMs: limite };
+}
+
+/** Termômetro de SLA: 0 = acabou de entrar na etapa, 1 = prazo vencido. */
+export function progressoSLA(
+  stage: StageId,
+  stageSince: string | null,
+  ultimaInteracao: string | null,
+  agora: number,
+): { pct: number; nivel: "ok" | "atencao" | "critico" } | null {
+  const sla = alertaSLA(stage, stageSince, ultimaInteracao, agora);
+  if (!sla) return null;
+  const decorrido = sla.limiteMs - sla.restanteMs;
+  const pct = Math.min(1, Math.max(0, decorrido / sla.limiteMs));
+  const nivel = pct >= 0.8 ? "critico" : pct >= 0.5 ? "atencao" : "ok";
+  return { pct, nivel };
+}
+
+/** Origem visual do card: de onde ele veio. */
+export function origemCard(lead: { agenda_record?: boolean | null; c2s_contact_id?: string | null }) {
+  if (lead.agenda_record) return { label: "Agenda", tone: "agenda" as const };
+  if (lead.c2s_contact_id) return { label: "C2S", tone: "c2s" as const };
+  return { label: "Manual", tone: "manual" as const };
 }
 
 export function formatRestante(ms: number) {

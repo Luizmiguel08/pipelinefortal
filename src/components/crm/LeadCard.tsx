@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { alertaSLA, formatBRL, formatRestante, relativeTime, whatsappLink } from "@/lib/stages";
+import { alertaSLA, formatBRL, formatRestante, origemCard, progressoSLA, relativeTime, whatsappLink } from "@/lib/stages";
 import type { BoardLead } from "@/lib/crm.functions";
 
 function WhatsappIcon({ size = 16 }: { size?: number }) {
@@ -23,6 +23,8 @@ type Props = {
 function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragStart, onDragEnd }: Props) {
   const sla = alertaSLA(lead.stage, lead.stage_since, lead.ultima_interacao, agora);
   const emAlerta = sla?.alerta ?? false;
+  const termometro = progressoSLA(lead.stage, lead.stage_since, lead.ultima_interacao, agora);
+  const origem = origemCard(lead);
   const waLink = whatsappLink(lead.telefone);
   return (
     <article
@@ -34,6 +36,23 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
         emAlerta ? "lead-alerta border-destructive" : "border-border hover:border-primary/50"
       }`}
     >
+      {termometro && (
+        <div
+          className="mb-2 h-1 w-full overflow-hidden rounded-full bg-muted"
+          title={sla ? `SLA da etapa · ${formatRestante(sla.restanteMs)}` : undefined}
+        >
+          <div
+            className={`h-full rounded-full transition-all ${
+              termometro.nivel === "critico"
+                ? "bg-destructive"
+                : termometro.nivel === "atencao"
+                  ? "bg-[oklch(0.78_0.16_75)]"
+                  : "bg-[oklch(0.7_0.15_150)]"
+            }`}
+            style={{ width: `${Math.max(4, termometro.pct * 100)}%` }}
+          />
+        </div>
+      )}
       <div className="flex items-start justify-between gap-2">
         <h4 className="flex items-center gap-1.5 text-sm font-semibold leading-tight">
           <span>{lead.nome}</span>
@@ -126,6 +145,18 @@ function LeadCardBase({ lead, corretorNome, showCorretor, agora, onOpen, onDragS
             {corretorNome}
           </span>
         )}
+        <span
+          className={`rounded-full px-2 py-0.5 font-medium ${
+            origem.tone === "agenda"
+              ? "bg-[oklch(0.95_0.05_260)] text-[oklch(0.45_0.15_260)]"
+              : origem.tone === "c2s"
+                ? "bg-primary/10 text-primary"
+                : "bg-muted text-muted-foreground"
+          }`}
+          title={lead.origem ? `Origem: ${lead.origem}` : `Registro vindo de ${origem.label}`}
+        >
+          {origem.label}
+        </span>
         {lead.origem && <span className="rounded-full bg-muted px-2 py-0.5">{lead.origem}</span>}
         <span className="ml-auto">{relativeTime(lead.ultima_interacao)}</span>
       </div>
