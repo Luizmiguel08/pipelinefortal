@@ -598,17 +598,17 @@
       "src_components_ui_carousel_usecarouselparameters"
     ],
     "16": [
-      "date_fns",
       "input_otp",
       "lovable_dev_cloud_auth_js",
       "package_dependencies",
-      "package_dependencies_date_fns",
       "package_dependencies_input_otp",
       "package_dependencies_lovable_dev_cloud_auth_js",
       "package_dependencies_radix_ui_react_context_menu",
+      "package_dependencies_radix_ui_react_hover_card",
       "package_dependencies_recharts",
       "package_dependencies_tanstack_react_start",
       "radix_ui_react_context_menu",
+      "radix_ui_react_hover_card",
       "recharts",
       "tanstack_react_start"
     ],
@@ -717,52 +717,52 @@
       "package_dependencies_cmdk"
     ],
     "29": [
+      "date_fns",
+      "package_dependencies_date_fns"
+    ],
+    "30": [
       "embla_carousel_react",
       "package_dependencies_embla_carousel_react"
     ],
-    "30": [
+    "31": [
       "hookform_resolvers",
       "package_dependencies_hookform_resolvers"
     ],
-    "31": [
+    "32": [
       "lucide_react",
       "package_dependencies_lucide_react"
     ],
-    "32": [
+    "33": [
       "package_dependencies_radix_ui_react_accordion",
       "radix_ui_react_accordion"
     ],
-    "33": [
+    "34": [
       "package_dependencies_radix_ui_react_alert_dialog",
       "radix_ui_react_alert_dialog"
     ],
-    "34": [
+    "35": [
       "package_dependencies_radix_ui_react_aspect_ratio",
       "radix_ui_react_aspect_ratio"
     ],
-    "35": [
+    "36": [
       "package_dependencies_radix_ui_react_avatar",
       "radix_ui_react_avatar"
     ],
-    "36": [
+    "37": [
       "package_dependencies_radix_ui_react_checkbox",
       "radix_ui_react_checkbox"
     ],
-    "37": [
+    "38": [
       "package_dependencies_radix_ui_react_collapsible",
       "radix_ui_react_collapsible"
     ],
-    "38": [
+    "39": [
       "package_dependencies_radix_ui_react_dialog",
       "radix_ui_react_dialog"
     ],
-    "39": [
+    "40": [
       "package_dependencies_radix_ui_react_dropdown_menu",
       "radix_ui_react_dropdown_menu"
-    ],
-    "40": [
-      "package_dependencies_radix_ui_react_hover_card",
-      "radix_ui_react_hover_card"
     ],
     "41": [
       "package_dependencies_radix_ui_react_label",
@@ -1011,23 +1011,18 @@
       "degree": 14
     },
     {
-      "id": "src_lib_stages_podemoverpara",
-      "label": "podeMoverPara()",
-      "degree": 9
-    },
-    {
       "id": "src_components_ui_button_buttonvariants",
       "label": "buttonVariants",
       "degree": 9
     },
     {
-      "id": "src_lib_stages_formatbrl",
-      "label": "formatBRL()",
-      "degree": 8
+      "id": "src_lib_stages_podemoverpara",
+      "label": "podeMoverPara()",
+      "degree": 9
     },
     {
-      "id": "src_lib_stages_resolveretapa",
-      "label": "resolverEtapa()",
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
       "degree": 8
     },
     {
@@ -1043,6 +1038,11 @@
     {
       "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
       "label": "requireSupabaseAuth",
+      "degree": 8
+    },
+    {
+      "id": "src_lib_stages_formatbrl",
+      "label": "formatBRL()",
       "degree": 8
     }
   ],

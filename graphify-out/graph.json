@@ -97,7 +97,7 @@
       "file_type": "code",
       "norm_label": "qualificacao",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L90"
+      "source_location": "L92"
     },
     {
       "id": "src_lib_stages_stageid",
@@ -109,7 +109,7 @@
       "file_type": "code",
       "norm_label": "stageid",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L15"
+      "source_location": "L16"
     },
     {
       "id": "src_lib_agenda_config_functions_agendaconfigstatus",
@@ -589,7 +589,7 @@
       "file_type": "code",
       "norm_label": "compositetypes",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L673"
+      "source_location": "L674"
     },
     {
       "id": "src_integrations_supabase_types_database",
@@ -613,7 +613,7 @@
       "file_type": "code",
       "norm_label": "databasewithoutinternals",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L573"
+      "source_location": "L574"
     },
     {
       "id": "src_integrations_supabase_types_defaultschema",
@@ -625,7 +625,7 @@
       "file_type": "code",
       "norm_label": "defaultschema",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L575"
+      "source_location": "L576"
     },
     {
       "id": "src_integrations_supabase_types_enums",
@@ -637,7 +637,7 @@
       "file_type": "code",
       "norm_label": "enums",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L656"
+      "source_location": "L657"
     },
     {
       "id": "src_integrations_supabase_types_json",
@@ -661,7 +661,7 @@
       "file_type": "code",
       "norm_label": "tables",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L577"
+      "source_location": "L578"
     },
     {
       "id": "src_integrations_supabase_types_tablesinsert",
@@ -673,7 +673,7 @@
       "file_type": "code",
       "norm_label": "tablesinsert",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L606"
+      "source_location": "L607"
     },
     {
       "id": "src_integrations_supabase_types_tablesupdate",
@@ -685,7 +685,7 @@
       "file_type": "code",
       "norm_label": "tablesupdate",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L631"
+      "source_location": "L632"
     },
     {
       "id": "src_lib_audit_server_auditlinha",
@@ -934,7 +934,7 @@
       "file_type": "code",
       "norm_label": "alertasla()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L29"
+      "source_location": "L31"
     },
     {
       "id": "src_lib_stages_formatbrl",
@@ -945,7 +945,7 @@
       "file_type": "code",
       "norm_label": "formatbrl()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L58"
+      "source_location": "L60"
     },
     {
       "id": "src_lib_stages_formatcompactbrl",
@@ -956,7 +956,7 @@
       "file_type": "code",
       "norm_label": "formatcompactbrl()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L66"
+      "source_location": "L68"
     },
     {
       "id": "src_lib_stages_formatrestante",
@@ -967,7 +967,7 @@
       "file_type": "code",
       "norm_label": "formatrestante()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L46"
+      "source_location": "L48"
     },
     {
       "id": "src_lib_stages_indicadorespreenchidos",
@@ -978,7 +978,7 @@
       "file_type": "code",
       "norm_label": "indicadorespreenchidos()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L104"
+      "source_location": "L106"
     },
     {
       "id": "src_lib_stages_podemoverpara",
@@ -989,7 +989,7 @@
       "file_type": "code",
       "norm_label": "podemoverpara()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L121"
+      "source_location": "L123"
     },
     {
       "id": "src_lib_stages_relativetime",
@@ -1000,7 +1000,7 @@
       "file_type": "code",
       "norm_label": "relativetime()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L78"
+      "source_location": "L80"
     },
     {
       "id": "src_lib_stages_resolveretapa",
@@ -1011,7 +1011,7 @@
       "file_type": "code",
       "norm_label": "resolveretapa()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L142"
+      "source_location": "L144"
     },
     {
       "id": "src_lib_stages_stagelabel",
@@ -1022,7 +1022,7 @@
       "file_type": "code",
       "norm_label": "stagelabel()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L54"
+      "source_location": "L56"
     },
     {
       "id": "src_lib_stages_whatsapplink",
@@ -1033,7 +1033,7 @@
       "file_type": "code",
       "norm_label": "whatsapplink()",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L152"
+      "source_location": "L154"
     },
     {
       "id": "src_routes_authenticated_integracao_integracaopage",
@@ -2599,7 +2599,7 @@
       "file_type": "code",
       "norm_label": "etapas_agenda",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L128"
+      "source_location": "L130"
     },
     {
       "id": "src_lib_stages_etapas_frias",
@@ -2609,7 +2609,7 @@
       "file_type": "code",
       "norm_label": "etapas_frias",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L101"
+      "source_location": "L103"
     },
     {
       "id": "src_lib_stages_limite_etapa",
@@ -2619,7 +2619,7 @@
       "file_type": "code",
       "norm_label": "limite_etapa",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L20"
+      "source_location": "L21"
     },
     {
       "id": "src_lib_stages_mensagem_agenda",
@@ -2629,7 +2629,7 @@
       "file_type": "code",
       "norm_label": "mensagem_agenda",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L130"
+      "source_location": "L132"
     },
     {
       "id": "src_lib_stages_mensagem_trava",
@@ -2639,7 +2639,7 @@
       "file_type": "code",
       "norm_label": "mensagem_trava",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L133"
+      "source_location": "L135"
     },
     {
       "id": "src_lib_stages_stage_ids",
@@ -2649,7 +2649,7 @@
       "file_type": "code",
       "norm_label": "stage_ids",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L17"
+      "source_location": "L18"
     },
     {
       "id": "src_lib_stages_stages",
@@ -3642,16 +3642,6 @@
       "source_location": "L17"
     },
     {
-      "id": "package_dependencies_date_fns",
-      "label": "date-fns",
-      "_origin": "ast",
-      "community": 16,
-      "file_type": "code",
-      "norm_label": "date-fns",
-      "source_file": "package.json",
-      "source_location": "L55"
-    },
-    {
       "id": "package_dependencies_input_otp",
       "label": "input-otp",
       "_origin": "ast",
@@ -3682,6 +3672,16 @@
       "source_location": "L26"
     },
     {
+      "id": "package_dependencies_radix_ui_react_hover_card",
+      "label": "@radix-ui/react-hover-card",
+      "_origin": "ast",
+      "community": 16,
+      "file_type": "code",
+      "norm_label": "@radix-ui/react-hover-card",
+      "source_file": "package.json",
+      "source_location": "L29"
+    },
+    {
       "id": "package_dependencies_recharts",
       "label": "recharts",
       "_origin": "ast",
@@ -3700,16 +3700,6 @@
       "norm_label": "@tanstack/react-start",
       "source_file": "package.json",
       "source_location": "L50"
-    },
-    {
-      "id": "date_fns",
-      "label": "date-fns",
-      "_origin": "ast",
-      "community": 16,
-      "file_type": "concept",
-      "norm_label": "date-fns",
-      "source_file": "package.json",
-      "source_location": "L55"
     },
     {
       "id": "input_otp",
@@ -3740,6 +3730,16 @@
       "norm_label": "@radix-ui/react-context-menu",
       "source_file": "package.json",
       "source_location": "L26"
+    },
+    {
+      "id": "radix_ui_react_hover_card",
+      "label": "@radix-ui/react-hover-card",
+      "_origin": "ast",
+      "community": 16,
+      "file_type": "concept",
+      "norm_label": "@radix-ui/react-hover-card",
+      "source_file": "package.json",
+      "source_location": "L29"
     },
     {
       "id": "recharts",
@@ -4902,24 +4902,24 @@
       "source_location": "L54"
     },
     {
-      "id": "package_dependencies_embla_carousel_react",
-      "label": "embla-carousel-react",
+      "id": "package_dependencies_date_fns",
+      "label": "date-fns",
       "_origin": "ast",
       "community": 29,
       "file_type": "code",
-      "norm_label": "embla-carousel-react",
+      "norm_label": "date-fns",
       "source_file": "package.json",
-      "source_location": "L56"
+      "source_location": "L55"
     },
     {
-      "id": "embla_carousel_react",
-      "label": "embla-carousel-react",
+      "id": "date_fns",
+      "label": "date-fns",
       "_origin": "ast",
       "community": 29,
       "file_type": "concept",
-      "norm_label": "embla-carousel-react",
+      "norm_label": "date-fns",
       "source_file": "package.json",
-      "source_location": "L56"
+      "source_location": "L55"
     },
     {
       "id": "src_components_ui_sonner",
@@ -5212,10 +5212,30 @@
       "source_location": "L284"
     },
     {
+      "id": "package_dependencies_embla_carousel_react",
+      "label": "embla-carousel-react",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "code",
+      "norm_label": "embla-carousel-react",
+      "source_file": "package.json",
+      "source_location": "L56"
+    },
+    {
+      "id": "embla_carousel_react",
+      "label": "embla-carousel-react",
+      "_origin": "ast",
+      "community": 30,
+      "file_type": "concept",
+      "norm_label": "embla-carousel-react",
+      "source_file": "package.json",
+      "source_location": "L56"
+    },
+    {
       "id": "package_dependencies_hookform_resolvers",
       "label": "@hookform/resolvers",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "code",
       "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
@@ -5225,7 +5245,7 @@
       "id": "hookform_resolvers",
       "label": "@hookform/resolvers",
       "_origin": "ast",
-      "community": 30,
+      "community": 31,
       "file_type": "concept",
       "norm_label": "@hookform/resolvers",
       "source_file": "package.json",
@@ -5235,7 +5255,7 @@
       "id": "package_dependencies_lucide_react",
       "label": "lucide-react",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "file_type": "code",
       "norm_label": "lucide-react",
       "source_file": "package.json",
@@ -5245,7 +5265,7 @@
       "id": "lucide_react",
       "label": "lucide-react",
       "_origin": "ast",
-      "community": 31,
+      "community": 32,
       "file_type": "concept",
       "norm_label": "lucide-react",
       "source_file": "package.json",
@@ -5255,7 +5275,7 @@
       "id": "package_dependencies_radix_ui_react_accordion",
       "label": "@radix-ui/react-accordion",
       "_origin": "ast",
-      "community": 32,
+      "community": 33,
       "file_type": "code",
       "norm_label": "@radix-ui/react-accordion",
       "source_file": "package.json",
@@ -5265,7 +5285,7 @@
       "id": "radix_ui_react_accordion",
       "label": "@radix-ui/react-accordion",
       "_origin": "ast",
-      "community": 32,
+      "community": 33,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-accordion",
       "source_file": "package.json",
@@ -5275,7 +5295,7 @@
       "id": "package_dependencies_radix_ui_react_alert_dialog",
       "label": "@radix-ui/react-alert-dialog",
       "_origin": "ast",
-      "community": 33,
+      "community": 34,
       "file_type": "code",
       "norm_label": "@radix-ui/react-alert-dialog",
       "source_file": "package.json",
@@ -5285,7 +5305,7 @@
       "id": "radix_ui_react_alert_dialog",
       "label": "@radix-ui/react-alert-dialog",
       "_origin": "ast",
-      "community": 33,
+      "community": 34,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-alert-dialog",
       "source_file": "package.json",
@@ -5295,7 +5315,7 @@
       "id": "package_dependencies_radix_ui_react_aspect_ratio",
       "label": "@radix-ui/react-aspect-ratio",
       "_origin": "ast",
-      "community": 34,
+      "community": 35,
       "file_type": "code",
       "norm_label": "@radix-ui/react-aspect-ratio",
       "source_file": "package.json",
@@ -5305,7 +5325,7 @@
       "id": "radix_ui_react_aspect_ratio",
       "label": "@radix-ui/react-aspect-ratio",
       "_origin": "ast",
-      "community": 34,
+      "community": 35,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-aspect-ratio",
       "source_file": "package.json",
@@ -5315,7 +5335,7 @@
       "id": "package_dependencies_radix_ui_react_avatar",
       "label": "@radix-ui/react-avatar",
       "_origin": "ast",
-      "community": 35,
+      "community": 36,
       "file_type": "code",
       "norm_label": "@radix-ui/react-avatar",
       "source_file": "package.json",
@@ -5325,7 +5345,7 @@
       "id": "radix_ui_react_avatar",
       "label": "@radix-ui/react-avatar",
       "_origin": "ast",
-      "community": 35,
+      "community": 36,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-avatar",
       "source_file": "package.json",
@@ -5335,7 +5355,7 @@
       "id": "package_dependencies_radix_ui_react_checkbox",
       "label": "@radix-ui/react-checkbox",
       "_origin": "ast",
-      "community": 36,
+      "community": 37,
       "file_type": "code",
       "norm_label": "@radix-ui/react-checkbox",
       "source_file": "package.json",
@@ -5345,7 +5365,7 @@
       "id": "radix_ui_react_checkbox",
       "label": "@radix-ui/react-checkbox",
       "_origin": "ast",
-      "community": 36,
+      "community": 37,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-checkbox",
       "source_file": "package.json",
@@ -5355,7 +5375,7 @@
       "id": "package_dependencies_radix_ui_react_collapsible",
       "label": "@radix-ui/react-collapsible",
       "_origin": "ast",
-      "community": 37,
+      "community": 38,
       "file_type": "code",
       "norm_label": "@radix-ui/react-collapsible",
       "source_file": "package.json",
@@ -5365,7 +5385,7 @@
       "id": "radix_ui_react_collapsible",
       "label": "@radix-ui/react-collapsible",
       "_origin": "ast",
-      "community": 37,
+      "community": 38,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-collapsible",
       "source_file": "package.json",
@@ -5375,7 +5395,7 @@
       "id": "package_dependencies_radix_ui_react_dialog",
       "label": "@radix-ui/react-dialog",
       "_origin": "ast",
-      "community": 38,
+      "community": 39,
       "file_type": "code",
       "norm_label": "@radix-ui/react-dialog",
       "source_file": "package.json",
@@ -5385,31 +5405,11 @@
       "id": "radix_ui_react_dialog",
       "label": "@radix-ui/react-dialog",
       "_origin": "ast",
-      "community": 38,
+      "community": 39,
       "file_type": "concept",
       "norm_label": "@radix-ui/react-dialog",
       "source_file": "package.json",
       "source_location": "L27"
-    },
-    {
-      "id": "package_dependencies_radix_ui_react_dropdown_menu",
-      "label": "@radix-ui/react-dropdown-menu",
-      "_origin": "ast",
-      "community": 39,
-      "file_type": "code",
-      "norm_label": "@radix-ui/react-dropdown-menu",
-      "source_file": "package.json",
-      "source_location": "L28"
-    },
-    {
-      "id": "radix_ui_react_dropdown_menu",
-      "label": "@radix-ui/react-dropdown-menu",
-      "_origin": "ast",
-      "community": 39,
-      "file_type": "concept",
-      "norm_label": "@radix-ui/react-dropdown-menu",
-      "source_file": "package.json",
-      "source_location": "L28"
     },
     {
       "id": "src_components_ui_accordion",
@@ -5822,24 +5822,24 @@
       "source_location": "L23"
     },
     {
-      "id": "package_dependencies_radix_ui_react_hover_card",
-      "label": "@radix-ui/react-hover-card",
+      "id": "package_dependencies_radix_ui_react_dropdown_menu",
+      "label": "@radix-ui/react-dropdown-menu",
       "_origin": "ast",
       "community": 40,
       "file_type": "code",
-      "norm_label": "@radix-ui/react-hover-card",
+      "norm_label": "@radix-ui/react-dropdown-menu",
       "source_file": "package.json",
-      "source_location": "L29"
+      "source_location": "L28"
     },
     {
-      "id": "radix_ui_react_hover_card",
-      "label": "@radix-ui/react-hover-card",
+      "id": "radix_ui_react_dropdown_menu",
+      "label": "@radix-ui/react-dropdown-menu",
       "_origin": "ast",
       "community": 40,
       "file_type": "concept",
-      "norm_label": "@radix-ui/react-hover-card",
+      "norm_label": "@radix-ui/react-dropdown-menu",
       "source_file": "package.json",
-      "source_location": "L29"
+      "source_location": "L28"
     },
     {
       "id": "package_dependencies_radix_ui_react_label",
@@ -6789,7 +6789,7 @@
       "file_type": "code",
       "norm_label": "constants",
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L690"
+      "source_location": "L691"
     },
     {
       "id": "src_routes_auth",
@@ -11038,7 +11038,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L75",
+      "source_location": "L77",
       "weight": 1.0
     },
     {
@@ -11050,7 +11050,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L124",
+      "source_location": "L126",
       "weight": 1.0
     },
     {
@@ -11062,7 +11062,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/stages.ts",
-      "source_location": "L147",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -20558,7 +20558,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L573",
+      "source_location": "L574",
       "weight": 1.0
     },
     {
@@ -20569,7 +20569,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L575",
+      "source_location": "L576",
       "weight": 1.0
     },
     {
@@ -20580,7 +20580,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L577",
+      "source_location": "L578",
       "weight": 1.0
     },
     {
@@ -20591,7 +20591,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L606",
+      "source_location": "L607",
       "weight": 1.0
     },
     {
@@ -20602,7 +20602,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L631",
+      "source_location": "L632",
       "weight": 1.0
     },
     {
@@ -20613,7 +20613,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L656",
+      "source_location": "L657",
       "weight": 1.0
     },
     {
@@ -20624,7 +20624,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L673",
+      "source_location": "L674",
       "weight": 1.0
     },
     {
@@ -20635,7 +20635,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/integrations/supabase/types.ts",
-      "source_location": "L690",
+      "source_location": "L691",
       "weight": 1.0
     },
     {
@@ -21702,7 +21702,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L101",
+      "source_location": "L103",
       "weight": 1.0
     },
     {
@@ -21713,7 +21713,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L104",
+      "source_location": "L106",
       "weight": 1.0
     },
     {
@@ -21724,7 +21724,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L121",
+      "source_location": "L123",
       "weight": 1.0
     },
     {
@@ -21735,7 +21735,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L128",
+      "source_location": "L130",
       "weight": 1.0
     },
     {
@@ -21746,7 +21746,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L130",
+      "source_location": "L132",
       "weight": 1.0
     },
     {
@@ -21757,7 +21757,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L133",
+      "source_location": "L135",
       "weight": 1.0
     },
     {
@@ -21768,18 +21768,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L142",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_stages",
-      "target": "src_lib_stages_stageid",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/stages.ts",
-      "source_location": "L15",
+      "source_location": "L144",
       "weight": 1.0
     },
     {
@@ -21790,7 +21779,18 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L152",
+      "source_location": "L154",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_stages",
+      "target": "src_lib_stages_stageid",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/stages.ts",
+      "source_location": "L16",
       "weight": 1.0
     },
     {
@@ -21801,7 +21801,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L17",
+      "source_location": "L18",
       "weight": 1.0
     },
     {
@@ -21812,7 +21812,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L20",
+      "source_location": "L21",
       "weight": 1.0
     },
     {
@@ -21823,7 +21823,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L29",
+      "source_location": "L31",
       "weight": 1.0
     },
     {
@@ -21834,7 +21834,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L46",
+      "source_location": "L48",
       "weight": 1.0
     },
     {
@@ -21845,7 +21845,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L54",
+      "source_location": "L56",
       "weight": 1.0
     },
     {
@@ -21856,7 +21856,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L58",
+      "source_location": "L60",
       "weight": 1.0
     },
     {
@@ -21867,7 +21867,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L66",
+      "source_location": "L68",
       "weight": 1.0
     },
     {
@@ -21878,7 +21878,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L78",
+      "source_location": "L80",
       "weight": 1.0
     },
     {
@@ -21889,7 +21889,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/stages.ts",
-      "source_location": "L90",
+      "source_location": "L92",
       "weight": 1.0
     },
     {
@@ -23051,5 +23051,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "666c4e57220f4fc10db963f648b90b067107e8b1"
+  "built_at_commit": "3338d940459498dfa9716f1b397b346bd3699ec1"
 }
