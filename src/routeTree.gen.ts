@@ -20,6 +20,7 @@ import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedReconciliacaoAgendaRouteImport } from './routes/_authenticated/reconciliacao-agenda'
 import { Route as ApiPublicHooksAgendaSyncRouteImport } from './routes/api/public/hooks/agenda-sync'
 import { Route as ApiPublicHooksC2sSyncRouteImport } from './routes/api/public/hooks/c2s-sync'
+import { Route as ApiPublicHooksEscalationNotifyRouteImport } from './routes/api/public/hooks/escalation-notify'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -78,6 +79,12 @@ const ApiPublicHooksC2sSyncRoute = ApiPublicHooksC2sSyncRouteImport.update({
   path: '/api/public/hooks/c2s-sync',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicHooksEscalationNotifyRoute =
+  ApiPublicHooksEscalationNotifyRouteImport.update({
+    id: '/api/public/hooks/escalation-notify',
+    path: '/api/public/hooks/escalation-notify',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -90,6 +97,7 @@ export interface FileRoutesByFullPath {
   '/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
+  '/api/public/hooks/escalation-notify': typeof ApiPublicHooksEscalationNotifyRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -102,6 +110,7 @@ export interface FileRoutesByTo {
   '/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
+  '/api/public/hooks/escalation-notify': typeof ApiPublicHooksEscalationNotifyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -116,6 +125,7 @@ export interface FileRoutesById {
   '/_authenticated/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
+  '/api/public/hooks/escalation-notify': typeof ApiPublicHooksEscalationNotifyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -130,6 +140,7 @@ export interface FileRouteTypes {
     | '/reconciliacao-agenda'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
+    | '/api/public/hooks/escalation-notify'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -142,6 +153,7 @@ export interface FileRouteTypes {
     | '/reconciliacao-agenda'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
+    | '/api/public/hooks/escalation-notify'
   id:
     | '__root__'
     | '/'
@@ -155,6 +167,7 @@ export interface FileRouteTypes {
     | '/_authenticated/reconciliacao-agenda'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
+    | '/api/public/hooks/escalation-notify'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -163,6 +176,7 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   ApiPublicHooksAgendaSyncRoute: typeof ApiPublicHooksAgendaSyncRoute
   ApiPublicHooksC2sSyncRoute: typeof ApiPublicHooksC2sSyncRoute
+  ApiPublicHooksEscalationNotifyRoute: typeof ApiPublicHooksEscalationNotifyRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -244,6 +258,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPublicHooksC2sSyncRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/hooks/escalation-notify': {
+      id: '/api/public/hooks/escalation-notify'
+      path: '/api/public/hooks/escalation-notify'
+      fullPath: '/api/public/hooks/escalation-notify'
+      preLoaderRoute: typeof ApiPublicHooksEscalationNotifyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -274,6 +295,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   ApiPublicHooksAgendaSyncRoute: ApiPublicHooksAgendaSyncRoute,
   ApiPublicHooksC2sSyncRoute: ApiPublicHooksC2sSyncRoute,
+  ApiPublicHooksEscalationNotifyRoute: ApiPublicHooksEscalationNotifyRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
