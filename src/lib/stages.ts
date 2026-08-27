@@ -100,7 +100,7 @@ export type Qualificacao = {
 };
 
 /** Etapas frias: o lead ainda não teve tratativa registrada. */
-export const ETAPAS_FRIAS: StageId[] = ["novo", "dia1", "dia2", "dia3", "lista_fria"];
+export const ETAPAS_FRIAS: StageId[] = ["novo", "nao_respondeu", "dia1", "dia2", "dia3", "lista_fria"];
 
 /** Indicadores preenchidos = o corretor já qualificou o lead. */
 export function indicadoresPreenchidos(q: Qualificacao) {
