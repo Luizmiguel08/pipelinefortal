@@ -37,6 +37,7 @@
   --color-surface-2: var(--surface-2);
   --color-stage-novo: var(--stage-novo);
   --color-stage-atendimento: var(--stage-atendimento);
+  --color-stage-nao-respondeu: var(--stage-nao-respondeu);
   --color-stage-negociacao: var(--stage-negociacao);
   --color-stage-documentacao: var(--stage-documentacao);
   --color-stage-fechamento: var(--stage-fechamento);
@@ -88,6 +89,7 @@
   --ring: oklch(0.79 0.152 79);
   --stage-novo: oklch(0.72 0.13 235);
   --stage-atendimento: oklch(0.74 0.14 195);
+  --stage-nao-respondeu: oklch(0.70 0.12 320);
   --stage-negociacao: oklch(0.79 0.152 79);
   --stage-documentacao: oklch(0.72 0.15 305);
   --stage-fechamento: oklch(0.73 0.16 150);

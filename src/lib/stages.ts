@@ -1,6 +1,7 @@
 export const STAGES = [
   { id: "novo", label: "Lead novo", hint: "Responder em até 5 min", color: "var(--stage-novo)" },
   { id: "atendimento", label: "Em atendimento", hint: "Avanço em até 1 dia", color: "var(--stage-atendimento)" },
+  { id: "nao_respondeu", label: "Não Respondeu", hint: "Sem interação após 5 min no Lead novo", color: "var(--stage-nao-respondeu)" },
   { id: "visita", label: "Agendado", hint: "Agendamentos confirmados na Agenda", color: "var(--stage-visita)" },
   { id: "visita_realizada", label: "Visita realizada", hint: "Cliente compareceu à visita", color: "var(--stage-visita-realizada)" },
   { id: "dia1", label: "Dia 1", hint: "Sem retorno há 1 dia", color: "var(--stage-dia1)" },
@@ -19,6 +20,7 @@ export const STAGE_IDS = STAGES.map((s) => s.id) as StageId[];
 // Tempo máximo (ms) que o lead pode ficar parado em cada etapa antes do escalonamento.
 const LIMITE_ETAPA: Partial<Record<StageId, number>> = {
   novo: 5 * 60_000,
+  nao_respondeu: 24 * 3600_000,
   atendimento: 24 * 3600_000,
   dia1: 24 * 3600_000,
   dia2: 24 * 3600_000,
@@ -98,7 +100,7 @@ export type Qualificacao = {
 };
 
 /** Etapas frias: o lead ainda não teve tratativa registrada. */
-export const ETAPAS_FRIAS: StageId[] = ["novo", "dia1", "dia2", "dia3", "lista_fria"];
+export const ETAPAS_FRIAS: StageId[] = ["novo", "nao_respondeu", "dia1", "dia2", "dia3", "lista_fria"];
 
 /** Indicadores preenchidos = o corretor já qualificou o lead. */
 export function indicadoresPreenchidos(q: Qualificacao) {
