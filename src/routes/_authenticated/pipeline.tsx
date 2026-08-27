@@ -238,6 +238,14 @@ function PipelinePage() {
       if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
+    onSuccess: (_r, vars) => {
+      // Cards da Agenda usam ID sintético (agenda:<id>:<etapa>). A etapa real fica no lead
+      // vinculado, então precisamos recarregar o funil para refletir a mudança no card correto.
+      const board = queryClient.getQueryData<Board>(["board"]);
+      if (board?.leads.some((l) => l.agenda_lead_id === vars.id)) {
+        queryClient.invalidateQueries({ queryKey: ["board"] });
+      }
+    },
   });
 
 
@@ -398,8 +406,19 @@ function PipelinePage() {
       toast.error(MENSAGEM_AGENDA);
       return setDragging(null);
     }
-    if (dragging.agenda_record) {
+    // Leads da Agenda espelhados em Documentação podem avançar manualmente para Fechamento,
+    // que é a etapa final do funil. Demais etapas da Agenda continuam controladas lá.
+    if (dragging.agenda_record && stage !== "fechamento") {
       toast.error("Agendamentos e visitas realizadas devem ser alterados no projeto Agenda.");
+      return setDragging(null);
+    }
+    if (dragging.agenda_record && stage === "fechamento" && dragging.stage !== "documentacao") {
+      toast.error("Apenas leads em Documentação podem ser avançados para Fechamento.");
+      return setDragging(null);
+    }
+    if (dragging.agenda_record && stage === "fechamento" && !dragging.agenda_lead_id) {
+      toast.error("Preencha as informações do cliente antes de fechar.");
+      abrirLead(dragging);
       return setDragging(null);
     }
     // Trava: sem indicador preenchido o lead não sai das colunas frias.
@@ -408,7 +427,8 @@ function PipelinePage() {
       abrirLead(dragging);
       return setDragging(null);
     }
-    moveMutation.mutate({ id: dragging.id, stage });
+    const id = dragging.agenda_record ? (dragging.agenda_lead_id ?? dragging.id) : dragging.id;
+    moveMutation.mutate({ id, stage });
     setDragging(null);
   }
 
