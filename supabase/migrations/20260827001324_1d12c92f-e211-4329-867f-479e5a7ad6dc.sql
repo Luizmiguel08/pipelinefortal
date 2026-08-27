@@ -1,0 +1,1 @@
+UPDATE public.corretores SET user_id = '27441c47-98a3-410c-8512-dd2062cf0924', updated_at = now() WHERE id = '62cef325-0e2c-4994-9058-9bc3680f6f4d';
