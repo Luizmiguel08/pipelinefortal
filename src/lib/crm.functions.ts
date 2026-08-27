@@ -177,13 +177,16 @@ export const getBoard = createServerFn({ method: "GET" })
             corretor_agenda_nome: a.corretor_nome,
           };
           // Cada agendamento gera exatamente um card e avança pela sequência do funil:
-          // Agendado -> Visita realizada -> Documentação. Antes, uma visita realizada
-          // mantinha também o card em Agendado, duplicando clientes (especialmente Jean).
-          const stage: StageId = vinculado?.documentacao_ok
-            ? "documentacao"
-            : a.status === "realizado"
-              ? "visita_realizada"
-              : "visita";
+          // Agendado -> Visita realizada -> Documentação -> Fechamento.
+          // Quando o lead já foi fechado no CRM, permanece em Fechamento mesmo que a Agenda
+          // ainda mostre status anterior.
+          const stage: StageId = vinculado?.stage === "fechamento"
+            ? "fechamento"
+            : vinculado?.documentacao_ok
+              ? "documentacao"
+              : a.status === "realizado"
+                ? "visita_realizada"
+                : "visita";
           return [{
             ...base,
             id: `agenda:${a.id}:${stage}`,
