@@ -192,9 +192,18 @@ export const getBoard = createServerFn({ method: "GET" })
                 : a.visita_em ?? a.agenda_atualizado_em ?? a.created_at,
           }];
         }),
-      ],
+    ];
+
+    return {
+      isGestor: (roles ?? []).some((r) => r.role === "gestor"),
+      nome: profile?.nome ?? "",
+      meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
+      corretores: lista.map(({ user_id: _u, ...c }) => c),
+      // Telefone é a chave principal: um mesmo cliente nunca repete na mesma coluna.
+      leads: dedupePorTelefone(cartoes),
     };
   });
+
 
 
 export const moveLead = createServerFn({ method: "POST" })
