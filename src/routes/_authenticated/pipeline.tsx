@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { LeadCard } from "@/components/crm/LeadCard";
 import { LeadDialog, type LeadFormValues } from "@/components/crm/LeadDialog";
 import { getBoard, moveLead, saveLead, salvarLeadAgenda, type Board, type BoardLead } from "@/lib/crm.functions";
-import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
+import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGES, alertaSLA, formatBRL, formatCompactBRL, podeMoverPara, resolverEtapa, type StageId } from "@/lib/stages";
 import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
