@@ -59,7 +59,7 @@ export async function notificarEscalonamentos() {
   const { data: leads, error } = await supabaseAdmin
     .from("leads")
     .select("id, nome, telefone, valor, stage, stage_since, corretor_id, corretores(nome)")
-    .in("stage", ETAPAS_AVISO as unknown as string[])
+    .in("stage", [...ETAPAS_AVISO])
     .gte("stage_since", desde)
     .order("stage_since", { ascending: false })
     .limit(200);
