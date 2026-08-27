@@ -166,10 +166,13 @@ export const MENSAGEM_TRAVA =
 export function resolverEtapa(q: Qualificacao, stage: StageId): StageId {
   if (q.documentacao_ok && stage !== "documentacao" && stage !== "fechamento") return "documentacao";
   if (!q.documentacao_ok && stage === "documentacao") return "negociacao";
-  const frias = ETAPAS_FRIAS;
+  // Só o "Lead novo" avança sozinho para Em atendimento ao ser qualificado.
+  // Nas demais colunas (Não respondeu, Dia 1/2/3, Lista fria) o corretor pode
+  // preencher os indicadores sem que o card mude de coluna sozinho.
   // Agendado / Visita realizada são espelhados da Agenda: nunca resolvidos manualmente.
-  if (indicadoresPreenchidos(q) && frias.includes(stage)) return "atendimento";
+  if (indicadoresPreenchidos(q) && stage === "novo") return "atendimento";
   return stage;
+
 }
 
 /** Monta o link wa.me a partir do telefone (aceita formatos variados, assume Brasil se faltar DDI). */
