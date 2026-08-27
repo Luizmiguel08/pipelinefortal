@@ -125,14 +125,10 @@ export const getBoard = createServerFn({ method: "GET" })
       (agendaRows ?? []).map((a) => a.lead_id).filter((id): id is string => Boolean(id)),
     );
 
-    return {
-      isGestor: (roles ?? []).some((r) => r.role === "gestor"),
-      nome: profile?.nome ?? "",
-      meuCorretorId: lista.find((c) => c.user_id === userId)?.id ?? null,
-      corretores: lista.map(({ user_id: _u, ...c }) => c),
-      leads: [
-        ...((leads ?? []) as BoardLead[])
-          .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada" && !comAgenda.has(l.id))
+    const cartoes: BoardLead[] = [
+      ...((leads ?? []) as BoardLead[])
+        .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada" && !comAgenda.has(l.id))
+
           .map((l) => ({
         ...l,
         valor: Number(l.valor),
