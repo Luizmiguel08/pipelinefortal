@@ -1041,22 +1041,22 @@
       "degree": 8
     },
     {
-      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
-      "label": "requireSupabaseAuth",
+      "id": "src_components_ui_input_input",
+      "label": "Input",
       "degree": 8
     }
   ],
   "surprises": [
     {
-      "source": "MenubarShortcut()",
+      "source": "Chip()",
       "target": "cn()",
       "source_files": [
-        "src/components/ui/menubar.tsx",
+        "src/components/crm/LeadDialog.tsx",
         "src/lib/utils.ts"
       ],
       "confidence": "EXTRACTED",
       "relation": "calls",
-      "why": "bridges separate communities; peripheral node `MenubarShortcut()` unexpectedly reaches hub `cn()`"
+      "why": "bridges separate communities; peripheral node `Chip()` unexpectedly reaches hub `cn()`"
     },
     {
       "source": "AlertDialogFooter()",
