@@ -1043,24 +1043,14 @@
       "degree": 14
     },
     {
-      "id": "src_lib_stages_podemoverpara",
-      "label": "podeMoverPara()",
-      "degree": 9
-    },
-    {
       "id": "src_components_ui_button_buttonvariants",
       "label": "buttonVariants",
       "degree": 9
     },
     {
-      "id": "src_lib_stages_formatbrl",
-      "label": "formatBRL()",
-      "degree": 8
-    },
-    {
-      "id": "src_lib_stages_resolveretapa",
-      "label": "resolverEtapa()",
-      "degree": 8
+      "id": "src_lib_stages_podemoverpara",
+      "label": "podeMoverPara()",
+      "degree": 9
     },
     {
       "id": "src_routes_authenticated_pipeline_pipelinepage",
@@ -1075,6 +1065,16 @@
     {
       "id": "src_components_ui_input_input",
       "label": "Input",
+      "degree": 8
+    },
+    {
+      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
+      "label": "requireSupabaseAuth",
+      "degree": 8
+    },
+    {
+      "id": "src_lib_stages_formatbrl",
+      "label": "formatBRL()",
       "degree": 8
     }
   ],
