@@ -229,6 +229,41 @@ export type Database = {
           },
         ]
       }
+      lead_stage_alerts: {
+        Row: {
+          canal: string
+          enviado_em: string
+          erro: string | null
+          id: string
+          lead_id: string
+          stage: Database["public"]["Enums"]["lead_stage"]
+        }
+        Insert: {
+          canal?: string
+          enviado_em?: string
+          erro?: string | null
+          id?: string
+          lead_id: string
+          stage: Database["public"]["Enums"]["lead_stage"]
+        }
+        Update: {
+          canal?: string
+          enviado_em?: string
+          erro?: string | null
+          id?: string
+          lead_id?: string
+          stage?: Database["public"]["Enums"]["lead_stage"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_stage_alerts_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       leads: {
         Row: {
           agenda_appointment_id: string | null
