@@ -1,6 +1,7 @@
 export const STAGES = [
   { id: "novo", label: "Lead novo", hint: "Responder em até 5 min", color: "var(--stage-novo)" },
   { id: "atendimento", label: "Em atendimento", hint: "Avanço em até 1 dia", color: "var(--stage-atendimento)" },
+  { id: "nao_respondeu", label: "Não Respondeu", hint: "Sem interação após 5 min no Lead novo", color: "var(--stage-nao-respondeu)" },
   { id: "visita", label: "Agendado", hint: "Agendamentos confirmados na Agenda", color: "var(--stage-visita)" },
   { id: "visita_realizada", label: "Visita realizada", hint: "Cliente compareceu à visita", color: "var(--stage-visita-realizada)" },
   { id: "dia1", label: "Dia 1", hint: "Sem retorno há 1 dia", color: "var(--stage-dia1)" },
