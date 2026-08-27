@@ -238,6 +238,14 @@ function PipelinePage() {
       if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
       toast.error(e.message);
     },
+    onSuccess: (_r, vars) => {
+      // Cards da Agenda usam ID sintético (agenda:<id>:<etapa>). A etapa real fica no lead
+      // vinculado, então precisamos recarregar o funil para refletir a mudança no card correto.
+      const board = queryClient.getQueryData<Board>(["board"]);
+      if (board?.leads.some((l) => l.agenda_lead_id === vars.id)) {
+        queryClient.invalidateQueries({ queryKey: ["board"] });
+      }
+    },
   });
 
 
