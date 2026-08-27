@@ -20,6 +20,7 @@ export const STAGE_IDS = STAGES.map((s) => s.id) as StageId[];
 // Tempo máximo (ms) que o lead pode ficar parado em cada etapa antes do escalonamento.
 const LIMITE_ETAPA: Partial<Record<StageId, number>> = {
   novo: 5 * 60_000,
+  nao_respondeu: 24 * 3600_000,
   atendimento: 24 * 3600_000,
   dia1: 24 * 3600_000,
   dia2: 24 * 3600_000,
