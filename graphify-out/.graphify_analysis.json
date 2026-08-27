@@ -391,6 +391,8 @@
       "tsconfig_include"
     ],
     "8": [
+      "src_router",
+      "src_router_getrouter",
       "src_routes_api_public_hooks_c2s_sync",
       "src_routes_api_public_hooks_c2s_sync_route",
       "src_routes_authenticated_pipeline_route",
@@ -417,6 +419,7 @@
       "src_routetree_gen_indexroute",
       "src_routetree_gen_register",
       "src_routetree_gen_rootroutechildren",
+      "src_routetree_gen_routetree",
       "src_routetree_gen_tanstack_react_router",
       "src_routetree_gen_tanstack_react_start"
     ],
@@ -723,216 +726,211 @@
       "src_components_ui_badge_badgevariants"
     ],
     "30": [
-      "src_router",
-      "src_router_getrouter",
-      "src_routetree_gen_routetree"
-    ],
-    "31": [
       "clsx",
       "package_dependencies_clsx"
     ],
-    "32": [
+    "31": [
       "cmdk",
       "package_dependencies_cmdk"
     ],
-    "33": [
+    "32": [
       "date_fns",
       "package_dependencies_date_fns"
     ],
-    "34": [
+    "33": [
       "embla_carousel_react",
       "package_dependencies_embla_carousel_react"
     ],
-    "35": [
+    "34": [
       "hookform_resolvers",
       "package_dependencies_hookform_resolvers"
     ],
-    "36": [
+    "35": [
       "lucide_react",
       "package_dependencies_lucide_react"
     ],
-    "37": [
+    "36": [
       "package_dependencies_radix_ui_react_accordion",
       "radix_ui_react_accordion"
     ],
-    "38": [
+    "37": [
       "package_dependencies_radix_ui_react_alert_dialog",
       "radix_ui_react_alert_dialog"
     ],
-    "39": [
+    "38": [
       "package_dependencies_radix_ui_react_aspect_ratio",
       "radix_ui_react_aspect_ratio"
     ],
-    "40": [
+    "39": [
       "package_dependencies_radix_ui_react_avatar",
       "radix_ui_react_avatar"
     ],
-    "41": [
+    "40": [
       "package_dependencies_radix_ui_react_checkbox",
       "radix_ui_react_checkbox"
     ],
-    "42": [
+    "41": [
       "package_dependencies_radix_ui_react_collapsible",
       "radix_ui_react_collapsible"
     ],
-    "43": [
+    "42": [
       "package_dependencies_radix_ui_react_dialog",
       "radix_ui_react_dialog"
     ],
-    "44": [
+    "43": [
       "package_dependencies_radix_ui_react_dropdown_menu",
       "radix_ui_react_dropdown_menu"
     ],
-    "45": [
+    "44": [
       "package_dependencies_radix_ui_react_hover_card",
       "radix_ui_react_hover_card"
     ],
-    "46": [
+    "45": [
       "package_dependencies_radix_ui_react_label",
       "radix_ui_react_label"
     ],
-    "47": [
+    "46": [
       "package_dependencies_radix_ui_react_menubar",
       "radix_ui_react_menubar"
     ],
-    "48": [
+    "47": [
       "package_dependencies_radix_ui_react_navigation_menu",
       "radix_ui_react_navigation_menu"
     ],
-    "49": [
+    "48": [
       "package_dependencies_radix_ui_react_popover",
       "radix_ui_react_popover"
     ],
-    "50": [
+    "49": [
       "package_dependencies_radix_ui_react_progress",
       "radix_ui_react_progress"
     ],
-    "51": [
+    "50": [
       "package_dependencies_radix_ui_react_radio_group",
       "radix_ui_react_radio_group"
     ],
-    "52": [
+    "51": [
       "package_dependencies_radix_ui_react_scroll_area",
       "radix_ui_react_scroll_area"
     ],
-    "53": [
+    "52": [
       "package_dependencies_radix_ui_react_select",
       "radix_ui_react_select"
     ],
-    "54": [
+    "53": [
       "package_dependencies_radix_ui_react_separator",
       "radix_ui_react_separator"
     ],
-    "55": [
+    "54": [
       "package_dependencies_radix_ui_react_slider",
       "radix_ui_react_slider"
     ],
-    "56": [
+    "55": [
       "package_dependencies_radix_ui_react_slot",
       "radix_ui_react_slot"
     ],
-    "57": [
+    "56": [
       "package_dependencies_radix_ui_react_switch",
       "radix_ui_react_switch"
     ],
-    "58": [
+    "57": [
       "package_dependencies_radix_ui_react_tabs",
       "radix_ui_react_tabs"
     ],
-    "59": [
+    "58": [
       "package_dependencies_radix_ui_react_toggle",
       "radix_ui_react_toggle"
     ],
-    "60": [
+    "59": [
       "package_dependencies_radix_ui_react_toggle_group",
       "radix_ui_react_toggle_group"
     ],
-    "61": [
+    "60": [
       "package_dependencies_radix_ui_react_tooltip",
       "radix_ui_react_tooltip"
     ],
-    "62": [
+    "61": [
       "package_dependencies_react",
       "react"
     ],
-    "63": [
+    "62": [
       "package_dependencies_react_day_picker",
       "react_day_picker"
     ],
-    "64": [
+    "63": [
       "package_dependencies_react_dom",
       "react_dom"
     ],
-    "65": [
+    "64": [
       "package_dependencies_react_hook_form",
       "react_hook_form"
     ],
-    "66": [
+    "65": [
       "package_dependencies_react_resizable_panels",
       "react_resizable_panels"
     ],
-    "67": [
+    "66": [
       "package_dependencies_sonner",
       "sonner"
     ],
-    "68": [
+    "67": [
       "package_dependencies_supabase_supabase_js",
       "supabase_supabase_js"
     ],
-    "69": [
+    "68": [
       "package_dependencies_tailwind_merge",
       "tailwind_merge"
     ],
-    "70": [
+    "69": [
       "package_dependencies_tailwindcss",
       "tailwindcss"
     ],
-    "71": [
+    "70": [
       "package_dependencies_tailwindcss_vite",
       "tailwindcss_vite"
     ],
-    "72": [
+    "71": [
       "package_dependencies_tanstack_react_query",
       "tanstack_react_query"
     ],
-    "73": [
+    "72": [
       "package_dependencies_tanstack_react_router",
       "tanstack_react_router"
     ],
-    "74": [
+    "73": [
       "package_dependencies_tanstack_router_plugin",
       "tanstack_router_plugin"
     ],
-    "75": [
+    "74": [
       "package_dependencies_tw_animate_css",
       "tw_animate_css"
     ],
-    "76": [
+    "75": [
       "package_dependencies_vaul",
       "vaul"
     ],
-    "77": [
+    "76": [
       "package_dependencies_vite_tsconfig_paths",
       "vite_tsconfig_paths"
     ],
-    "78": [
+    "77": [
       "package_dependencies_zod",
       "zod"
     ],
-    "79": [
+    "78": [
       "src_integrations_supabase_cron_auth",
       "src_integrations_supabase_cron_auth_authenticatecronrequest"
     ],
-    "80": [
+    "79": [
       "eslint_config"
     ],
-    "81": [
+    "80": [
       "src_components_ui_aspect_ratio"
     ],
-    "82": [
+    "81": [
       "src_components_ui_collapsible"
     ],
-    "83": [
+    "82": [
       "vite_config"
     ]
   },
@@ -945,7 +943,7 @@
     "5": 0.06827880512091039,
     "6": 0.10037878787878787,
     "7": 0.0625,
-    "8": 0.07671957671957672,
+    "8": 0.07311827956989247,
     "9": 0.07407407407407407,
     "10": 0.11666666666666667,
     "11": 0.1471861471861472,
@@ -967,7 +965,7 @@
     "27": 0.5,
     "28": 0.5,
     "29": 0.6666666666666666,
-    "30": 0.6666666666666666,
+    "30": 1.0,
     "31": 1.0,
     "32": 1.0,
     "33": 1.0,
@@ -1019,8 +1017,7 @@
     "79": 1.0,
     "80": 1.0,
     "81": 1.0,
-    "82": 1.0,
-    "83": 1.0
+    "82": 1.0
   },
   "gods": [
     {
@@ -1039,13 +1036,13 @@
       "degree": 14
     },
     {
-      "id": "src_lib_stages_podemoverpara",
-      "label": "podeMoverPara()",
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
       "degree": 10
     },
     {
-      "id": "src_routes_authenticated_pipeline_pipelinepage",
-      "label": "PipelinePage()",
+      "id": "src_lib_stages_podemoverpara",
+      "label": "podeMoverPara()",
       "degree": 10
     },
     {
@@ -1054,13 +1051,13 @@
       "degree": 9
     },
     {
-      "id": "src_lib_c2s_server_fetchc2scontacts",
-      "label": "fetchC2SContacts()",
+      "id": "src_components_crm_leadcard_leadcardbase",
+      "label": "LeadCardBase()",
       "degree": 8
     },
     {
-      "id": "src_components_ui_input_input",
-      "label": "Input",
+      "id": "src_lib_c2s_server_fetchc2scontacts",
+      "label": "fetchC2SContacts()",
       "degree": 8
     },
     {
@@ -1069,8 +1066,8 @@
       "degree": 8
     },
     {
-      "id": "src_components_crm_leadcard_leadcardbase",
-      "label": "LeadCardBase()",
+      "id": "src_components_ui_input_input",
+      "label": "Input",
       "degree": 8
     }
   ],
