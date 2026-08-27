@@ -33,7 +33,7 @@ export function alertaSLA(
   stageSince: string | null,
   ultimaInteracao: string | null,
   agora: number,
-): { alerta: boolean; restanteMs: number } | null {
+): { alerta: boolean; restanteMs: number; limiteMs: number } | null {
   const limite = LIMITE_ETAPA[stage];
   if (!limite || !stageSince) return null;
   const base = Math.max(
