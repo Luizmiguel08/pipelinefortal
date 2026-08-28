@@ -1,5 +1,6 @@
 import { fetchC2SContacts } from "./c2s.server";
 import { type StageId } from "./stages";
+import { valorComTabela } from "./project-prices";
 
 export type SyncResult = {
   criados: number;
