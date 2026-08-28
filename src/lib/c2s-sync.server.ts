@@ -1,5 +1,6 @@
 import { fetchC2SContacts } from "./c2s.server";
 import { type StageId } from "./stages";
+import { valorComTabela } from "./project-prices";
 
 export type SyncResult = {
   criados: number;
@@ -85,7 +86,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
       telefone: contato.telefone,
       email: contato.email,
       imovel: contato.imovel,
-      valor: contato.valor,
+      valor: valorComTabela(contato.imovel, contato.valor),
       origem: contato.origem,
       ultima_interacao: contato.ultima_interacao,
       data_c2s: contato.data_c2s,
@@ -102,15 +103,21 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
     }
 
     // Atualiza somente dados do contato, preservando a etapa definida no painel.
-    // O valor da negociação digitado pelo corretor no funil nunca é zerado pelo C2S:
-    // só sobrescrevemos quando o C2S traz um valor maior que zero.
+    // O valor digitado pelo corretor nunca é zerado: só sobrescrevemos quando o
+    // C2S traz valor maior que zero; se ambos forem zero, usa a tabela do projeto.
     atualizados.push({
       ...base,
-      valor: Number(contato.valor) > 0 ? contato.valor : existente.valor,
+      valor:
+        Number(contato.valor) > 0
+          ? Number(contato.valor)
+          : Number(existente.valor) > 0
+            ? existente.valor
+            : valorComTabela(contato.imovel, 0),
       c2s_contact_id: contato.c2s_contact_id,
       stage: existente.stage,
     });
     result.atualizados += 1;
+
 
 
   }
