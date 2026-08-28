@@ -1,80 +1,6 @@
 {
   "communities": {
     "0": [
-      "src_components_crm_leadcard",
-      "src_components_crm_leadcard_leadcard",
-      "src_components_crm_leadcard_leadcardbase",
-      "src_components_crm_leadcard_props",
-      "src_components_crm_leadcard_whatsappicon",
-      "src_components_crm_leaddialog",
-      "src_components_crm_leaddialog_atalhos_entrada",
-      "src_components_crm_leaddialog_atalhos_valor",
-      "src_components_crm_leaddialog_campovalor",
-      "src_components_crm_leaddialog_chip",
-      "src_components_crm_leaddialog_empty",
-      "src_components_crm_leaddialog_leaddialog",
-      "src_components_crm_leaddialog_leadformvalues",
-      "src_components_crm_leaddialog_parainputlocal",
-      "src_components_ui_dialog",
-      "src_components_ui_dialog_dialogcontent",
-      "src_components_ui_dialog_dialogdescription",
-      "src_components_ui_dialog_dialogfooter",
-      "src_components_ui_dialog_dialogheader",
-      "src_components_ui_dialog_dialogoverlay",
-      "src_components_ui_dialog_dialogtitle",
-      "src_components_ui_textarea",
-      "src_components_ui_textarea_textarea",
-      "src_hooks_use_drag_autoscroll",
-      "src_hooks_use_drag_autoscroll_usedragautoscroll",
-      "src_lib_board_dedupe",
-      "src_lib_board_dedupe_chavecliente",
-      "src_lib_board_dedupe_dedupeportelefone",
-      "src_lib_board_dedupe_ordem",
-      "src_lib_crm_functions",
-      "src_lib_crm_functions_board",
-      "src_lib_crm_functions_boardcorretor",
-      "src_lib_crm_functions_boardlead",
-      "src_lib_crm_functions_getboard",
-      "src_lib_crm_functions_getintegrationstatus",
-      "src_lib_crm_functions_getsynchistory",
-      "src_lib_crm_functions_movelead",
-      "src_lib_crm_functions_salvarleadagenda",
-      "src_lib_crm_functions_savelead",
-      "src_lib_crm_functions_testc2sconnection",
-      "src_lib_stages",
-      "src_lib_stages_alertasla",
-      "src_lib_stages_etapas_agenda",
-      "src_lib_stages_etapas_frias",
-      "src_lib_stages_formatbrl",
-      "src_lib_stages_formatcompactbrl",
-      "src_lib_stages_formatrestante",
-      "src_lib_stages_indicadorespreenchidos",
-      "src_lib_stages_limite_etapa",
-      "src_lib_stages_mensagem_agenda",
-      "src_lib_stages_mensagem_trava",
-      "src_lib_stages_origemcard",
-      "src_lib_stages_podemoverpara",
-      "src_lib_stages_progressosla",
-      "src_lib_stages_qualificacao",
-      "src_lib_stages_relativetime",
-      "src_lib_stages_resolveretapa",
-      "src_lib_stages_stage_ids",
-      "src_lib_stages_stageid",
-      "src_lib_stages_stagelabel",
-      "src_lib_stages_stages",
-      "src_lib_stages_whatsapplink",
-      "src_routes_authenticated_integracao",
-      "src_routes_authenticated_integracao_integracaopage",
-      "src_routes_authenticated_integracao_route",
-      "src_routes_authenticated_pipeline",
-      "src_routes_authenticated_pipeline_funnelsummarycard",
-      "src_routes_authenticated_pipeline_pipelinepage",
-      "src_routes_authenticated_pipeline_pipelinepage_handledragend",
-      "src_routes_authenticated_pipeline_pipelinepage_handledrop",
-      "src_routes_authenticated_pipeline_pipelinepage_sair",
-      "src_routes_authenticated_pipeline_summarycard"
-    ],
-    "1": [
       "src_integrations_supabase_client_server",
       "src_integrations_supabase_client_server_createsupabaseadminclient",
       "src_integrations_supabase_client_server_createsupabasefetch",
@@ -134,7 +60,118 @@
       "src_routes_authenticated_reconciliacao_agenda_resumo",
       "src_routes_authenticated_reconciliacao_agenda_route"
     ],
+    "1": [
+      "src_components_crm_leadcard",
+      "src_components_crm_leadcard_leadcard",
+      "src_components_crm_leadcard_leadcardbase",
+      "src_components_crm_leadcard_props",
+      "src_components_crm_leadcard_whatsappicon",
+      "src_components_crm_leaddialog_leaddialog",
+      "src_hooks_use_drag_autoscroll",
+      "src_hooks_use_drag_autoscroll_usedragautoscroll",
+      "src_lib_board_dedupe",
+      "src_lib_board_dedupe_chavecliente",
+      "src_lib_board_dedupe_dedupeportelefone",
+      "src_lib_board_dedupe_ordem",
+      "src_lib_crm_functions",
+      "src_lib_crm_functions_board",
+      "src_lib_crm_functions_boardlead",
+      "src_lib_crm_functions_getboard",
+      "src_lib_crm_functions_getintegrationstatus",
+      "src_lib_crm_functions_getsynchistory",
+      "src_lib_crm_functions_movelead",
+      "src_lib_crm_functions_salvarleadagenda",
+      "src_lib_crm_functions_savelead",
+      "src_lib_crm_functions_testc2sconnection",
+      "src_lib_stages",
+      "src_lib_stages_alertasla",
+      "src_lib_stages_etapas_agenda",
+      "src_lib_stages_etapas_frias",
+      "src_lib_stages_formatbrl",
+      "src_lib_stages_formatcompactbrl",
+      "src_lib_stages_formatrestante",
+      "src_lib_stages_indicadorespreenchidos",
+      "src_lib_stages_limite_etapa",
+      "src_lib_stages_mensagem_agenda",
+      "src_lib_stages_mensagem_trava",
+      "src_lib_stages_origemcard",
+      "src_lib_stages_podemoverpara",
+      "src_lib_stages_progressosla",
+      "src_lib_stages_qualificacao",
+      "src_lib_stages_relativetime",
+      "src_lib_stages_resolveretapa",
+      "src_lib_stages_stage_ids",
+      "src_lib_stages_stageid",
+      "src_lib_stages_stagelabel",
+      "src_lib_stages_stages",
+      "src_lib_stages_whatsapplink",
+      "src_routes_authenticated_integracao",
+      "src_routes_authenticated_integracao_integracaopage",
+      "src_routes_authenticated_integracao_route",
+      "src_routes_authenticated_pipeline",
+      "src_routes_authenticated_pipeline_funnelsummarycard",
+      "src_routes_authenticated_pipeline_pipelinepage",
+      "src_routes_authenticated_pipeline_pipelinepage_handledragend",
+      "src_routes_authenticated_pipeline_pipelinepage_handledrop",
+      "src_routes_authenticated_pipeline_pipelinepage_sair",
+      "src_routes_authenticated_pipeline_summarycard"
+    ],
     "2": [
+      "src_components_ui_accordion",
+      "src_components_ui_accordion_accordioncontent",
+      "src_components_ui_accordion_accordionitem",
+      "src_components_ui_accordion_accordiontrigger",
+      "src_components_ui_avatar",
+      "src_components_ui_avatar_avatar",
+      "src_components_ui_avatar_avatarfallback",
+      "src_components_ui_avatar_avatarimage",
+      "src_components_ui_card",
+      "src_components_ui_card_card",
+      "src_components_ui_card_cardcontent",
+      "src_components_ui_card_carddescription",
+      "src_components_ui_card_cardfooter",
+      "src_components_ui_card_cardheader",
+      "src_components_ui_card_cardtitle",
+      "src_components_ui_context_menu",
+      "src_components_ui_context_menu_contextmenucheckboxitem",
+      "src_components_ui_context_menu_contextmenucontent",
+      "src_components_ui_context_menu_contextmenuitem",
+      "src_components_ui_context_menu_contextmenulabel",
+      "src_components_ui_context_menu_contextmenuradioitem",
+      "src_components_ui_context_menu_contextmenuseparator",
+      "src_components_ui_context_menu_contextmenushortcut",
+      "src_components_ui_context_menu_contextmenusubcontent",
+      "src_components_ui_context_menu_contextmenusubtrigger",
+      "src_components_ui_dropdown_menu",
+      "src_components_ui_dropdown_menu_dropdownmenucheckboxitem",
+      "src_components_ui_dropdown_menu_dropdownmenucontent",
+      "src_components_ui_dropdown_menu_dropdownmenuitem",
+      "src_components_ui_dropdown_menu_dropdownmenulabel",
+      "src_components_ui_dropdown_menu_dropdownmenuradioitem",
+      "src_components_ui_dropdown_menu_dropdownmenuseparator",
+      "src_components_ui_dropdown_menu_dropdownmenushortcut",
+      "src_components_ui_dropdown_menu_dropdownmenusubcontent",
+      "src_components_ui_dropdown_menu_dropdownmenusubtrigger",
+      "src_components_ui_select",
+      "src_components_ui_select_selectcontent",
+      "src_components_ui_select_selectitem",
+      "src_components_ui_select_selectlabel",
+      "src_components_ui_select_selectscrolldownbutton",
+      "src_components_ui_select_selectscrollupbutton",
+      "src_components_ui_select_selectseparator",
+      "src_components_ui_select_selecttrigger",
+      "src_components_ui_table",
+      "src_components_ui_table_table",
+      "src_components_ui_table_tablebody",
+      "src_components_ui_table_tablecaption",
+      "src_components_ui_table_tablecell",
+      "src_components_ui_table_tablefooter",
+      "src_components_ui_table_tablehead",
+      "src_components_ui_table_tableheader",
+      "src_components_ui_table_tablerow",
+      "src_lib_utils_cn"
+    ],
+    "3": [
       "eslint",
       "eslint_config_prettier",
       "eslint_js",
@@ -185,107 +222,18 @@
       "vite",
       "vitejs_plugin_react"
     ],
-    "3": [
-      "src_components_ui_breadcrumb",
-      "src_components_ui_breadcrumb_breadcrumb",
-      "src_components_ui_breadcrumb_breadcrumbellipsis",
-      "src_components_ui_breadcrumb_breadcrumbitem",
-      "src_components_ui_breadcrumb_breadcrumblink",
-      "src_components_ui_breadcrumb_breadcrumblist",
-      "src_components_ui_breadcrumb_breadcrumbpage",
-      "src_components_ui_breadcrumb_breadcrumbseparator",
-      "src_components_ui_card",
-      "src_components_ui_card_card",
-      "src_components_ui_card_cardcontent",
-      "src_components_ui_card_carddescription",
-      "src_components_ui_card_cardfooter",
-      "src_components_ui_card_cardheader",
-      "src_components_ui_card_cardtitle",
-      "src_components_ui_context_menu",
-      "src_components_ui_context_menu_contextmenucheckboxitem",
-      "src_components_ui_context_menu_contextmenucontent",
-      "src_components_ui_context_menu_contextmenuitem",
-      "src_components_ui_context_menu_contextmenulabel",
-      "src_components_ui_context_menu_contextmenuradioitem",
-      "src_components_ui_context_menu_contextmenuseparator",
-      "src_components_ui_context_menu_contextmenushortcut",
-      "src_components_ui_context_menu_contextmenusubcontent",
-      "src_components_ui_context_menu_contextmenusubtrigger",
-      "src_components_ui_dropdown_menu",
-      "src_components_ui_dropdown_menu_dropdownmenucheckboxitem",
-      "src_components_ui_dropdown_menu_dropdownmenucontent",
-      "src_components_ui_dropdown_menu_dropdownmenuitem",
-      "src_components_ui_dropdown_menu_dropdownmenulabel",
-      "src_components_ui_dropdown_menu_dropdownmenuradioitem",
-      "src_components_ui_dropdown_menu_dropdownmenuseparator",
-      "src_components_ui_dropdown_menu_dropdownmenushortcut",
-      "src_components_ui_dropdown_menu_dropdownmenusubcontent",
-      "src_components_ui_dropdown_menu_dropdownmenusubtrigger",
-      "src_components_ui_select",
-      "src_components_ui_select_selectcontent",
-      "src_components_ui_select_selectitem",
-      "src_components_ui_select_selectlabel",
-      "src_components_ui_select_selectscrolldownbutton",
-      "src_components_ui_select_selectscrollupbutton",
-      "src_components_ui_select_selectseparator",
-      "src_components_ui_select_selecttrigger",
-      "src_components_ui_tabs",
-      "src_components_ui_tabs_tabscontent",
-      "src_components_ui_tabs_tabslist",
-      "src_components_ui_tabs_tabstrigger",
-      "src_lib_utils_cn"
-    ],
     "4": [
-      "src_components_ui_form",
-      "src_components_ui_form_formcontrol",
-      "src_components_ui_form_formdescription",
-      "src_components_ui_form_formfield",
-      "src_components_ui_form_formfieldcontext",
-      "src_components_ui_form_formfieldcontextvalue",
-      "src_components_ui_form_formitem",
-      "src_components_ui_form_formitemcontext",
-      "src_components_ui_form_formitemcontextvalue",
-      "src_components_ui_form_formlabel",
-      "src_components_ui_form_formmessage",
-      "src_components_ui_form_useformfield",
-      "src_components_ui_label",
-      "src_components_ui_label_label",
-      "src_components_ui_label_labelvariants",
-      "src_integrations_lovable_index",
-      "src_integrations_lovable_index_lovable",
-      "src_integrations_lovable_index_lovableauth",
-      "src_integrations_lovable_index_signinoptions",
-      "src_integrations_supabase_client",
-      "src_integrations_supabase_client_createsupabaseclient",
-      "src_integrations_supabase_client_createsupabasefetch",
-      "src_integrations_supabase_client_isnewsupabaseapikey",
-      "src_integrations_supabase_client_supabase",
-      "src_integrations_supabase_previewauthstorage",
-      "src_integrations_supabase_previewauthstorage_brokeredpreviewstorage",
-      "src_integrations_supabase_types",
-      "src_integrations_supabase_types_compositetypes",
-      "src_integrations_supabase_types_constants",
-      "src_integrations_supabase_types_database",
-      "src_integrations_supabase_types_databasewithoutinternals",
-      "src_integrations_supabase_types_defaultschema",
-      "src_integrations_supabase_types_enums",
-      "src_integrations_supabase_types_json",
-      "src_integrations_supabase_types_tables",
-      "src_integrations_supabase_types_tablesinsert",
-      "src_integrations_supabase_types_tablesupdate",
-      "src_routes_auth",
-      "src_routes_auth_authpage",
-      "src_routes_auth_authpage_handlegoogle",
-      "src_routes_auth_authpage_handlesubmit",
-      "src_routes_auth_route",
-      "src_routes_authenticated_route",
-      "src_routes_authenticated_route_route"
-    ],
-    "5": [
-      "src_components_ui_input",
-      "src_components_ui_input_input",
       "src_components_ui_separator",
       "src_components_ui_separator_separator",
+      "src_components_ui_sheet",
+      "src_components_ui_sheet_sheetcontent",
+      "src_components_ui_sheet_sheetcontentprops",
+      "src_components_ui_sheet_sheetdescription",
+      "src_components_ui_sheet_sheetfooter",
+      "src_components_ui_sheet_sheetheader",
+      "src_components_ui_sheet_sheetoverlay",
+      "src_components_ui_sheet_sheettitle",
+      "src_components_ui_sheet_sheetvariants",
       "src_components_ui_sidebar",
       "src_components_ui_sidebar_sidebar",
       "src_components_ui_sidebar_sidebarcontent",
@@ -320,6 +268,47 @@
       "src_components_ui_tooltip_tooltipcontent",
       "src_hooks_use_mobile",
       "src_hooks_use_mobile_useismobile"
+    ],
+    "5": [
+      "src_components_ui_alert_dialog",
+      "src_components_ui_alert_dialog_alertdialogaction",
+      "src_components_ui_alert_dialog_alertdialogcancel",
+      "src_components_ui_alert_dialog_alertdialogcontent",
+      "src_components_ui_alert_dialog_alertdialogdescription",
+      "src_components_ui_alert_dialog_alertdialogfooter",
+      "src_components_ui_alert_dialog_alertdialogheader",
+      "src_components_ui_alert_dialog_alertdialogoverlay",
+      "src_components_ui_alert_dialog_alertdialogtitle",
+      "src_components_ui_button",
+      "src_components_ui_button_button",
+      "src_components_ui_button_buttonprops",
+      "src_components_ui_button_buttonvariants",
+      "src_components_ui_calendar",
+      "src_components_ui_calendar_calendar",
+      "src_components_ui_calendar_calendardaybutton",
+      "src_components_ui_carousel",
+      "src_components_ui_carousel_carousel",
+      "src_components_ui_carousel_carouselapi",
+      "src_components_ui_carousel_carouselcontent",
+      "src_components_ui_carousel_carouselcontext",
+      "src_components_ui_carousel_carouselcontextprops",
+      "src_components_ui_carousel_carouselitem",
+      "src_components_ui_carousel_carouselnext",
+      "src_components_ui_carousel_carouseloptions",
+      "src_components_ui_carousel_carouselplugin",
+      "src_components_ui_carousel_carouselprevious",
+      "src_components_ui_carousel_carouselprops",
+      "src_components_ui_carousel_usecarousel",
+      "src_components_ui_carousel_usecarouselparameters",
+      "src_components_ui_pagination",
+      "src_components_ui_pagination_pagination",
+      "src_components_ui_pagination_paginationcontent",
+      "src_components_ui_pagination_paginationellipsis",
+      "src_components_ui_pagination_paginationitem",
+      "src_components_ui_pagination_paginationlink",
+      "src_components_ui_pagination_paginationlinkprops",
+      "src_components_ui_pagination_paginationnext",
+      "src_components_ui_pagination_paginationprevious"
     ],
     "6": [
       "src_lib_audit_functions",
@@ -424,15 +413,45 @@
       "src_routetree_gen_tanstack_react_start"
     ],
     "9": [
+      "src_integrations_lovable_index",
+      "src_integrations_lovable_index_lovable",
+      "src_integrations_lovable_index_lovableauth",
+      "src_integrations_lovable_index_signinoptions",
+      "src_integrations_supabase_client",
+      "src_integrations_supabase_client_createsupabaseclient",
+      "src_integrations_supabase_client_createsupabasefetch",
+      "src_integrations_supabase_client_isnewsupabaseapikey",
+      "src_integrations_supabase_client_supabase",
+      "src_integrations_supabase_previewauthstorage",
+      "src_integrations_supabase_previewauthstorage_brokeredpreviewstorage",
+      "src_integrations_supabase_types",
+      "src_integrations_supabase_types_compositetypes",
+      "src_integrations_supabase_types_constants",
+      "src_integrations_supabase_types_database",
+      "src_integrations_supabase_types_databasewithoutinternals",
+      "src_integrations_supabase_types_defaultschema",
+      "src_integrations_supabase_types_enums",
+      "src_integrations_supabase_types_json",
+      "src_integrations_supabase_types_tables",
+      "src_integrations_supabase_types_tablesinsert",
+      "src_integrations_supabase_types_tablesupdate",
+      "src_routes_auth",
+      "src_routes_auth_authpage",
+      "src_routes_auth_authpage_handlegoogle",
+      "src_routes_auth_authpage_handlesubmit",
+      "src_routes_auth_route",
+      "src_routes_authenticated_route",
+      "src_routes_authenticated_route_route"
+    ],
+    "10": [
+      "src_components_ui_badge",
+      "src_components_ui_badge_badge",
+      "src_components_ui_badge_badgeprops",
+      "src_components_ui_badge_badgevariants",
       "src_components_ui_checkbox",
       "src_components_ui_checkbox_checkbox",
       "src_components_ui_hover_card",
       "src_components_ui_hover_card_hovercardcontent",
-      "src_components_ui_input_otp",
-      "src_components_ui_input_otp_inputotp",
-      "src_components_ui_input_otp_inputotpgroup",
-      "src_components_ui_input_otp_inputotpseparator",
-      "src_components_ui_input_otp_inputotpslot",
       "src_components_ui_popover",
       "src_components_ui_popover_popovercontent",
       "src_components_ui_progress",
@@ -452,34 +471,32 @@
       "src_components_ui_switch_switch",
       "src_lib_utils"
     ],
-    "10": [
-      "src_components_ui_alert_dialog",
-      "src_components_ui_alert_dialog_alertdialogaction",
-      "src_components_ui_alert_dialog_alertdialogcancel",
-      "src_components_ui_alert_dialog_alertdialogcontent",
-      "src_components_ui_alert_dialog_alertdialogdescription",
-      "src_components_ui_alert_dialog_alertdialogfooter",
-      "src_components_ui_alert_dialog_alertdialogheader",
-      "src_components_ui_alert_dialog_alertdialogoverlay",
-      "src_components_ui_alert_dialog_alertdialogtitle",
-      "src_components_ui_button",
-      "src_components_ui_button_button",
-      "src_components_ui_button_buttonprops",
-      "src_components_ui_button_buttonvariants",
-      "src_components_ui_calendar",
-      "src_components_ui_calendar_calendar",
-      "src_components_ui_calendar_calendardaybutton",
-      "src_components_ui_pagination",
-      "src_components_ui_pagination_pagination",
-      "src_components_ui_pagination_paginationcontent",
-      "src_components_ui_pagination_paginationellipsis",
-      "src_components_ui_pagination_paginationitem",
-      "src_components_ui_pagination_paginationlink",
-      "src_components_ui_pagination_paginationlinkprops",
-      "src_components_ui_pagination_paginationnext",
-      "src_components_ui_pagination_paginationprevious"
-    ],
     "11": [
+      "src_components_crm_leaddialog",
+      "src_components_crm_leaddialog_atalhos_entrada",
+      "src_components_crm_leaddialog_atalhos_valor",
+      "src_components_crm_leaddialog_campovalor",
+      "src_components_crm_leaddialog_chip",
+      "src_components_crm_leaddialog_empty",
+      "src_components_crm_leaddialog_leadformvalues",
+      "src_components_crm_leaddialog_parainputlocal",
+      "src_components_ui_dialog",
+      "src_components_ui_dialog_dialogcontent",
+      "src_components_ui_dialog_dialogdescription",
+      "src_components_ui_dialog_dialogfooter",
+      "src_components_ui_dialog_dialogheader",
+      "src_components_ui_dialog_dialogoverlay",
+      "src_components_ui_dialog_dialogtitle",
+      "src_components_ui_input",
+      "src_components_ui_input_input",
+      "src_components_ui_label",
+      "src_components_ui_label_label",
+      "src_components_ui_label_labelvariants",
+      "src_components_ui_textarea",
+      "src_components_ui_textarea_textarea",
+      "src_lib_crm_functions_boardcorretor"
+    ],
+    "12": [
       "src_integrations_supabase_auth_attacher",
       "src_integrations_supabase_auth_attacher_attachsupabaseauth",
       "src_lib_error_capture",
@@ -503,7 +520,7 @@
       "src_start_errormiddleware",
       "src_start_startinstance"
     ],
-    "12": [
+    "13": [
       "components",
       "components_aliases",
       "components_aliases_components",
@@ -524,7 +541,7 @@
       "components_tailwind_prefix",
       "components_tsx"
     ],
-    "13": [
+    "14": [
       "src_integrations_supabase_auth_middleware",
       "src_integrations_supabase_auth_middleware_createsupabasefetch",
       "src_integrations_supabase_auth_middleware_isnewsupabaseapikey",
@@ -545,7 +562,7 @@
       "src_routes_authenticated_equipe_equipepage_copiar",
       "src_routes_authenticated_equipe_route"
     ],
-    "14": [
+    "15": [
       "src_components_ui_menubar",
       "src_components_ui_menubar_menubar",
       "src_components_ui_menubar_menubarcheckboxitem",
@@ -563,22 +580,6 @@
       "src_components_ui_menubar_menubarsubcontent",
       "src_components_ui_menubar_menubarsubtrigger",
       "src_components_ui_menubar_menubartrigger"
-    ],
-    "15": [
-      "src_components_ui_carousel",
-      "src_components_ui_carousel_carousel",
-      "src_components_ui_carousel_carouselapi",
-      "src_components_ui_carousel_carouselcontent",
-      "src_components_ui_carousel_carouselcontext",
-      "src_components_ui_carousel_carouselcontextprops",
-      "src_components_ui_carousel_carouselitem",
-      "src_components_ui_carousel_carouselnext",
-      "src_components_ui_carousel_carouseloptions",
-      "src_components_ui_carousel_carouselplugin",
-      "src_components_ui_carousel_carouselprevious",
-      "src_components_ui_carousel_carouselprops",
-      "src_components_ui_carousel_usecarousel",
-      "src_components_ui_carousel_usecarouselparameters"
     ],
     "16": [
       "src_components_ui_sonner",
@@ -612,6 +613,20 @@
       "tanstack_react_start"
     ],
     "18": [
+      "src_components_ui_form",
+      "src_components_ui_form_formcontrol",
+      "src_components_ui_form_formdescription",
+      "src_components_ui_form_formfield",
+      "src_components_ui_form_formfieldcontext",
+      "src_components_ui_form_formfieldcontextvalue",
+      "src_components_ui_form_formitem",
+      "src_components_ui_form_formitemcontext",
+      "src_components_ui_form_formitemcontextvalue",
+      "src_components_ui_form_formlabel",
+      "src_components_ui_form_formmessage",
+      "src_components_ui_form_useformfield"
+    ],
+    "19": [
       "src_components_ui_chart",
       "src_components_ui_chart_chartconfig",
       "src_components_ui_chart_chartcontainer",
@@ -624,7 +639,7 @@
       "src_components_ui_chart_themes",
       "src_components_ui_chart_usechart"
     ],
-    "19": [
+    "20": [
       "src_lib_escalation_notify_server",
       "src_lib_escalation_notify_server_canalslack",
       "src_lib_escalation_notify_server_credenciaisslack",
@@ -637,7 +652,7 @@
       "src_routes_api_public_hooks_escalation_notify_route",
       "src_routetree_gen_fileroutesbypath"
     ],
-    "20": [
+    "21": [
       "src_components_ui_command",
       "src_components_ui_command_command",
       "src_components_ui_command_commanddialog",
@@ -649,27 +664,15 @@
       "src_components_ui_command_commandseparator",
       "src_components_ui_command_commandshortcut"
     ],
-    "21": [
-      "src_components_ui_sheet",
-      "src_components_ui_sheet_sheetcontent",
-      "src_components_ui_sheet_sheetcontentprops",
-      "src_components_ui_sheet_sheetdescription",
-      "src_components_ui_sheet_sheetfooter",
-      "src_components_ui_sheet_sheetheader",
-      "src_components_ui_sheet_sheetoverlay",
-      "src_components_ui_sheet_sheettitle",
-      "src_components_ui_sheet_sheetvariants"
-    ],
     "22": [
-      "src_components_ui_table",
-      "src_components_ui_table_table",
-      "src_components_ui_table_tablebody",
-      "src_components_ui_table_tablecaption",
-      "src_components_ui_table_tablecell",
-      "src_components_ui_table_tablefooter",
-      "src_components_ui_table_tablehead",
-      "src_components_ui_table_tableheader",
-      "src_components_ui_table_tablerow"
+      "src_components_ui_breadcrumb",
+      "src_components_ui_breadcrumb_breadcrumb",
+      "src_components_ui_breadcrumb_breadcrumbellipsis",
+      "src_components_ui_breadcrumb_breadcrumbitem",
+      "src_components_ui_breadcrumb_breadcrumblink",
+      "src_components_ui_breadcrumb_breadcrumblist",
+      "src_components_ui_breadcrumb_breadcrumbpage",
+      "src_components_ui_breadcrumb_breadcrumbseparator"
     ],
     "23": [
       "src_components_ui_drawer",
@@ -708,263 +711,258 @@
       "src_components_ui_alert_alertvariants"
     ],
     "27": [
-      "src_components_ui_accordion",
-      "src_components_ui_accordion_accordioncontent",
-      "src_components_ui_accordion_accordionitem",
-      "src_components_ui_accordion_accordiontrigger"
+      "src_components_ui_input_otp",
+      "src_components_ui_input_otp_inputotp",
+      "src_components_ui_input_otp_inputotpgroup",
+      "src_components_ui_input_otp_inputotpseparator",
+      "src_components_ui_input_otp_inputotpslot"
     ],
     "28": [
-      "src_components_ui_avatar",
-      "src_components_ui_avatar_avatar",
-      "src_components_ui_avatar_avatarfallback",
-      "src_components_ui_avatar_avatarimage"
+      "src_components_ui_tabs",
+      "src_components_ui_tabs_tabscontent",
+      "src_components_ui_tabs_tabslist",
+      "src_components_ui_tabs_tabstrigger"
     ],
     "29": [
-      "src_components_ui_badge",
-      "src_components_ui_badge_badge",
-      "src_components_ui_badge_badgeprops",
-      "src_components_ui_badge_badgevariants"
-    ],
-    "30": [
       "clsx",
       "package_dependencies_clsx"
     ],
-    "31": [
+    "30": [
       "cmdk",
       "package_dependencies_cmdk"
     ],
-    "32": [
+    "31": [
       "date_fns",
       "package_dependencies_date_fns"
     ],
-    "33": [
+    "32": [
       "embla_carousel_react",
       "package_dependencies_embla_carousel_react"
     ],
-    "34": [
+    "33": [
       "hookform_resolvers",
       "package_dependencies_hookform_resolvers"
     ],
-    "35": [
+    "34": [
       "lucide_react",
       "package_dependencies_lucide_react"
     ],
-    "36": [
+    "35": [
       "package_dependencies_radix_ui_react_accordion",
       "radix_ui_react_accordion"
     ],
-    "37": [
+    "36": [
       "package_dependencies_radix_ui_react_alert_dialog",
       "radix_ui_react_alert_dialog"
     ],
-    "38": [
+    "37": [
       "package_dependencies_radix_ui_react_aspect_ratio",
       "radix_ui_react_aspect_ratio"
     ],
-    "39": [
+    "38": [
       "package_dependencies_radix_ui_react_avatar",
       "radix_ui_react_avatar"
     ],
-    "40": [
+    "39": [
       "package_dependencies_radix_ui_react_checkbox",
       "radix_ui_react_checkbox"
     ],
-    "41": [
+    "40": [
       "package_dependencies_radix_ui_react_collapsible",
       "radix_ui_react_collapsible"
     ],
-    "42": [
+    "41": [
       "package_dependencies_radix_ui_react_dialog",
       "radix_ui_react_dialog"
     ],
-    "43": [
+    "42": [
       "package_dependencies_radix_ui_react_dropdown_menu",
       "radix_ui_react_dropdown_menu"
     ],
-    "44": [
+    "43": [
       "package_dependencies_radix_ui_react_hover_card",
       "radix_ui_react_hover_card"
     ],
-    "45": [
+    "44": [
       "package_dependencies_radix_ui_react_label",
       "radix_ui_react_label"
     ],
-    "46": [
+    "45": [
       "package_dependencies_radix_ui_react_menubar",
       "radix_ui_react_menubar"
     ],
-    "47": [
+    "46": [
       "package_dependencies_radix_ui_react_navigation_menu",
       "radix_ui_react_navigation_menu"
     ],
-    "48": [
+    "47": [
       "package_dependencies_radix_ui_react_popover",
       "radix_ui_react_popover"
     ],
-    "49": [
+    "48": [
       "package_dependencies_radix_ui_react_progress",
       "radix_ui_react_progress"
     ],
-    "50": [
+    "49": [
       "package_dependencies_radix_ui_react_radio_group",
       "radix_ui_react_radio_group"
     ],
-    "51": [
+    "50": [
       "package_dependencies_radix_ui_react_scroll_area",
       "radix_ui_react_scroll_area"
     ],
-    "52": [
+    "51": [
       "package_dependencies_radix_ui_react_select",
       "radix_ui_react_select"
     ],
-    "53": [
+    "52": [
       "package_dependencies_radix_ui_react_separator",
       "radix_ui_react_separator"
     ],
-    "54": [
+    "53": [
       "package_dependencies_radix_ui_react_slider",
       "radix_ui_react_slider"
     ],
-    "55": [
+    "54": [
       "package_dependencies_radix_ui_react_slot",
       "radix_ui_react_slot"
     ],
-    "56": [
+    "55": [
       "package_dependencies_radix_ui_react_switch",
       "radix_ui_react_switch"
     ],
-    "57": [
+    "56": [
       "package_dependencies_radix_ui_react_tabs",
       "radix_ui_react_tabs"
     ],
-    "58": [
+    "57": [
       "package_dependencies_radix_ui_react_toggle",
       "radix_ui_react_toggle"
     ],
-    "59": [
+    "58": [
       "package_dependencies_radix_ui_react_toggle_group",
       "radix_ui_react_toggle_group"
     ],
-    "60": [
+    "59": [
       "package_dependencies_radix_ui_react_tooltip",
       "radix_ui_react_tooltip"
     ],
-    "61": [
+    "60": [
       "package_dependencies_react",
       "react"
     ],
-    "62": [
+    "61": [
       "package_dependencies_react_day_picker",
       "react_day_picker"
     ],
-    "63": [
+    "62": [
       "package_dependencies_react_dom",
       "react_dom"
     ],
-    "64": [
+    "63": [
       "package_dependencies_react_hook_form",
       "react_hook_form"
     ],
-    "65": [
+    "64": [
       "package_dependencies_react_resizable_panels",
       "react_resizable_panels"
     ],
-    "66": [
+    "65": [
       "package_dependencies_sonner",
       "sonner"
     ],
-    "67": [
+    "66": [
       "package_dependencies_supabase_supabase_js",
       "supabase_supabase_js"
     ],
-    "68": [
+    "67": [
       "package_dependencies_tailwind_merge",
       "tailwind_merge"
     ],
-    "69": [
+    "68": [
       "package_dependencies_tailwindcss",
       "tailwindcss"
     ],
-    "70": [
+    "69": [
       "package_dependencies_tailwindcss_vite",
       "tailwindcss_vite"
     ],
-    "71": [
+    "70": [
       "package_dependencies_tanstack_react_query",
       "tanstack_react_query"
     ],
-    "72": [
+    "71": [
       "package_dependencies_tanstack_react_router",
       "tanstack_react_router"
     ],
-    "73": [
+    "72": [
       "package_dependencies_tanstack_router_plugin",
       "tanstack_router_plugin"
     ],
-    "74": [
+    "73": [
       "package_dependencies_tw_animate_css",
       "tw_animate_css"
     ],
-    "75": [
+    "74": [
       "package_dependencies_vaul",
       "vaul"
     ],
-    "76": [
+    "75": [
       "package_dependencies_vite_tsconfig_paths",
       "vite_tsconfig_paths"
     ],
-    "77": [
+    "76": [
       "package_dependencies_zod",
       "zod"
     ],
-    "78": [
+    "77": [
       "src_integrations_supabase_cron_auth",
       "src_integrations_supabase_cron_auth_authenticatecronrequest"
     ],
-    "79": [
+    "78": [
       "eslint_config"
     ],
-    "80": [
+    "79": [
       "src_components_ui_aspect_ratio"
     ],
-    "81": [
+    "80": [
       "src_components_ui_collapsible"
     ],
-    "82": [
+    "81": [
       "vite_config"
     ]
   },
   "cohesion": {
-    "0": 0.06338028169014084,
-    "1": 0.06715063520871144,
-    "2": 0.04081632653061224,
-    "3": 0.07712765957446809,
-    "4": 0.06342494714587738,
-    "5": 0.06827880512091039,
+    "0": 0.06715063520871144,
+    "1": 0.0859538784067086,
+    "2": 0.07039187227866474,
+    "3": 0.04081632653061224,
+    "4": 0.0595959595959596,
+    "5": 0.0728744939271255,
     "6": 0.10037878787878787,
     "7": 0.0625,
     "8": 0.07311827956989247,
-    "9": 0.07407407407407407,
-    "10": 0.11666666666666667,
-    "11": 0.1471861471861472,
-    "12": 0.10526315789473684,
-    "13": 0.16374269005847952,
-    "14": 0.11764705882352941,
-    "15": 0.18681318681318682,
+    "9": 0.09359605911330049,
+    "10": 0.08,
+    "11": 0.1225296442687747,
+    "12": 0.1471861471861472,
+    "13": 0.10526315789473684,
+    "14": 0.16374269005847952,
+    "15": 0.11764705882352941,
     "16": 0.17582417582417584,
     "17": 0.15384615384615385,
-    "18": 0.2545454545454545,
-    "19": 0.2727272727272727,
-    "20": 0.2,
-    "21": 0.25,
-    "22": 0.2222222222222222,
+    "18": 0.22727272727272727,
+    "19": 0.2545454545454545,
+    "20": 0.2727272727272727,
+    "21": 0.2,
+    "22": 0.25,
     "23": 0.25,
     "24": 0.2857142857142857,
     "25": 0.42857142857142855,
     "26": 0.5,
-    "27": 0.5,
+    "27": 0.4,
     "28": 0.5,
-    "29": 0.6666666666666666,
+    "29": 1.0,
     "30": 1.0,
     "31": 1.0,
     "32": 1.0,
@@ -1016,8 +1014,7 @@
     "78": 1.0,
     "79": 1.0,
     "80": 1.0,
-    "81": 1.0,
-    "82": 1.0
+    "81": 1.0
   },
   "gods": [
     {
@@ -1036,18 +1033,18 @@
       "degree": 14
     },
     {
-      "id": "src_routes_authenticated_pipeline_pipelinepage",
-      "label": "PipelinePage()",
-      "degree": 10
-    },
-    {
       "id": "src_lib_stages_podemoverpara",
       "label": "podeMoverPara()",
-      "degree": 10
+      "degree": 9
     },
     {
       "id": "src_components_ui_button_buttonvariants",
       "label": "buttonVariants",
+      "degree": 9
+    },
+    {
+      "id": "src_routes_authenticated_pipeline_pipelinepage",
+      "label": "PipelinePage()",
       "degree": 9
     },
     {
@@ -1056,22 +1053,33 @@
       "degree": 8
     },
     {
+      "id": "src_lib_stages_formatbrl",
+      "label": "formatBRL()",
+      "degree": 8
+    },
+    {
+      "id": "src_lib_stages_resolveretapa",
+      "label": "resolverEtapa()",
+      "degree": 8
+    },
+    {
       "id": "src_lib_c2s_server_fetchc2scontacts",
       "label": "fetchC2SContacts()",
-      "degree": 8
-    },
-    {
-      "id": "src_integrations_supabase_auth_middleware_requiresupabaseauth",
-      "label": "requireSupabaseAuth",
-      "degree": 8
-    },
-    {
-      "id": "src_components_ui_input_input",
-      "label": "Input",
       "degree": 8
     }
   ],
   "surprises": [
+    {
+      "source": "CampoValor()",
+      "target": "formatBRL()",
+      "source_files": [
+        "src/components/crm/LeadDialog.tsx",
+        "src/lib/stages.ts"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities; peripheral node `CampoValor()` unexpectedly reaches hub `formatBRL()`"
+    },
     {
       "source": "Chip()",
       "target": "cn()",
@@ -1115,17 +1123,6 @@
       "confidence": "EXTRACTED",
       "relation": "calls",
       "why": "bridges separate communities; peripheral node `Pagination()` unexpectedly reaches hub `cn()`"
-    },
-    {
-      "source": "PaginationEllipsis()",
-      "target": "cn()",
-      "source_files": [
-        "src/components/ui/pagination.tsx",
-        "src/lib/utils.ts"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "why": "bridges separate communities; peripheral node `PaginationEllipsis()` unexpectedly reaches hub `cn()`"
     }
   ],
   "tokens": {
