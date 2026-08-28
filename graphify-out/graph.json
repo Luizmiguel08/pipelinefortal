@@ -2377,7 +2377,7 @@
       "file_type": "code",
       "norm_label": "normalizarprojeto()",
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L29"
+      "source_location": "L33"
     },
     {
       "id": "src_lib_project_prices_valorcomtabela",
@@ -2388,7 +2388,7 @@
       "file_type": "code",
       "norm_label": "valorcomtabela()",
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L53"
+      "source_location": "L57"
     },
     {
       "id": "src_lib_project_prices_valordoprojeto",
@@ -2399,7 +2399,7 @@
       "file_type": "code",
       "norm_label": "valordoprojeto()",
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L40"
+      "source_location": "L44"
     },
     {
       "id": "src_routes_authenticated_auditoria_auditoriapage",
@@ -11345,7 +11345,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L59",
+      "source_location": "L63",
       "weight": 1.0
     },
     {
@@ -11357,7 +11357,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L41",
+      "source_location": "L45",
       "weight": 1.0
     },
     {
@@ -22424,7 +22424,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L29",
+      "source_location": "L33",
       "weight": 1.0
     },
     {
@@ -22435,7 +22435,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L40",
+      "source_location": "L44",
       "weight": 1.0
     },
     {
@@ -22446,7 +22446,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/project-prices.ts",
-      "source_location": "L53",
+      "source_location": "L57",
       "weight": 1.0
     },
     {
@@ -23908,5 +23908,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "2589c59ed38d1c26cccd115657378398524554fe"
+  "built_at_commit": "1374af07bf590349d585f079c2955f4ea51b30ec"
 }
