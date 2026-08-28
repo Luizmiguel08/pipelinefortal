@@ -17,11 +17,15 @@ export type RegraProjeto = {
 
 export const TABELA_PROJETOS: RegraProjeto[] = [
   { projeto: "RMKT - Guilhermina", padroes: ["RMKT GUILHERMINA"], valor: 178_000 },
-  { projeto: "RAJ Mendes", padroes: ["RAJ MENDES"], valor: 178_000 },
-  { projeto: "RAJ Penha", padroes: ["RAJ PENHA"], valor: 159_000 },
+  { projeto: "RAJ Mendes", padroes: ["RAJ MENDES", "ON MENDES", "MENDES"], valor: 178_000 },
+  { projeto: "RAJ Penha", padroes: ["RAJ PENHA", "ON PENHA", "PENHA"], valor: 159_000 },
   { projeto: "Raj Home", padroes: ["RAJ HOME"], valor: 136_000 },
   { projeto: "Guilhermina - SP", padroes: ["GUILHERMINA SP"], valor: 178_000 },
-  { projeto: "Guilhermina - BR", padroes: ["GUILHERMINA BR"], valor: 178_000 },
+  {
+    projeto: "Guilhermina - BR",
+    padroes: ["GUILHERMINA BR", "RAJ GUILHERMINA", "GUILHERMINA"],
+    valor: 178_000,
+  },
   { projeto: "Vértice", padroes: ["VERTICE"], valor: 211_000 },
   { projeto: "Consolação", padroes: ["CONSOLACAO"], valor: 190_000 },
   { projeto: "Formulário R - II", padroes: ["FORMULARIO R II"], valor: 136_000 },
