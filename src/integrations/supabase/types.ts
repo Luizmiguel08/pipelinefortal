@@ -583,6 +583,7 @@ export type Database = {
       is_my_corretor: { Args: { _corretor_id: string }; Returns: boolean }
       normalize_phone: { Args: { _phone: string }; Returns: string }
       owns_lead: { Args: { _lead_id: string }; Returns: boolean }
+      valor_projeto: { Args: { _imovel: string }; Returns: number }
     }
     Enums: {
       app_role: "gestor" | "corretor"
