@@ -1,3 +1,4 @@
+import { chaveCliente } from "@/lib/board-dedupe";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -144,16 +145,23 @@ function PipelinePage() {
           if (lead === null) removidos.add(id);
           else atualizados.set(id, lead);
         }
-        // Um cliente aparece em uma única coluna: se já existe card da Agenda vinculado
-        // ao lead, o registro do C2S não pode voltar pelo tempo real.
+        // Um cliente aparece em uma única coluna: se já existe card da Agenda do mesmo
+        // cliente (por vínculo ou por telefone/nome), o registro do C2S não volta pelo tempo real.
+        const cardsAgenda = old.leads.filter((l) => l.agenda_record);
         const comAgenda = new Set(
-          old.leads
-            .filter((l) => l.agenda_record && l.agenda_lead_id)
-            .map((l) => l.agenda_lead_id as string),
+          cardsAgenda.filter((l) => l.agenda_lead_id).map((l) => l.agenda_lead_id as string),
         );
-        for (const id of comAgenda) atualizados.delete(id);
+        const chavesAgenda = new Set(cardsAgenda.map((l) => chaveCliente(l)));
+        for (const [id, lead] of atualizados) {
+          if (comAgenda.has(id) || chavesAgenda.has(chaveCliente(lead))) atualizados.delete(id);
+        }
         const leads = old.leads
-          .filter((l) => !removidos.has(l.id) && !(!l.agenda_record && comAgenda.has(l.id)))
+          .filter(
+            (l) =>
+              !removidos.has(l.id) &&
+              !(!l.agenda_record && (comAgenda.has(l.id) || chavesAgenda.has(chaveCliente(l)))),
+          )
+
           .map((l) => {
             const novo = atualizados.get(l.id);
             if (!novo) return l;
