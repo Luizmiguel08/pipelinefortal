@@ -46,8 +46,8 @@ export const getAtividade = createServerFn({ method: "GET" })
       supabase.rpc("atividade_corretores", { p_dias: dias }),
       supabase.rpc("atividade_eventos", {
         p_dias: dias,
-        p_corretor: data.corretor ?? undefined,
         p_limit: 200,
+        ...(data.corretor ? { p_corretor: data.corretor } : {}),
       }),
     ]);
 
