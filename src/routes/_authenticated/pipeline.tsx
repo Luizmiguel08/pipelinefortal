@@ -506,6 +506,11 @@ function PipelinePage() {
               </Button>
             )}
 
+            <Button variant="secondary" asChild>
+              <Link to="/atividade">Atividade</Link>
+            </Button>
+
+
             <Button variant="ghost" onClick={sair}>
               Sair
             </Button>

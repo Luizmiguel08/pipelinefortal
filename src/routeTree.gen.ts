@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedAtividadeRouteImport } from './routes/_authenticated/atividade'
 import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authenticated/auditoria'
 import { Route as AuthenticatedConfiguracoesAgendaRouteImport } from './routes/_authenticated/configuracoes-agenda'
 import { Route as AuthenticatedEquipeRouteImport } from './routes/_authenticated/equipe'
@@ -35,6 +36,11 @@ const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedAtividadeRoute = AuthenticatedAtividadeRouteImport.update({
+  id: '/atividade',
+  path: '/atividade',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedAuditoriaRoute = AuthenticatedAuditoriaRouteImport.update({
   id: '/auditoria',
@@ -89,6 +95,7 @@ const ApiPublicHooksEscalationNotifyRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/atividade': typeof AuthenticatedAtividadeRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/configuracoes-agenda': typeof AuthenticatedConfiguracoesAgendaRoute
   '/equipe': typeof AuthenticatedEquipeRoute
@@ -102,6 +109,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/atividade': typeof AuthenticatedAtividadeRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/configuracoes-agenda': typeof AuthenticatedConfiguracoesAgendaRoute
   '/equipe': typeof AuthenticatedEquipeRoute
@@ -117,6 +125,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/atividade': typeof AuthenticatedAtividadeRoute
   '/_authenticated/auditoria': typeof AuthenticatedAuditoriaRoute
   '/_authenticated/configuracoes-agenda': typeof AuthenticatedConfiguracoesAgendaRoute
   '/_authenticated/equipe': typeof AuthenticatedEquipeRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/atividade'
     | '/auditoria'
     | '/configuracoes-agenda'
     | '/equipe'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/atividade'
     | '/auditoria'
     | '/configuracoes-agenda'
     | '/equipe'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/atividade'
     | '/_authenticated/auditoria'
     | '/_authenticated/configuracoes-agenda'
     | '/_authenticated/equipe'
@@ -201,6 +213,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/atividade': {
+      id: '/_authenticated/atividade'
+      path: '/atividade'
+      fullPath: '/atividade'
+      preLoaderRoute: typeof AuthenticatedAtividadeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/auditoria': {
       id: '/_authenticated/auditoria'
@@ -269,6 +288,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAtividadeRoute: typeof AuthenticatedAtividadeRoute
   AuthenticatedAuditoriaRoute: typeof AuthenticatedAuditoriaRoute
   AuthenticatedConfiguracoesAgendaRoute: typeof AuthenticatedConfiguracoesAgendaRoute
   AuthenticatedEquipeRoute: typeof AuthenticatedEquipeRoute
@@ -278,6 +298,7 @@ interface AuthenticatedRouteRouteChildren {
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAtividadeRoute: AuthenticatedAtividadeRoute,
   AuthenticatedAuditoriaRoute: AuthenticatedAuditoriaRoute,
   AuthenticatedConfiguracoesAgendaRoute: AuthenticatedConfiguracoesAgendaRoute,
   AuthenticatedEquipeRoute: AuthenticatedEquipeRoute,
