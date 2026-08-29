@@ -1,7 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { ETAPAS_AGENDA, MENSAGEM_AGENDA, MENSAGEM_TRAVA, STAGE_IDS, podeMoverPara, resolverEtapa, type StageId } from "./stages";
-import { dedupePorTelefone } from "./board-dedupe";
+import { chaveCliente, dedupePorTelefone } from "./board-dedupe";
 
 
 export type BoardLead = {
