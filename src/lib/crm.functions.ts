@@ -123,13 +123,32 @@ export const getBoard = createServerFn({ method: "GET" })
     const porId = new Map((leads ?? []).map((l) => [l.id, l] as const));
     // Um cliente aparece em uma única coluna: se já existe agendamento na Agenda,
     // o card do C2S some das colunas anteriores e vale o registro da Agenda.
+    // Comparamos pelo lead vinculado E pela chave do cliente (telefone/nome), porque
+    // o mesmo cliente pode ter mais de um contato no C2S e a Agenda vincula só um deles.
     const comAgenda = new Set(
       (agendaRows ?? []).map((a) => a.lead_id).filter((id): id is string => Boolean(id)),
+    );
+    const chavesAgenda = new Set(
+      (agendaRows ?? []).map((a) =>
+        chaveCliente({
+          telefone: a.cliente_telefone,
+          agenda_lead_id: a.lead_id,
+          nome: a.cliente_nome,
+          id: a.id,
+        }),
+      ),
     );
 
     const cartoes: BoardLead[] = [
       ...((leads ?? []) as BoardLead[])
-        .filter((l) => l.stage !== "visita" && l.stage !== "visita_realizada" && !comAgenda.has(l.id))
+        .filter(
+          (l) =>
+            l.stage !== "visita" &&
+            l.stage !== "visita_realizada" &&
+            !comAgenda.has(l.id) &&
+            !chavesAgenda.has(chaveCliente(l)),
+        )
+
 
           .map((l) => ({
         ...l,
