@@ -497,6 +497,36 @@ export type Database = {
       }
     }
     Functions: {
+      atividade_corretores: {
+        Args: { p_dias?: number }
+        Returns: {
+          ativo: boolean
+          automaticas: number
+          corretor_id: string
+          hoje: number
+          leads_qualificados: number
+          leads_total: number
+          manuais: number
+          movimentacoes: number
+          nome: string
+          ultima_edicao: string
+          ultima_movimentacao: string
+        }[]
+      }
+      atividade_eventos: {
+        Args: { p_corretor?: string; p_dias?: number; p_limit?: number }
+        Returns: {
+          automatico: boolean
+          corretor_id: string
+          corretor_nome: string
+          created_at: string
+          de: string
+          id: string
+          lead_id: string
+          lead_nome: string
+          para: string
+        }[]
+      }
       board_cards_page: {
         Args: {
           p_busca?: string
