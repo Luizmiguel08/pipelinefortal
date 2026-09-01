@@ -37,13 +37,13 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
   // Carrega de uma vez os leads já existentes para evitar uma consulta por contato.
   const existentes = new Map<
     string,
-    { id: string; stage: StageId; valor: number; corretor_id: string | null }
+    { id: string; stage: StageId; valor: number; corretor_id: string | null; stage_since: string }
   >();
   const ids = contatos.map((c) => c.c2s_contact_id);
   for (let i = 0; i < ids.length; i += 200) {
     const { data } = await supabaseAdmin
       .from("leads")
-      .select("id, stage, valor, corretor_id, c2s_contact_id")
+      .select("id, stage, valor, corretor_id, stage_since, c2s_contact_id")
       .in("c2s_contact_id", ids.slice(i, i + 200));
     for (const l of data ?? []) {
       if (l.c2s_contact_id)
@@ -52,6 +52,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
           stage: l.stage as StageId,
           valor: Number(l.valor ?? 0),
           corretor_id: l.corretor_id ?? null,
+          stage_since: l.stage_since ?? new Date().toISOString(),
         });
     }
   }
@@ -101,7 +102,12 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
     // Regra do time: o C2S nunca move o lead de coluna.
     // Novo lead entra sempre em "novo"; a etapa só muda manualmente dentro do CRM.
     if (!existente) {
-      novos.push({ ...base, c2s_contact_id: contato.c2s_contact_id, stage: "novo" as StageId });
+      novos.push({
+        ...base,
+        c2s_contact_id: contato.c2s_contact_id,
+        stage: "novo" as StageId,
+        stage_since: new Date().toISOString(),
+      });
       result.criados += 1;
       continue;
     }
@@ -124,7 +130,10 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
             : valorComTabela(contato.imovel, 0),
       c2s_contact_id: contato.c2s_contact_id,
       stage: trocouDono ? ("novo" as StageId) : existente.stage,
-      ...(trocouDono ? { stage_since: new Date().toISOString(), ultima_interacao: null } : {}),
+      // stage_since sempre presente: o upsert em lote preenche com null as colunas
+      // ausentes em parte das linhas, o que quebrava a restrição NOT NULL.
+      stage_since: trocouDono ? new Date().toISOString() : existente.stage_since,
+      ...(trocouDono ? { ultima_interacao: null } : {}),
     });
     result.atualizados += 1;
     if (trocouDono) result.movidos += 1;
