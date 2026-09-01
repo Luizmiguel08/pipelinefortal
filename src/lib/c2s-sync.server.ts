@@ -35,12 +35,15 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
   );
 
   // Carrega de uma vez os leads já existentes para evitar uma consulta por contato.
-  const existentes = new Map<string, { id: string; stage: StageId; valor: number }>();
+  const existentes = new Map<
+    string,
+    { id: string; stage: StageId; valor: number; corretor_id: string | null }
+  >();
   const ids = contatos.map((c) => c.c2s_contact_id);
   for (let i = 0; i < ids.length; i += 200) {
     const { data } = await supabaseAdmin
       .from("leads")
-      .select("id, stage, valor, c2s_contact_id")
+      .select("id, stage, valor, corretor_id, c2s_contact_id")
       .in("c2s_contact_id", ids.slice(i, i + 200));
     for (const l of data ?? []) {
       if (l.c2s_contact_id)
@@ -48,6 +51,7 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
           id: l.id,
           stage: l.stage as StageId,
           valor: Number(l.valor ?? 0),
+          corretor_id: l.corretor_id ?? null,
         });
     }
   }
