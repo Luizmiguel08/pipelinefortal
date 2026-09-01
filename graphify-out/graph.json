@@ -2259,7 +2259,7 @@
       "file_type": "code",
       "norm_label": "runc2ssync()",
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L152"
+      "source_location": "L161"
     },
     {
       "id": "src_lib_project_prices_normalizarprojeto",
@@ -11281,7 +11281,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L93",
+      "source_location": "L94",
       "weight": 1.0
     },
     {
@@ -11293,7 +11293,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L219",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -12218,7 +12218,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L153",
+      "source_location": "L162",
       "weight": 1.0
     },
     {
@@ -22360,7 +22360,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L152",
+      "source_location": "L161",
       "weight": 1.0
     },
     {
@@ -24472,5 +24472,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "224d17b226b712c0858a1e0ba48af8cfce0d501f"
+  "built_at_commit": "f9df0648ac69c81594d2ceb5b66be1bee3060b8a"
 }
