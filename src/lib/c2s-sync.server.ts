@@ -106,6 +106,11 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
       continue;
     }
 
+    // Bolsão do C2S: se o contato mudou de dono (ou voltou para o bolsão sem dono),
+    // o lead deixa de pertencer ao corretor anterior e reinicia em "Lead novo"
+    // para o novo responsável. Sem isso o card continuava aparecendo para quem perdeu o lead.
+    const trocouDono = existente.corretor_id !== corretorId;
+
     // Atualiza somente dados do contato, preservando a etapa definida no painel.
     // O valor digitado pelo corretor nunca é zerado: só sobrescrevemos quando o
     // C2S traz valor maior que zero; se ambos forem zero, usa a tabela do projeto.
@@ -118,9 +123,11 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
             ? existente.valor
             : valorComTabela(contato.imovel, 0),
       c2s_contact_id: contato.c2s_contact_id,
-      stage: existente.stage,
+      stage: trocouDono ? ("novo" as StageId) : existente.stage,
+      ...(trocouDono ? { stage_since: new Date().toISOString(), ultima_interacao: null } : {}),
     });
     result.atualizados += 1;
+    if (trocouDono) result.movidos += 1;
 
 
 
