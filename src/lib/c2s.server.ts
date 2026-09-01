@@ -243,7 +243,7 @@ export async function fetchC2SContacts(options: FetchContactsOptions = {}): Prom
       for (const item of lista) {
         const id = String(item["id"] ?? "");
         if (id && vistos.has(id)) continue;
-        if (contactCreatedDate(item) < corte) continue;
+        if (contactTouchedDate(item) < corte) continue;
         if (id) vistos.add(id);
         itens.push(item);
         maisNovoQueCorte += 1;
