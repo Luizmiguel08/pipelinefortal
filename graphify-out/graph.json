@@ -685,7 +685,7 @@
       "file_type": "code",
       "norm_label": "c2sseller",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L258"
+      "source_location": "L268"
     },
     {
       "id": "src_lib_c2s_server_fetchcontactsoptions",
@@ -2141,15 +2141,15 @@
       "source_location": "L36"
     },
     {
-      "id": "src_lib_c2s_server_contactcreateddate",
-      "label": "contactCreatedDate()",
+      "id": "src_lib_c2s_server_contacttoucheddate",
+      "label": "contactTouchedDate()",
       "_callable": true,
       "_origin": "ast",
       "community": 6,
       "file_type": "code",
-      "norm_label": "contactcreateddate()",
+      "norm_label": "contacttoucheddate()",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L183"
+      "source_location": "L188"
     },
     {
       "id": "src_lib_c2s_server_fetchc2scontacts",
@@ -2160,7 +2160,7 @@
       "file_type": "code",
       "norm_label": "fetchc2scontacts()",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L191"
+      "source_location": "L201"
     },
     {
       "id": "src_lib_c2s_server_fetchc2ssellers",
@@ -2171,7 +2171,7 @@
       "file_type": "code",
       "norm_label": "fetchc2ssellers()",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L297"
+      "source_location": "L307"
     },
     {
       "id": "src_lib_c2s_server_fetchpage",
@@ -2215,7 +2215,7 @@
       "file_type": "code",
       "norm_label": "normalizeseller()",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L266"
+      "source_location": "L276"
     },
     {
       "id": "src_lib_c2s_server_pick",
@@ -2259,7 +2259,7 @@
       "file_type": "code",
       "norm_label": "runc2ssync()",
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L141"
+      "source_location": "L152"
     },
     {
       "id": "src_lib_project_prices_normalizarprojeto",
@@ -11177,7 +11177,7 @@
       "weight": 1.0
     },
     {
-      "source": "src_lib_c2s_server_contactcreateddate",
+      "source": "src_lib_c2s_server_contacttoucheddate",
       "target": "src_lib_c2s_server_pick",
       "relation": "calls",
       "_origin": "ast",
@@ -11185,7 +11185,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L186",
+      "source_location": "L192",
       "weight": 1.0
     },
     {
@@ -11197,19 +11197,19 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L219",
+      "source_location": "L229",
       "weight": 1.0
     },
     {
       "source": "src_lib_c2s_server_fetchc2scontacts",
-      "target": "src_lib_c2s_server_contactcreateddate",
+      "target": "src_lib_c2s_server_contacttoucheddate",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L236",
+      "source_location": "L246",
       "weight": 1.0
     },
     {
@@ -11257,7 +11257,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L267",
+      "source_location": "L277",
       "weight": 1.0
     },
     {
@@ -11281,7 +11281,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L89",
+      "source_location": "L93",
       "weight": 1.0
     },
     {
@@ -11293,7 +11293,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L208",
+      "source_location": "L219",
       "weight": 1.0
     },
     {
@@ -11858,6 +11858,7 @@
       "context": "export",
       "source_file": "src/lib/agenda-reconciliacao.functions.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -11870,6 +11871,7 @@
       "context": "export",
       "source_file": "src/lib/audit.functions.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -12216,7 +12218,7 @@
       "context": "import",
       "deferred": true,
       "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L142",
+      "source_location": "L153",
       "weight": 1.0
     },
     {
@@ -15839,6 +15841,7 @@
       "context": "import",
       "source_file": "src/components/crm/LeadCard.tsx",
       "source_location": "L3",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -15935,6 +15938,7 @@
       "context": "import",
       "source_file": "src/components/crm/LeadDialog.tsx",
       "source_location": "L24",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -16655,6 +16659,7 @@
       "context": "import",
       "source_file": "src/integrations/supabase/auth-middleware.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -16667,6 +16672,7 @@
       "context": "import",
       "source_file": "src/integrations/supabase/client.ts",
       "source_location": "L3",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -16691,6 +16697,7 @@
       "context": "import",
       "source_file": "src/integrations/supabase/client.server.ts",
       "source_location": "L6",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -16823,6 +16830,7 @@
       "context": "import",
       "source_file": "src/lib/board-dedupe.ts",
       "source_location": "L1",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -16835,6 +16843,7 @@
       "context": "import",
       "source_file": "src/lib/c2s.server.ts",
       "source_location": "L1",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -17543,6 +17552,7 @@
       "context": "import",
       "source_file": "src/routeTree.gen.ts",
       "source_location": "L326",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -17603,6 +17613,7 @@
       "context": "re-export",
       "source_file": "src/lib/agenda-reconciliacao.functions.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -17615,6 +17626,7 @@
       "context": "re-export",
       "source_file": "src/lib/agenda-reconciliacao.functions.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -17627,6 +17639,7 @@
       "context": "re-export",
       "source_file": "src/lib/audit.functions.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -17639,6 +17652,7 @@
       "context": "re-export",
       "source_file": "src/lib/audit.functions.ts",
       "source_location": "L5",
+      "type_only": true,
       "weight": 1.0
     },
     {
@@ -22219,13 +22233,13 @@
     },
     {
       "source": "src_lib_c2s_server",
-      "target": "src_lib_c2s_server_contactcreateddate",
+      "target": "src_lib_c2s_server_contacttoucheddate",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L183",
+      "source_location": "L188",
       "weight": 1.0
     },
     {
@@ -22236,7 +22250,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L191",
+      "source_location": "L201",
       "weight": 1.0
     },
     {
@@ -22258,7 +22272,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L258",
+      "source_location": "L268",
       "weight": 1.0
     },
     {
@@ -22269,7 +22283,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L266",
+      "source_location": "L276",
       "weight": 1.0
     },
     {
@@ -22280,7 +22294,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L297",
+      "source_location": "L307",
       "weight": 1.0
     },
     {
@@ -22329,17 +22343,6 @@
     },
     {
       "source": "src_lib_c2s_sync_server",
-      "target": "src_lib_c2s_sync_server_runc2ssync",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/lib/c2s-sync.server.ts",
-      "source_location": "L141",
-      "weight": 1.0
-    },
-    {
-      "source": "src_lib_c2s_sync_server",
       "target": "src_lib_c2s_sync_server_adminclient",
       "relation": "contains",
       "_origin": "ast",
@@ -22347,6 +22350,17 @@
       "confidence_score": 1.0,
       "source_file": "src/lib/c2s-sync.server.ts",
       "source_location": "L15",
+      "weight": 1.0
+    },
+    {
+      "source": "src_lib_c2s_sync_server",
+      "target": "src_lib_c2s_sync_server_runc2ssync",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/lib/c2s-sync.server.ts",
+      "source_location": "L152",
       "weight": 1.0
     },
     {
@@ -24285,7 +24299,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L253",
+      "source_location": "L263",
       "weight": 1.0
     },
     {
@@ -24297,7 +24311,7 @@
       "confidence_score": 0.85,
       "context": "argument",
       "source_file": "src/lib/c2s.server.ts",
-      "source_location": "L328",
+      "source_location": "L338",
       "weight": 1.0
     },
     {
@@ -24458,5 +24472,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "9aafcd3cee63d8c181f133d0eedfadecb62f20ab"
+  "built_at_commit": "224d17b226b712c0858a1e0ba48af8cfce0d501f"
 }
