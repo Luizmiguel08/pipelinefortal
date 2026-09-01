@@ -180,13 +180,23 @@ async function fetchPage(root: string, token: string, page: number): Promise<C2S
   };
 }
 
-function contactCreatedDate(rawItem: Record<string, unknown>): number {
+/**
+ * Data de referência do contato para a janela incremental.
+ * Usamos a mais recente entre criação e última atualização/interação, para que
+ * contatos antigos que mudaram de dono (bolsão do C2S) voltem na sincronização.
+ */
+function contactTouchedDate(rawItem: Record<string, unknown>): number {
   const attrs = (rawItem["attributes"] as Record<string, unknown> | undefined) ?? {};
   const raw: Record<string, unknown> = { ...attrs, ...rawItem };
-  const value = pick(raw, ["created_at", "created_date", "criado_em", "date", "inserted_at"]);
-  const parsed = value ? Date.parse(String(value)) : NaN;
-  return Number.isFinite(parsed) ? parsed : Date.now();
+  const datas = [
+    pick(raw, ["created_at", "created_date", "criado_em", "date", "inserted_at"]),
+    pick(raw, ["updated_at", "atualizado_em", "last_activity_date", "last_interaction_at", "last_message_at"]),
+  ]
+    .map((v) => (v ? Date.parse(String(v)) : NaN))
+    .filter((n) => Number.isFinite(n)) as number[];
+  return datas.length ? Math.max(...datas) : Date.now();
 }
+
 
 export async function fetchC2SContacts(options: FetchContactsOptions = {}): Promise<C2SContact[]> {
   const baseUrl = process.env["C2S_API_BASE_URL"];
