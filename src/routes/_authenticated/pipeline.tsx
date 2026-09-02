@@ -16,6 +16,36 @@ import { useDragAutoscroll } from "@/hooks/use-drag-autoscroll";
 // Quantos cards cada coluna renderiza por vez (o funil tem milhares de leads).
 const PAGINA_COLUNA = 25;
 
+// Exporta os contatos de uma coluna em CSV (nome, telefone, corretor, valor).
+function exportarColuna(
+  stage: { id: StageId; label: string },
+  leadsColuna: BoardLead[],
+  nomePorCorretor: Map<string, string>,
+) {
+  const telefones = leadsColuna.filter((l) => l.telefone?.trim());
+  if (telefones.length === 0) {
+    toast.info(`A coluna ${stage.label} não tem contatos com telefone.`);
+    return;
+  }
+  const linhas = [
+    "nome;telefone;corretor;valor",
+    ...telefones.map((l) => {
+      const tel = l.telefone!.replace(/\D/g, "");
+      const corretor = l.corretor_id ? (nomePorCorretor.get(l.corretor_id) ?? "") : (l.corretor_agenda_nome ?? "");
+      const nome = `"${l.nome.replace(/"/g, '""')}"`;
+      return `${nome};${tel};"${corretor.replace(/"/g, '""')}";${l.valor.toFixed(2)}`;
+    }),
+  ];
+  const blob = new Blob(["﻿" + linhas.join("\r\n")], { type: "text/csv;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `fortal-${stage.id}-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast.success(`${telefones.length} números exportados da coluna ${stage.label}.`);
+}
+
 // Recorte padrão do funil: agosto/2026 em diante.
 const INICIO_PADRAO = "2026-08-01";
 
