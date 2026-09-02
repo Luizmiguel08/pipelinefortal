@@ -414,21 +414,8 @@ function PipelinePage() {
       toast.error(MENSAGEM_AGENDA);
       return setDragging(null);
     }
-    // Leads da Agenda espelhados no funil têm dois avanços manuais permitidos:
-    // Visita realizada -> Negociação e Documentação -> Fechamento.
-    // Demais etapas da Agenda continuam controladas lá.
-    if (dragging.agenda_record && stage !== "fechamento" && stage !== "negociacao") {
-      toast.error("Agendamentos e visitas realizadas devem ser alterados no projeto Agenda.");
-      return setDragging(null);
-    }
-    if (dragging.agenda_record && stage === "negociacao" && dragging.stage !== "visita_realizada") {
-      toast.error("Apenas leads em Visita realizada podem ser avançados para Negociação.");
-      return setDragging(null);
-    }
-    if (dragging.agenda_record && stage === "fechamento" && dragging.stage !== "documentacao") {
-      toast.error("Apenas leads em Documentação podem ser avançados para Fechamento.");
-      return setDragging(null);
-    }
+    // Cards da Agenda podem avançar manualmente para qualquer etapa do funil;
+    // apenas as colunas Agendado e Visita realizada continuam alimentadas pela Agenda.
     if (dragging.agenda_record && !dragging.agenda_lead_id) {
       toast.error("Preencha as informações do cliente antes de avançar.");
       abrirLead(dragging);

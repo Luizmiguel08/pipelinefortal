@@ -444,7 +444,7 @@ export function LeadDialog({
             Cancelar
           </Button>
           <Button
-            onClick={() => onSave(daAgenda ? { ...values, preservar_stage: true } : values)}
+            onClick={() => onSave(manterEtapaAgenda ? { ...values, preservar_stage: true } : values)}
             disabled={saving || travado}
           >
             {saving ? "Salvando..." : `Salvar · ${stageLabel(etapaFinal)}`}
