@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  ETAPAS_AGENDA,
   STAGES,
   formatBRL,
   indicadoresPreenchidos,
@@ -187,12 +188,14 @@ export function LeadDialog({
 
   // Registro espelhado da Agenda: os campos ficam liberados, mas a etapa é da Agenda.
   const daAgenda = Boolean(lead?.agenda_record);
+  // Card da Agenda sem mudança de etapa: só salva indicadores (preserva a etapa da Agenda).
+  const manterEtapaAgenda = daAgenda && values.stage === lead?.stage;
   const etapaFinal = useMemo(
-    () => (daAgenda ? values.stage : resolverEtapa(values, values.stage)),
-    [values, daAgenda],
+    () => (manterEtapaAgenda ? values.stage : resolverEtapa(values, values.stage)),
+    [values, manterEtapaAgenda],
   );
   const qualificado = indicadoresPreenchidos(values);
-  const travado = daAgenda ? false : !podeMoverPara(etapaFinal, values);
+  const travado = manterEtapaAgenda ? false : !podeMoverPara(etapaFinal, values);
   const set = (patch: Partial<LeadFormValues>) => setValues((v) => ({ ...v, ...patch }));
 
   return (
@@ -317,12 +320,11 @@ export function LeadDialog({
               <Label htmlFor="lead-stage">Etapa</Label>
               <select
                 id="lead-stage"
-                disabled={daAgenda}
                 value={values.stage}
                 onChange={(e) => set({ stage: e.target.value as StageId })}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
-                {STAGES.map((s) => (
+                {STAGES.filter((s) => !ETAPAS_AGENDA.includes(s.id) || s.id === lead?.stage).map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.label}
                   </option>
@@ -330,7 +332,8 @@ export function LeadDialog({
               </select>
               {daAgenda && (
                 <p className="text-xs text-muted-foreground">
-                  Etapa controlada pelo projeto Agenda.
+                  Agendado e Visita realizada vêm da Agenda, mas você pode avançar o lead
+                  manualmente para as demais etapas.
                 </p>
               )}
             </div>
@@ -441,7 +444,7 @@ export function LeadDialog({
             Cancelar
           </Button>
           <Button
-            onClick={() => onSave(daAgenda ? { ...values, preservar_stage: true } : values)}
+            onClick={() => onSave(manterEtapaAgenda ? { ...values, preservar_stage: true } : values)}
             disabled={saving || travado}
           >
             {saving ? "Salvando..." : `Salvar · ${stageLabel(etapaFinal)}`}
