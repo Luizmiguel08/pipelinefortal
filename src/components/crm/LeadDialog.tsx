@@ -317,12 +317,11 @@ export function LeadDialog({
               <Label htmlFor="lead-stage">Etapa</Label>
               <select
                 id="lead-stage"
-                disabled={daAgenda}
                 value={values.stage}
                 onChange={(e) => set({ stage: e.target.value as StageId })}
                 className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
               >
-                {STAGES.map((s) => (
+                {STAGES.filter((s) => !ETAPAS_AGENDA.includes(s.id) || s.id === lead?.stage).map((s) => (
                   <option key={s.id} value={s.id}>
                     {s.label}
                   </option>
@@ -330,7 +329,8 @@ export function LeadDialog({
               </select>
               {daAgenda && (
                 <p className="text-xs text-muted-foreground">
-                  Etapa controlada pelo projeto Agenda.
+                  Agendado e Visita realizada vêm da Agenda, mas você pode avançar o lead
+                  manualmente para as demais etapas.
                 </p>
               )}
             </div>
