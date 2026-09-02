@@ -12,6 +12,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  ETAPAS_AGENDA,
   STAGES,
   formatBRL,
   indicadoresPreenchidos,
@@ -187,12 +188,14 @@ export function LeadDialog({
 
   // Registro espelhado da Agenda: os campos ficam liberados, mas a etapa é da Agenda.
   const daAgenda = Boolean(lead?.agenda_record);
+  // Card da Agenda sem mudança de etapa: só salva indicadores (preserva a etapa da Agenda).
+  const manterEtapaAgenda = daAgenda && values.stage === lead?.stage;
   const etapaFinal = useMemo(
-    () => (daAgenda ? values.stage : resolverEtapa(values, values.stage)),
-    [values, daAgenda],
+    () => (manterEtapaAgenda ? values.stage : resolverEtapa(values, values.stage)),
+    [values, manterEtapaAgenda],
   );
   const qualificado = indicadoresPreenchidos(values);
-  const travado = daAgenda ? false : !podeMoverPara(etapaFinal, values);
+  const travado = manterEtapaAgenda ? false : !podeMoverPara(etapaFinal, values);
   const set = (patch: Partial<LeadFormValues>) => setValues((v) => ({ ...v, ...patch }));
 
   return (
