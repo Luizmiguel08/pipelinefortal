@@ -751,6 +751,8 @@ export type Database = {
       owns_lead: { Args: { _lead_id: string }; Returns: boolean }
       rebuild_valor_projeto: { Args: never; Returns: undefined }
       saude_sistema: { Args: never; Returns: Json }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       valor_projeto: { Args: { _imovel: string }; Returns: number }
     }
     Enums: {
