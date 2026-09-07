@@ -1,0 +1,221 @@
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { STAGES } from "@/lib/stages";
+import { getDesempenho, type DesempenhoCorretor } from "@/lib/desempenho.functions";
+import { cn } from "@/lib/utils";
+
+export const Route = createFileRoute("/_authenticated/desempenho")({
+  head: () => ({
+    meta: [
+      { title: "Desempenho por corretor | Fortal Pipeline" },
+      {
+        name: "description",
+        content:
+          "Veja por corretor quantos leads ele tem, o valor total em andamento, a distribuição por coluna do funil e o que ainda falta preencher.",
+      },
+      { property: "og:title", content: "Desempenho por corretor | Fortal Pipeline" },
+      {
+        property: "og:description",
+        content: "Leads, valor total e informações pendentes de cada corretor no Fortal Pipeline.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: DesempenhoPage,
+  errorComponent: ({ error }) => (
+    <main className="mx-auto max-w-3xl px-5 py-16 text-center">
+      <h1 className="text-xl font-semibold">Não foi possível carregar o desempenho</h1>
+      <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+      <Button className="mt-6" asChild>
+        <Link to="/pipeline">Voltar ao funil</Link>
+      </Button>
+    </main>
+  ),
+  notFoundComponent: () => <p className="p-8">Página não encontrada.</p>,
+});
+
+const INICIO_PADRAO = "2026-08-01";
+
+const dinheiro = (v: number) =>
+  v.toLocaleString("pt-BR", { style: "currency", currency: "BRL", maximumFractionDigits: 0 });
+
+function quando(iso: string | null) {
+  if (!iso) return "Sem movimento";
+  const min = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+  if (min < 1) return "agora";
+  if (min < 60) return `há ${min} min`;
+  if (min < 1440) return `há ${Math.floor(min / 60)} h`;
+  const dias = Math.floor(min / 1440);
+  return dias === 1 ? "ontem" : `há ${dias} dias`;
+}
+
+function Pendencia({ rotulo, valor, total }: { rotulo: string; valor: number; total: number }) {
+  const pct = total > 0 ? Math.round((valor / total) * 100) : 0;
+  return (
+    <div className="rounded-lg border border-border bg-background px-3 py-2">
+      <p className="text-xs text-muted-foreground">{rotulo}</p>
+      <p className={cn("text-sm font-semibold", valor > 0 ? "text-destructive" : "text-foreground")}>
+        {valor} {total > 0 && <span className="text-xs font-normal text-muted-foreground">({pct}%)</span>}
+      </p>
+    </div>
+  );
+}
+
+function CardCorretor({ c }: { c: DesempenhoCorretor }) {
+  const stagesComLeads = STAGES.filter((s) => (c.por_stage?.[s.id] ?? 0) > 0);
+
+  return (
+    <article className="rounded-xl border border-border bg-card p-5">
+      <header className="flex flex-wrap items-baseline justify-between gap-2">
+        <div>
+          <h2 className="text-lg font-semibold">{c.nome}</h2>
+          <p className="text-xs text-muted-foreground">
+            Última atualização de lead: {quando(c.ultima_atualizacao)}
+            {!c.ativo && " · inativo"}
+          </p>
+        </div>
+        <div className="text-right">
+          <p className="text-sm text-muted-foreground">
+            {c.leads_total} {c.leads_total === 1 ? "lead" : "leads"}
+          </p>
+          <p className="text-lg font-semibold">{dinheiro(c.valor_total)}</p>
+        </div>
+      </header>
+
+      {c.leads_total === 0 ? (
+        <p className="mt-4 text-sm text-muted-foreground">Nenhum lead no período selecionado.</p>
+      ) : (
+        <>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {stagesComLeads.map((s) => (
+              <span
+                key={s.id}
+                className="flex items-center gap-2 rounded-full border border-border px-3 py-1 text-xs"
+              >
+                <span
+                  className="h-2 w-2 rounded-full"
+                  style={{ backgroundColor: s.color }}
+                  aria-hidden
+                />
+                {s.label}
+                <strong className="font-semibold">{c.por_stage[s.id]}</strong>
+              </span>
+            ))}
+          </div>
+
+          <div className="mt-4">
+            <p className="text-xs font-medium uppercase text-muted-foreground">Falta preencher</p>
+            <div className="mt-2 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-6">
+              <Pendencia rotulo="Sem telefone" valor={c.sem_telefone} total={c.leads_total} />
+              <Pendencia rotulo="Sem valor" valor={c.sem_valor} total={c.leads_total} />
+              <Pendencia rotulo="Sem entrada" valor={c.sem_entrada} total={c.leads_total} />
+              <Pendencia rotulo="Sem finalidade" valor={c.sem_finalidade} total={c.leads_total} />
+              <Pendencia rotulo="Sem tipo do imóvel" valor={c.sem_estagio_imovel} total={c.leads_total} />
+              <Pendencia rotulo="Nada preenchido" valor={c.sem_nenhum_indicador} total={c.leads_total} />
+            </div>
+          </div>
+        </>
+      )}
+    </article>
+  );
+}
+
+function DesempenhoPage() {
+  const buscar = useServerFn(getDesempenho);
+  const [inicio, setInicio] = useState(INICIO_PADRAO);
+  const [fim, setFim] = useState("");
+  const [busca, setBusca] = useState("");
+
+  const filtro = useMemo(
+    () => ({
+      inicio: inicio ? new Date(`${inicio}T00:00:00`).toISOString() : null,
+      fim: fim ? new Date(`${fim}T23:59:59`).toISOString() : null,
+    }),
+    [inicio, fim],
+  );
+
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: ["desempenho", filtro.inicio, filtro.fim],
+    queryFn: () => buscar({ data: filtro }),
+    refetchInterval: 60_000,
+    placeholderData: (prev) => prev,
+  });
+
+  const corretores = (data?.corretores ?? []).filter((c) =>
+    c.nome.toLowerCase().includes(busca.trim().toLowerCase()),
+  );
+
+  const totalLeads = corretores.reduce((s, c) => s + c.leads_total, 0);
+  const totalValor = corretores.reduce((s, c) => s + c.valor_total, 0);
+
+  return (
+    <main className="mx-auto max-w-[1400px] px-5 py-8">
+      <header className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-semibold">Desempenho por corretor</h1>
+          <p className="text-sm text-muted-foreground">
+            Leads, valor em andamento, distribuição por coluna e informações que ainda faltam.
+          </p>
+        </div>
+        <Button variant="secondary" asChild>
+          <Link to="/pipeline">Voltar ao funil</Link>
+        </Button>
+      </header>
+
+      <section className="mt-6 flex flex-wrap items-end gap-3 rounded-xl border border-border p-4">
+        <label className="text-xs text-muted-foreground">
+          De
+          <Input type="date" value={inicio} onChange={(e) => setInicio(e.target.value)} className="mt-1 h-9 w-44" />
+        </label>
+        <label className="text-xs text-muted-foreground">
+          Até
+          <Input type="date" value={fim} onChange={(e) => setFim(e.target.value)} className="mt-1 h-9 w-44" />
+        </label>
+        <label className="text-xs text-muted-foreground">
+          Corretor
+          <Input
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            placeholder="Buscar corretor"
+            className="mt-1 h-9 w-56"
+          />
+        </label>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setInicio(INICIO_PADRAO);
+            setFim("");
+            setBusca("");
+          }}
+        >
+          Limpar filtros
+        </Button>
+        <div className="ml-auto text-right">
+          <p className="text-xs text-muted-foreground">
+            {corretores.length} corretores · {totalLeads} leads
+          </p>
+          <p className="text-lg font-semibold">{dinheiro(totalValor)}</p>
+        </div>
+      </section>
+
+      {isLoading && <p className="mt-8 text-sm text-muted-foreground">Carregando...</p>}
+      {!isLoading && isFetching && (
+        <p className="mt-4 text-xs text-muted-foreground">Atualizando...</p>
+      )}
+
+      <section className="mt-4 grid gap-4">
+        {corretores.map((c) => (
+          <CardCorretor key={c.corretor_id} c={c} />
+        ))}
+        {!isLoading && corretores.length === 0 && (
+          <p className="text-sm text-muted-foreground">Nenhum corretor encontrado.</p>
+        )}
+      </section>
+    </main>
+  );
+}

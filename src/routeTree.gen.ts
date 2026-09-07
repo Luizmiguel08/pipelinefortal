@@ -15,6 +15,7 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedAtividadeRouteImport } from './routes/_authenticated/atividade'
 import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authenticated/auditoria'
 import { Route as AuthenticatedConfiguracoesAgendaRouteImport } from './routes/_authenticated/configuracoes-agenda'
+import { Route as AuthenticatedDesempenhoRouteImport } from './routes/_authenticated/desempenho'
 import { Route as AuthenticatedEquipeRouteImport } from './routes/_authenticated/equipe'
 import { Route as AuthenticatedIntegracaoRouteImport } from './routes/_authenticated/integracao'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
@@ -53,6 +54,11 @@ const AuthenticatedConfiguracoesAgendaRoute =
     path: '/configuracoes-agenda',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedDesempenhoRoute = AuthenticatedDesempenhoRouteImport.update({
+  id: '/desempenho',
+  path: '/desempenho',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedEquipeRoute = AuthenticatedEquipeRouteImport.update({
   id: '/equipe',
   path: '/equipe',
@@ -98,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/atividade': typeof AuthenticatedAtividadeRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/configuracoes-agenda': typeof AuthenticatedConfiguracoesAgendaRoute
+  '/desempenho': typeof AuthenticatedDesempenhoRoute
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
@@ -112,6 +119,7 @@ export interface FileRoutesByTo {
   '/atividade': typeof AuthenticatedAtividadeRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/configuracoes-agenda': typeof AuthenticatedConfiguracoesAgendaRoute
+  '/desempenho': typeof AuthenticatedDesempenhoRoute
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
@@ -128,6 +136,7 @@ export interface FileRoutesById {
   '/_authenticated/atividade': typeof AuthenticatedAtividadeRoute
   '/_authenticated/auditoria': typeof AuthenticatedAuditoriaRoute
   '/_authenticated/configuracoes-agenda': typeof AuthenticatedConfiguracoesAgendaRoute
+  '/_authenticated/desempenho': typeof AuthenticatedDesempenhoRoute
   '/_authenticated/equipe': typeof AuthenticatedEquipeRoute
   '/_authenticated/integracao': typeof AuthenticatedIntegracaoRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
@@ -144,6 +153,7 @@ export interface FileRouteTypes {
     | '/atividade'
     | '/auditoria'
     | '/configuracoes-agenda'
+    | '/desempenho'
     | '/equipe'
     | '/integracao'
     | '/pipeline'
@@ -158,6 +168,7 @@ export interface FileRouteTypes {
     | '/atividade'
     | '/auditoria'
     | '/configuracoes-agenda'
+    | '/desempenho'
     | '/equipe'
     | '/integracao'
     | '/pipeline'
@@ -173,6 +184,7 @@ export interface FileRouteTypes {
     | '/_authenticated/atividade'
     | '/_authenticated/auditoria'
     | '/_authenticated/configuracoes-agenda'
+    | '/_authenticated/desempenho'
     | '/_authenticated/equipe'
     | '/_authenticated/integracao'
     | '/_authenticated/pipeline'
@@ -235,6 +247,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedConfiguracoesAgendaRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/desempenho': {
+      id: '/_authenticated/desempenho'
+      path: '/desempenho'
+      fullPath: '/desempenho'
+      preLoaderRoute: typeof AuthenticatedDesempenhoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/equipe': {
       id: '/_authenticated/equipe'
       path: '/equipe'
@@ -291,6 +310,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAtividadeRoute: typeof AuthenticatedAtividadeRoute
   AuthenticatedAuditoriaRoute: typeof AuthenticatedAuditoriaRoute
   AuthenticatedConfiguracoesAgendaRoute: typeof AuthenticatedConfiguracoesAgendaRoute
+  AuthenticatedDesempenhoRoute: typeof AuthenticatedDesempenhoRoute
   AuthenticatedEquipeRoute: typeof AuthenticatedEquipeRoute
   AuthenticatedIntegracaoRoute: typeof AuthenticatedIntegracaoRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
@@ -301,6 +321,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAtividadeRoute: AuthenticatedAtividadeRoute,
   AuthenticatedAuditoriaRoute: AuthenticatedAuditoriaRoute,
   AuthenticatedConfiguracoesAgendaRoute: AuthenticatedConfiguracoesAgendaRoute,
+  AuthenticatedDesempenhoRoute: AuthenticatedDesempenhoRoute,
   AuthenticatedEquipeRoute: AuthenticatedEquipeRoute,
   AuthenticatedIntegracaoRoute: AuthenticatedIntegracaoRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
