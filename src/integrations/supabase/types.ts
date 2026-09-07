@@ -602,6 +602,24 @@ export type Database = {
           total: number
         }[]
       }
+      desempenho_corretores: {
+        Args: { p_fim?: string; p_inicio?: string }
+        Returns: {
+          ativo: boolean
+          corretor_id: string
+          leads_total: number
+          nome: string
+          por_stage: Json
+          sem_entrada: number
+          sem_estagio_imovel: number
+          sem_finalidade: number
+          sem_nenhum_indicador: number
+          sem_telefone: number
+          sem_valor: number
+          ultima_atualizacao: string
+          valor_total: number
+        }[]
+      }
       escalate_stale_leads: { Args: never; Returns: undefined }
       has_role: {
         Args: {
