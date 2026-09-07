@@ -351,7 +351,16 @@ function DesempenhoPage() {
 
       <section className="mt-4 grid gap-4">
         {corretores.map((c) => (
-          <CardCorretor key={c.corretor_id} c={c} />
+          <CardCorretor
+            key={c.corretor_id}
+            c={c}
+            meta={metaPorCorretor.get(c.corretor_id)}
+            gestor={data?.isGestor ?? false}
+            salvandoMeta={mutarMeta.isPending}
+            onSalvarMeta={(corretor_id, meta_leads, meta_valor) =>
+              mutarMeta.mutate({ corretor_id, meta_leads, meta_valor })
+            }
+          />
         ))}
         {!isLoading && corretores.length === 0 && (
           <p className="text-sm text-muted-foreground">Nenhum corretor encontrado.</p>
