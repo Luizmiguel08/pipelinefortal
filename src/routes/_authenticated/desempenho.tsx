@@ -244,9 +244,13 @@ function CardCorretor({
 
 function DesempenhoPage() {
   const buscar = useServerFn(getDesempenho);
+  const buscarMetas = useServerFn(getMetas);
+  const gravarMeta = useServerFn(salvarMeta);
+  const queryClient = useQueryClient();
   const [inicio, setInicio] = useState(INICIO_PADRAO);
   const [fim, setFim] = useState("");
   const [busca, setBusca] = useState("");
+  const [mes, setMes] = useState(() => new Date().toISOString().slice(0, 7));
 
   const filtro = useMemo(
     () => ({
