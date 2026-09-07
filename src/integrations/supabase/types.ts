@@ -31,6 +31,7 @@ export type Database = {
           motivo: string | null
           status: string
           synced_at: string
+          telefone_norm: string | null
           updated_at: string
           visita_em: string | null
         }
@@ -50,6 +51,7 @@ export type Database = {
           motivo?: string | null
           status: string
           synced_at?: string
+          telefone_norm?: string | null
           updated_at?: string
           visita_em?: string | null
         }
@@ -69,6 +71,7 @@ export type Database = {
           motivo?: string | null
           status?: string
           synced_at?: string
+          telefone_norm?: string | null
           updated_at?: string
           visita_em?: string | null
         }
@@ -194,6 +197,44 @@ export type Database = {
         }
         Relationships: []
       }
+      lead_audit: {
+        Row: {
+          campo: string
+          created_at: string
+          de: string | null
+          id: string
+          lead_id: string
+          para: string | null
+          user_id: string | null
+        }
+        Insert: {
+          campo: string
+          created_at?: string
+          de?: string | null
+          id?: string
+          lead_id: string
+          para?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          campo?: string
+          created_at?: string
+          de?: string | null
+          id?: string
+          lead_id?: string
+          para?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_audit_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       lead_events: {
         Row: {
           created_at: string
@@ -286,6 +327,7 @@ export type Database = {
           stage: Database["public"]["Enums"]["lead_stage"]
           stage_since: string
           telefone: string | null
+          telefone_norm: string | null
           ultima_interacao: string | null
           updated_at: string
           valor: number
@@ -316,6 +358,7 @@ export type Database = {
           stage?: Database["public"]["Enums"]["lead_stage"]
           stage_since?: string
           telefone?: string | null
+          telefone_norm?: string | null
           ultima_interacao?: string | null
           updated_at?: string
           valor?: number
@@ -346,6 +389,7 @@ export type Database = {
           stage?: Database["public"]["Enums"]["lead_stage"]
           stage_since?: string
           telefone?: string | null
+          telefone_norm?: string | null
           ultima_interacao?: string | null
           updated_at?: string
           valor?: number
@@ -364,6 +408,80 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      metas_corretores: {
+        Row: {
+          corretor_id: string
+          created_at: string
+          id: string
+          mes: string
+          meta_leads: number
+          meta_valor: number
+          updated_at: string
+        }
+        Insert: {
+          corretor_id: string
+          created_at?: string
+          id?: string
+          mes: string
+          meta_leads?: number
+          meta_valor?: number
+          updated_at?: string
+        }
+        Update: {
+          corretor_id?: string
+          created_at?: string
+          id?: string
+          mes?: string
+          meta_leads?: number
+          meta_valor?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "metas_corretores_corretor_id_fkey"
+            columns: ["corretor_id"]
+            isOneToOne: false
+            referencedRelation: "corretores"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      precos_projetos: {
+        Row: {
+          ativo: boolean
+          created_at: string
+          exato: boolean
+          id: string
+          ordem: number
+          padroes: string[]
+          projeto: string
+          updated_at: string
+          valor: number
+        }
+        Insert: {
+          ativo?: boolean
+          created_at?: string
+          exato?: boolean
+          id?: string
+          ordem?: number
+          padroes?: string[]
+          projeto: string
+          updated_at?: string
+          valor?: number
+        }
+        Update: {
+          ativo?: boolean
+          created_at?: string
+          exato?: boolean
+          id?: string
+          ordem?: number
+          padroes?: string[]
+          projeto?: string
+          updated_at?: string
+          valor?: number
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -631,6 +749,8 @@ export type Database = {
       is_my_corretor: { Args: { _corretor_id: string }; Returns: boolean }
       normalize_phone: { Args: { _phone: string }; Returns: string }
       owns_lead: { Args: { _lead_id: string }; Returns: boolean }
+      rebuild_valor_projeto: { Args: never; Returns: undefined }
+      saude_sistema: { Args: never; Returns: Json }
       valor_projeto: { Args: { _imovel: string }; Returns: number }
     }
     Enums: {
