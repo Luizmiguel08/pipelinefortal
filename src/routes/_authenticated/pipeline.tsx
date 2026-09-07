@@ -113,17 +113,23 @@ function PipelinePage() {
   const persistAgenda = useServerFn(salvarLeadAgenda);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
+  // Período consultado no servidor: o funil baixa só os contatos do intervalo visível.
+  const [dataInicio, setDataInicio] = useState(INICIO_PADRAO);
+  const [dataFim, setDataFim] = useState("");
+  const boardKey = useMemo(() => ["board", dataInicio, dataFim] as const, [dataInicio, dataFim]);
 
   const { data, isLoading, isError, error: queryError } = useQuery({
-    queryKey: ["board"],
+    queryKey: boardKey,
+
     // O tempo real cobre a tabela de leads; a agenda chega pela recarga periódica.
-    queryFn: () => fetchBoard(),
+    queryFn: () => fetchBoard({ data: { inicio: dataInicio, fim: dataFim } }),
     refetchInterval: 60_000,
     refetchOnWindowFocus: true,
     staleTime: 30_000,
     placeholderData: (prev) => prev,
     retry: 2,
   });
+
 
   // Tempo real: aplicamos as mudanças direto no cache, em lotes, sem recarregar o funil.
   useEffect(() => {
@@ -167,7 +173,7 @@ function PipelinePage() {
       if (pendentes.size === 0) return;
       const lote = new Map(pendentes);
       pendentes.clear();
-      queryClient.setQueryData<Board>(["board"], (old) => {
+      queryClient.setQueryData<Board>(boardKey, (old) => {
         if (!old) return old;
         const removidos = new Set<string>();
         const atualizados = new Map<string, BoardLead>();
@@ -226,7 +232,7 @@ function PipelinePage() {
       if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
-  }, [queryClient]);
+  }, [queryClient, boardKey]);
 
   // A sincronização com o C2S roda no servidor a cada minuto (rotina automática),
   // por isso o navegador de cada corretor/gestor não dispara mais sync sozinho.
@@ -235,8 +241,6 @@ function PipelinePage() {
 
 
   const [corretorFiltro, setCorretorFiltro] = useState<string>("todos");
-  const [dataInicio, setDataInicio] = useState(INICIO_PADRAO);
-  const [dataFim, setDataFim] = useState("");
   const [buscaInput, setBuscaInput] = useState("");
   const [busca, setBusca] = useState("");
   const [dragging, setDragging] = useState<BoardLead | null>(null);
@@ -264,8 +268,8 @@ function PipelinePage() {
     // Atualização otimista: o card muda de coluna na hora, sem esperar o servidor.
     onMutate: async (vars) => {
       await queryClient.cancelQueries({ queryKey: ["board"] });
-      const anterior = queryClient.getQueryData<Board>(["board"]);
-      queryClient.setQueryData<Board>(["board"], (old) =>
+      const anterior = queryClient.getQueryData<Board>(boardKey);
+      queryClient.setQueryData<Board>(boardKey, (old) =>
         old
           ? { ...old, leads: old.leads.map((l) => (l.id === vars.id ? { ...l, stage: vars.stage } : l)) }
           : old,
@@ -273,13 +277,13 @@ function PipelinePage() {
       return { anterior };
     },
     onError: (e: Error, _vars, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(boardKey, ctx.anterior);
       toast.error(e.message);
     },
     onSuccess: (_r, vars) => {
       // Cards da Agenda usam ID sintético (agenda:<id>:<etapa>). A etapa real fica no lead
       // vinculado, então precisamos recarregar o funil para refletir a mudança no card correto.
-      const board = queryClient.getQueryData<Board>(["board"]);
+      const board = queryClient.getQueryData<Board>(boardKey);
       if (board?.leads.some((l) => l.agenda_lead_id === vars.id)) {
         queryClient.invalidateQueries({ queryKey: ["board"] });
       }
@@ -331,12 +335,12 @@ function PipelinePage() {
       setDialogOpen(false);
       if (!values.id || values.agenda_appointment_id) return { anterior: undefined };
       await queryClient.cancelQueries({ queryKey: ["board"] });
-      const anterior = queryClient.getQueryData<Board>(["board"]);
+      const anterior = queryClient.getQueryData<Board>(boardKey);
       if (values.preservar_stage) return { anterior: undefined };
       const stageFinal: StageId = values.forcar_stage
         ? values.stage
         : resolverEtapa(values, values.stage);
-      queryClient.setQueryData<Board>(["board"], (old) =>
+      queryClient.setQueryData<Board>(boardKey, (old) =>
         old
           ? {
               ...old,
@@ -374,7 +378,7 @@ function PipelinePage() {
         queryClient.invalidateQueries({ queryKey: ["board"] });
     },
     onError: (e: Error, _values, ctx) => {
-      if (ctx?.anterior) queryClient.setQueryData(["board"], ctx.anterior);
+      if (ctx?.anterior) queryClient.setQueryData(boardKey, ctx.anterior);
       toast.error(e.message);
     },
   });
