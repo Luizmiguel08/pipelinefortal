@@ -19,7 +19,9 @@ import { Route as AuthenticatedDesempenhoRouteImport } from './routes/_authentic
 import { Route as AuthenticatedEquipeRouteImport } from './routes/_authenticated/equipe'
 import { Route as AuthenticatedIntegracaoRouteImport } from './routes/_authenticated/integracao'
 import { Route as AuthenticatedPipelineRouteImport } from './routes/_authenticated/pipeline'
+import { Route as AuthenticatedPrecosRouteImport } from './routes/_authenticated/precos'
 import { Route as AuthenticatedReconciliacaoAgendaRouteImport } from './routes/_authenticated/reconciliacao-agenda'
+import { Route as AuthenticatedSaudeRouteImport } from './routes/_authenticated/saude'
 import { Route as ApiPublicHooksAgendaSyncRouteImport } from './routes/api/public/hooks/agenda-sync'
 import { Route as ApiPublicHooksC2sSyncRouteImport } from './routes/api/public/hooks/c2s-sync'
 import { Route as ApiPublicHooksEscalationNotifyRouteImport } from './routes/api/public/hooks/escalation-notify'
@@ -74,12 +76,22 @@ const AuthenticatedPipelineRoute = AuthenticatedPipelineRouteImport.update({
   path: '/pipeline',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedPrecosRoute = AuthenticatedPrecosRouteImport.update({
+  id: '/precos',
+  path: '/precos',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedReconciliacaoAgendaRoute =
   AuthenticatedReconciliacaoAgendaRouteImport.update({
     id: '/reconciliacao-agenda',
     path: '/reconciliacao-agenda',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedSaudeRoute = AuthenticatedSaudeRouteImport.update({
+  id: '/saude',
+  path: '/saude',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const ApiPublicHooksAgendaSyncRoute =
   ApiPublicHooksAgendaSyncRouteImport.update({
     id: '/api/public/hooks/agenda-sync',
@@ -108,7 +120,9 @@ export interface FileRoutesByFullPath {
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
+  '/precos': typeof AuthenticatedPrecosRoute
   '/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
+  '/saude': typeof AuthenticatedSaudeRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
   '/api/public/hooks/escalation-notify': typeof ApiPublicHooksEscalationNotifyRoute
@@ -123,7 +137,9 @@ export interface FileRoutesByTo {
   '/equipe': typeof AuthenticatedEquipeRoute
   '/integracao': typeof AuthenticatedIntegracaoRoute
   '/pipeline': typeof AuthenticatedPipelineRoute
+  '/precos': typeof AuthenticatedPrecosRoute
   '/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
+  '/saude': typeof AuthenticatedSaudeRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
   '/api/public/hooks/escalation-notify': typeof ApiPublicHooksEscalationNotifyRoute
@@ -140,7 +156,9 @@ export interface FileRoutesById {
   '/_authenticated/equipe': typeof AuthenticatedEquipeRoute
   '/_authenticated/integracao': typeof AuthenticatedIntegracaoRoute
   '/_authenticated/pipeline': typeof AuthenticatedPipelineRoute
+  '/_authenticated/precos': typeof AuthenticatedPrecosRoute
   '/_authenticated/reconciliacao-agenda': typeof AuthenticatedReconciliacaoAgendaRoute
+  '/_authenticated/saude': typeof AuthenticatedSaudeRoute
   '/api/public/hooks/agenda-sync': typeof ApiPublicHooksAgendaSyncRoute
   '/api/public/hooks/c2s-sync': typeof ApiPublicHooksC2sSyncRoute
   '/api/public/hooks/escalation-notify': typeof ApiPublicHooksEscalationNotifyRoute
@@ -157,7 +175,9 @@ export interface FileRouteTypes {
     | '/equipe'
     | '/integracao'
     | '/pipeline'
+    | '/precos'
     | '/reconciliacao-agenda'
+    | '/saude'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
     | '/api/public/hooks/escalation-notify'
@@ -172,7 +192,9 @@ export interface FileRouteTypes {
     | '/equipe'
     | '/integracao'
     | '/pipeline'
+    | '/precos'
     | '/reconciliacao-agenda'
+    | '/saude'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
     | '/api/public/hooks/escalation-notify'
@@ -188,7 +210,9 @@ export interface FileRouteTypes {
     | '/_authenticated/equipe'
     | '/_authenticated/integracao'
     | '/_authenticated/pipeline'
+    | '/_authenticated/precos'
     | '/_authenticated/reconciliacao-agenda'
+    | '/_authenticated/saude'
     | '/api/public/hooks/agenda-sync'
     | '/api/public/hooks/c2s-sync'
     | '/api/public/hooks/escalation-notify'
@@ -275,11 +299,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPipelineRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/precos': {
+      id: '/_authenticated/precos'
+      path: '/precos'
+      fullPath: '/precos'
+      preLoaderRoute: typeof AuthenticatedPrecosRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/reconciliacao-agenda': {
       id: '/_authenticated/reconciliacao-agenda'
       path: '/reconciliacao-agenda'
       fullPath: '/reconciliacao-agenda'
       preLoaderRoute: typeof AuthenticatedReconciliacaoAgendaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/saude': {
+      id: '/_authenticated/saude'
+      path: '/saude'
+      fullPath: '/saude'
+      preLoaderRoute: typeof AuthenticatedSaudeRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/api/public/hooks/agenda-sync': {
@@ -314,7 +352,9 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedEquipeRoute: typeof AuthenticatedEquipeRoute
   AuthenticatedIntegracaoRoute: typeof AuthenticatedIntegracaoRoute
   AuthenticatedPipelineRoute: typeof AuthenticatedPipelineRoute
+  AuthenticatedPrecosRoute: typeof AuthenticatedPrecosRoute
   AuthenticatedReconciliacaoAgendaRoute: typeof AuthenticatedReconciliacaoAgendaRoute
+  AuthenticatedSaudeRoute: typeof AuthenticatedSaudeRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -325,7 +365,9 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedEquipeRoute: AuthenticatedEquipeRoute,
   AuthenticatedIntegracaoRoute: AuthenticatedIntegracaoRoute,
   AuthenticatedPipelineRoute: AuthenticatedPipelineRoute,
+  AuthenticatedPrecosRoute: AuthenticatedPrecosRoute,
   AuthenticatedReconciliacaoAgendaRoute: AuthenticatedReconciliacaoAgendaRoute,
+  AuthenticatedSaudeRoute: AuthenticatedSaudeRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

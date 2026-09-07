@@ -1,11 +1,13 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { STAGES } from "@/lib/stages";
 import { getDesempenho, type DesempenhoCorretor } from "@/lib/desempenho.functions";
+import { getMetas, salvarMeta, type Meta } from "@/lib/metas.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/desempenho")({
@@ -66,7 +68,114 @@ function Pendencia({ rotulo, valor, total }: { rotulo: string; valor: number; to
   );
 }
 
-function CardCorretor({ c }: { c: DesempenhoCorretor }) {
+function Metas({
+  c,
+  meta,
+  gestor,
+  onSalvar,
+  salvando,
+}: {
+  c: DesempenhoCorretor;
+  meta: Meta | undefined;
+  gestor: boolean;
+  onSalvar: (leads: number, valor: number) => void;
+  salvando: boolean;
+}) {
+  const [editando, setEditando] = useState(false);
+  const [leads, setLeads] = useState(String(meta?.meta_leads ?? 0));
+  const [valor, setValor] = useState(String(meta?.meta_valor ?? 0));
+
+  const metaLeads = meta?.meta_leads ?? 0;
+  const metaValor = meta?.meta_valor ?? 0;
+  const pctLeads = metaLeads > 0 ? Math.min(100, Math.round((c.leads_total / metaLeads) * 100)) : 0;
+  const pctValor = metaValor > 0 ? Math.min(100, Math.round((c.valor_total / metaValor) * 100)) : 0;
+
+  if (editando) {
+    return (
+      <div className="mt-4 flex flex-wrap items-end gap-2 rounded-lg border border-border p-3">
+        <label className="text-xs text-muted-foreground">
+          Meta de leads
+          <Input
+            className="mt-1 h-9 w-32"
+            inputMode="numeric"
+            value={leads}
+            onChange={(e) => setLeads(e.target.value)}
+          />
+        </label>
+        <label className="text-xs text-muted-foreground">
+          Meta de valor (R$)
+          <Input
+            className="mt-1 h-9 w-40"
+            inputMode="numeric"
+            value={valor}
+            onChange={(e) => setValor(e.target.value)}
+          />
+        </label>
+        <Button
+          size="sm"
+          disabled={salvando}
+          onClick={() => {
+            onSalvar(Number(leads) || 0, Number(valor) || 0);
+            setEditando(false);
+          }}
+        >
+          Salvar meta
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setEditando(false)}>
+          Cancelar
+        </Button>
+      </div>
+    );
+  }
+
+  if (metaLeads === 0 && metaValor === 0) {
+    return gestor ? (
+      <Button size="sm" variant="outline" className="mt-4" onClick={() => setEditando(true)}>
+        Definir meta do mês
+      </Button>
+    ) : null;
+  }
+
+  return (
+    <div className="mt-4 grid gap-2 rounded-lg border border-border p-3 sm:grid-cols-2">
+      <div>
+        <p className="text-xs text-muted-foreground">
+          Meta de leads: {c.leads_total}/{metaLeads} ({pctLeads}%)
+        </p>
+        <div className="mt-1 h-2 rounded-full bg-muted">
+          <div className="h-2 rounded-full bg-primary" style={{ width: `${pctLeads}%` }} />
+        </div>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">
+          Meta de valor: {dinheiro(c.valor_total)}/{dinheiro(metaValor)} ({pctValor}%)
+        </p>
+        <div className="mt-1 h-2 rounded-full bg-muted">
+          <div className="h-2 rounded-full bg-primary" style={{ width: `${pctValor}%` }} />
+        </div>
+      </div>
+      {gestor && (
+        <Button size="sm" variant="ghost" className="justify-self-start" onClick={() => setEditando(true)}>
+          Alterar meta
+        </Button>
+      )}
+    </div>
+  );
+}
+
+function CardCorretor({
+  c,
+  meta,
+  gestor,
+  onSalvarMeta,
+  salvandoMeta,
+}: {
+  c: DesempenhoCorretor;
+  meta: Meta | undefined;
+  gestor: boolean;
+  onSalvarMeta: (corretorId: string, leads: number, valor: number) => void;
+  salvandoMeta: boolean;
+}) {
   const stagesComLeads = STAGES.filter((s) => (c.por_stage?.[s.id] ?? 0) > 0);
 
   return (
@@ -86,6 +195,14 @@ function CardCorretor({ c }: { c: DesempenhoCorretor }) {
           <p className="text-lg font-semibold">{dinheiro(c.valor_total)}</p>
         </div>
       </header>
+
+      <Metas
+        c={c}
+        meta={meta}
+        gestor={gestor}
+        salvando={salvandoMeta}
+        onSalvar={(leads, valor) => onSalvarMeta(c.corretor_id, leads, valor)}
+      />
 
       {c.leads_total === 0 ? (
         <p className="mt-4 text-sm text-muted-foreground">Nenhum lead no período selecionado.</p>
@@ -127,9 +244,13 @@ function CardCorretor({ c }: { c: DesempenhoCorretor }) {
 
 function DesempenhoPage() {
   const buscar = useServerFn(getDesempenho);
+  const buscarMetas = useServerFn(getMetas);
+  const gravarMeta = useServerFn(salvarMeta);
+  const queryClient = useQueryClient();
   const [inicio, setInicio] = useState(INICIO_PADRAO);
   const [fim, setFim] = useState("");
   const [busca, setBusca] = useState("");
+  const [mes, setMes] = useState(() => new Date().toISOString().slice(0, 7));
 
   const filtro = useMemo(
     () => ({
@@ -144,6 +265,26 @@ function DesempenhoPage() {
     queryFn: () => buscar({ data: filtro }),
     refetchInterval: 60_000,
     placeholderData: (prev) => prev,
+  });
+
+  const { data: metasData } = useQuery({
+    queryKey: ["metas", mes],
+    queryFn: () => buscarMetas({ data: { mes } }),
+  });
+
+  const metaPorCorretor = useMemo(
+    () => new Map((metasData?.metas ?? []).map((m) => [m.corretor_id, m])),
+    [metasData],
+  );
+
+  const mutarMeta = useMutation({
+    mutationFn: (v: { corretor_id: string; meta_leads: number; meta_valor: number }) =>
+      gravarMeta({ data: { ...v, mes } }),
+    onSuccess: () => {
+      toast.success("Meta salva.");
+      void queryClient.invalidateQueries({ queryKey: ["metas", mes] });
+    },
+    onError: (e: Error) => toast.error(e.message),
   });
 
   const corretores = (data?.corretores ?? []).filter((c) =>
@@ -185,6 +326,15 @@ function DesempenhoPage() {
             className="mt-1 h-9 w-56"
           />
         </label>
+        <label className="text-xs text-muted-foreground">
+          Metas do mês
+          <Input
+            type="month"
+            value={mes}
+            onChange={(e) => setMes(e.target.value)}
+            className="mt-1 h-9 w-40"
+          />
+        </label>
         <Button
           variant="ghost"
           onClick={() => {
@@ -210,7 +360,16 @@ function DesempenhoPage() {
 
       <section className="mt-4 grid gap-4">
         {corretores.map((c) => (
-          <CardCorretor key={c.corretor_id} c={c} />
+          <CardCorretor
+            key={c.corretor_id}
+            c={c}
+            meta={metaPorCorretor.get(c.corretor_id)}
+            gestor={data?.isGestor ?? false}
+            salvandoMeta={mutarMeta.isPending}
+            onSalvarMeta={(corretor_id, meta_leads, meta_valor) =>
+              mutarMeta.mutate({ corretor_id, meta_leads, meta_valor })
+            }
+          />
         ))}
         {!isLoading && corretores.length === 0 && (
           <p className="text-sm text-muted-foreground">Nenhum corretor encontrado.</p>

@@ -527,6 +527,16 @@ function PipelinePage() {
               </Button>
             )}
 
+            {data?.isGestor && (
+              <Button variant="secondary" asChild>
+                <Link to="/saude">Saúde</Link>
+              </Button>
+            )}
+
+            <Button variant="secondary" asChild>
+              <Link to="/precos">Valores</Link>
+            </Button>
+
             <Button variant="secondary" asChild>
               <Link to="/atividade">Atividade</Link>
             </Button>
