@@ -40,11 +40,12 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
     { id: string; stage: StageId; valor: number; corretor_id: string | null; stage_since: string }
   >();
   const ids = contatos.map((c) => c.c2s_contact_id);
-  for (let i = 0; i < ids.length; i += 200) {
+  // Lotes maiores = menos idas ao banco. Era a consulta mais cara do sistema.
+  for (let i = 0; i < ids.length; i += 1000) {
     const { data } = await supabaseAdmin
       .from("leads")
       .select("id, stage, valor, corretor_id, stage_since, c2s_contact_id")
-      .in("c2s_contact_id", ids.slice(i, i + 200));
+      .in("c2s_contact_id", ids.slice(i, i + 1000));
     for (const l of data ?? []) {
       if (l.c2s_contact_id)
         existentes.set(l.c2s_contact_id, {
@@ -144,10 +145,10 @@ async function executarSync(supabaseAdmin: AdminClient, result: SyncResult, desd
 
   // Gravação em lote (upsert por c2s_contact_id) para a rodada terminar em segundos.
   const gravar = async (linhas: Record<string, unknown>[]) => {
-    for (let i = 0; i < linhas.length; i += 200) {
+    for (let i = 0; i < linhas.length; i += 500) {
       const { error } = await supabaseAdmin
         .from("leads")
-        .upsert(linhas.slice(i, i + 200) as never, { onConflict: "c2s_contact_id" });
+        .upsert(linhas.slice(i, i + 500) as never, { onConflict: "c2s_contact_id" });
       if (error) throw new Error(`Falha ao gravar contatos no CRM: ${error.message}`);
     }
   };
