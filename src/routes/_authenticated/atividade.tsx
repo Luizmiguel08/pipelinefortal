@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { stageLabel, type StageId } from "@/lib/stages";
 import { getAtividade } from "@/lib/atividade.functions";
+import { getHistoricoAlteracoes } from "@/lib/historico.functions";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/_authenticated/atividade")({
@@ -65,14 +66,45 @@ function rotulo(stage: string | null) {
   return stageLabel(stage as StageId);
 }
 
+const CAMPOS: Record<string, string> = {
+  etapa: "Etapa",
+  valor: "Valor",
+  entrada: "Entrada",
+  finalidade: "Finalidade",
+  estagio_imovel: "Tipo do imóvel",
+  documentacao: "Documentação",
+  corretor: "Corretor",
+  telefone: "Telefone",
+};
+
+function valorLegivel(campo: string, v: string | null) {
+  if (v === null || v === "") return "vazio";
+  if (campo === "etapa") return rotulo(v);
+  if (campo === "documentacao") return v === "true" ? "sim" : "não";
+  if (campo === "valor" || campo === "entrada")
+    return Number(v).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+      maximumFractionDigits: 0,
+    });
+  return v;
+}
+
 function AtividadePage() {
   const buscar = useServerFn(getAtividade);
+  const buscarAlteracoes = useServerFn(getHistoricoAlteracoes);
   const [dias, setDias] = useState(7);
   const [corretor, setCorretor] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["atividade", dias, corretor],
     queryFn: () => buscar({ data: { dias, corretor } }),
+    refetchInterval: 60_000,
+  });
+
+  const { data: alteracoes = [] } = useQuery({
+    queryKey: ["alteracoes", dias],
+    queryFn: () => buscarAlteracoes({ data: { dias } }),
     refetchInterval: 60_000,
   });
 
