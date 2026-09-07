@@ -113,17 +113,21 @@ function PipelinePage() {
   const persistAgenda = useServerFn(salvarLeadAgenda);
 
   const [filtrosAbertos, setFiltrosAbertos] = useState(true);
+  // Período consultado no servidor: o funil baixa só os contatos do intervalo visível.
+  const [dataInicio, setDataInicio] = useState(INICIO_PADRAO);
+  const [dataFim, setDataFim] = useState("");
 
   const { data, isLoading, isError, error: queryError } = useQuery({
-    queryKey: ["board"],
+    queryKey: ["board", dataInicio, dataFim],
     // O tempo real cobre a tabela de leads; a agenda chega pela recarga periódica.
-    queryFn: () => fetchBoard(),
+    queryFn: () => fetchBoard({ data: { inicio: dataInicio, fim: dataFim } }),
     refetchInterval: 60_000,
     refetchOnWindowFocus: true,
     staleTime: 30_000,
     placeholderData: (prev) => prev,
     retry: 2,
   });
+
 
   // Tempo real: aplicamos as mudanças direto no cache, em lotes, sem recarregar o funil.
   useEffect(() => {
