@@ -68,7 +68,114 @@ function Pendencia({ rotulo, valor, total }: { rotulo: string; valor: number; to
   );
 }
 
-function CardCorretor({ c }: { c: DesempenhoCorretor }) {
+function Metas({
+  c,
+  meta,
+  gestor,
+  onSalvar,
+  salvando,
+}: {
+  c: DesempenhoCorretor;
+  meta: Meta | undefined;
+  gestor: boolean;
+  onSalvar: (leads: number, valor: number) => void;
+  salvando: boolean;
+}) {
+  const [editando, setEditando] = useState(false);
+  const [leads, setLeads] = useState(String(meta?.meta_leads ?? 0));
+  const [valor, setValor] = useState(String(meta?.meta_valor ?? 0));
+
+  const metaLeads = meta?.meta_leads ?? 0;
+  const metaValor = meta?.meta_valor ?? 0;
+  const pctLeads = metaLeads > 0 ? Math.min(100, Math.round((c.leads_total / metaLeads) * 100)) : 0;
+  const pctValor = metaValor > 0 ? Math.min(100, Math.round((c.valor_total / metaValor) * 100)) : 0;
+
+  if (editando) {
+    return (
+      <div className="mt-4 flex flex-wrap items-end gap-2 rounded-lg border border-border p-3">
+        <label className="text-xs text-muted-foreground">
+          Meta de leads
+          <Input
+            className="mt-1 h-9 w-32"
+            inputMode="numeric"
+            value={leads}
+            onChange={(e) => setLeads(e.target.value)}
+          />
+        </label>
+        <label className="text-xs text-muted-foreground">
+          Meta de valor (R$)
+          <Input
+            className="mt-1 h-9 w-40"
+            inputMode="numeric"
+            value={valor}
+            onChange={(e) => setValor(e.target.value)}
+          />
+        </label>
+        <Button
+          size="sm"
+          disabled={salvando}
+          onClick={() => {
+            onSalvar(Number(leads) || 0, Number(valor) || 0);
+            setEditando(false);
+          }}
+        >
+          Salvar meta
+        </Button>
+        <Button size="sm" variant="ghost" onClick={() => setEditando(false)}>
+          Cancelar
+        </Button>
+      </div>
+    );
+  }
+
+  if (metaLeads === 0 && metaValor === 0) {
+    return gestor ? (
+      <Button size="sm" variant="outline" className="mt-4" onClick={() => setEditando(true)}>
+        Definir meta do mês
+      </Button>
+    ) : null;
+  }
+
+  return (
+    <div className="mt-4 grid gap-2 rounded-lg border border-border p-3 sm:grid-cols-2">
+      <div>
+        <p className="text-xs text-muted-foreground">
+          Meta de leads: {c.leads_total}/{metaLeads} ({pctLeads}%)
+        </p>
+        <div className="mt-1 h-2 rounded-full bg-muted">
+          <div className="h-2 rounded-full bg-primary" style={{ width: `${pctLeads}%` }} />
+        </div>
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">
+          Meta de valor: {dinheiro(c.valor_total)}/{dinheiro(metaValor)} ({pctValor}%)
+        </p>
+        <div className="mt-1 h-2 rounded-full bg-muted">
+          <div className="h-2 rounded-full bg-primary" style={{ width: `${pctValor}%` }} />
+        </div>
+      </div>
+      {gestor && (
+        <Button size="sm" variant="ghost" className="justify-self-start" onClick={() => setEditando(true)}>
+          Alterar meta
+        </Button>
+      )}
+    </div>
+  );
+}
+
+function CardCorretor({
+  c,
+  meta,
+  gestor,
+  onSalvarMeta,
+  salvandoMeta,
+}: {
+  c: DesempenhoCorretor;
+  meta: Meta | undefined;
+  gestor: boolean;
+  onSalvarMeta: (corretorId: string, leads: number, valor: number) => void;
+  salvandoMeta: boolean;
+}) {
   const stagesComLeads = STAGES.filter((s) => (c.por_stage?.[s.id] ?? 0) > 0);
 
   return (
