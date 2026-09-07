@@ -55,19 +55,39 @@ export type Board = {
 
 export const getBoard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
-  .handler(async ({ context }): Promise<Board> => {
+  .inputValidator((input?: { inicio?: string | undefined; fim?: string | undefined }) => ({
+    inicio: input?.inicio || undefined,
+    fim: input?.fim || undefined,
+  }))
+  .handler(async ({ context, data: periodo }): Promise<Board> => {
     const { supabase, userId } = context;
+
+    // Só trazemos o período visível no funil: sem isso o navegador baixava
+    // dezenas de milhares de contatos antigos a cada abertura da tela.
+    const inicioISO = periodo.inicio ? new Date(`${periodo.inicio}T00:00:00`).toISOString() : null;
+    const fimISO = periodo.fim ? new Date(`${periodo.fim}T23:59:59.999`).toISOString() : null;
 
     // O PostgREST devolve no máximo 1000 linhas por requisição: paginamos para trazer todos os leads.
     const carregarLeads = async () => {
       const pagina = 1000;
       const todos: BoardLead[] = [];
       for (let inicio = 0; ; inicio += pagina) {
-        const { data, error } = await supabase
+        let consulta = supabase
           .from("leads")
           .select(
             "id, nome, telefone, email, imovel, valor, stage, corretor_id, origem, observacoes, ultima_interacao, c2s_contact_id, created_at, data_c2s, entrada, finalidade, estagio_imovel, documentacao_ok, visita_em, visita_realizada, visita_status, visita_motivo, visita_projeto, stage_since",
-          )
+          );
+        if (inicioISO) {
+          consulta = consulta.or(
+            `data_c2s.gte.${inicioISO},and(data_c2s.is.null,created_at.gte.${inicioISO})`,
+          );
+        }
+        if (fimISO) {
+          consulta = consulta.or(
+            `data_c2s.lte.${fimISO},and(data_c2s.is.null,created_at.lte.${fimISO})`,
+          );
+        }
+        const { data, error } = await consulta
           .order("updated_at", { ascending: false })
           .range(inicio, inicio + pagina - 1);
         if (error) throw new Error(error.message);
@@ -77,6 +97,7 @@ export const getBoard = createServerFn({ method: "GET" })
       }
       return todos;
     };
+
 
     // A agenda também pode passar de 1000 linhas: paginamos para não perder datas antigas ou futuras.
     const carregarAgenda = async () => {
