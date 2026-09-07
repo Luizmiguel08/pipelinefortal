@@ -267,6 +267,26 @@ function DesempenhoPage() {
     placeholderData: (prev) => prev,
   });
 
+  const { data: metasData } = useQuery({
+    queryKey: ["metas", mes],
+    queryFn: () => buscarMetas({ data: { mes } }),
+  });
+
+  const metaPorCorretor = useMemo(
+    () => new Map((metasData?.metas ?? []).map((m) => [m.corretor_id, m])),
+    [metasData],
+  );
+
+  const mutarMeta = useMutation({
+    mutationFn: (v: { corretor_id: string; meta_leads: number; meta_valor: number }) =>
+      gravarMeta({ data: { ...v, mes } }),
+    onSuccess: () => {
+      toast.success("Meta salva.");
+      void queryClient.invalidateQueries({ queryKey: ["metas", mes] });
+    },
+    onError: (e: Error) => toast.error(e.message),
+  });
+
   const corretores = (data?.corretores ?? []).filter((c) =>
     c.nome.toLowerCase().includes(busca.trim().toLowerCase()),
   );
