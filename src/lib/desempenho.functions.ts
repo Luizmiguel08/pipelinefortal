@@ -31,8 +31,8 @@ export const getDesempenho = createServerFn({ method: "GET" })
     const [{ data: gestor }, resumo] = await Promise.all([
       supabase.rpc("has_role", { _user_id: userId, _role: "gestor" }),
       supabase.rpc("desempenho_corretores", {
-        p_inicio: data.inicio ?? null,
-        p_fim: data.fim ?? null,
+        p_inicio: data.inicio ?? undefined,
+        p_fim: data.fim ?? undefined,
       }),
     ]);
 
