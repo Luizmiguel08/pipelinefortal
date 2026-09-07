@@ -258,6 +258,36 @@ function AtividadePage() {
           )}
         </ul>
       </section>
+
+      <section className="mt-8">
+        <h2 className="text-lg font-semibold">Alterações nos leads</h2>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Tudo o que foi alterado em cada lead no período: quem alterou, o que mudou e o valor
+          anterior.
+        </p>
+        <ul className="mt-4 divide-y divide-border rounded-xl border border-border">
+          {alteracoes.map((a) => (
+            <li key={a.id} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-4 py-3 text-sm">
+              <span className="w-28 shrink-0 text-xs text-muted-foreground">
+                {dataHora(a.created_at)}
+              </span>
+              <span className="font-medium">{a.autor}</span>
+              <span className="text-muted-foreground">alterou</span>
+              <span className="font-medium">{CAMPOS[a.campo] ?? a.campo}</span>
+              <span className="text-muted-foreground">de</span>
+              <span>{valorLegivel(a.campo, a.de)}</span>
+              <span className="text-muted-foreground">para</span>
+              <span className="font-medium">{valorLegivel(a.campo, a.para)}</span>
+              <span className="ml-auto text-xs text-muted-foreground">{a.lead_nome}</span>
+            </li>
+          ))}
+          {alteracoes.length === 0 && (
+            <li className="px-4 py-6 text-sm text-muted-foreground">
+              Nenhuma alteração registrada no período.
+            </li>
+          )}
+        </ul>
+      </section>
     </main>
   );
 }
