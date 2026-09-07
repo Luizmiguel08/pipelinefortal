@@ -326,6 +326,15 @@ function DesempenhoPage() {
             className="mt-1 h-9 w-56"
           />
         </label>
+        <label className="text-xs text-muted-foreground">
+          Metas do mês
+          <Input
+            type="month"
+            value={mes}
+            onChange={(e) => setMes(e.target.value)}
+            className="mt-1 h-9 w-40"
+          />
+        </label>
         <Button
           variant="ghost"
           onClick={() => {
