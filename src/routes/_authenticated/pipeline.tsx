@@ -116,9 +116,11 @@ function PipelinePage() {
   // Período consultado no servidor: o funil baixa só os contatos do intervalo visível.
   const [dataInicio, setDataInicio] = useState(INICIO_PADRAO);
   const [dataFim, setDataFim] = useState("");
+  const boardKey = useMemo(() => ["board", dataInicio, dataFim] as const, [dataInicio, dataFim]);
 
   const { data, isLoading, isError, error: queryError } = useQuery({
-    queryKey: ["board", dataInicio, dataFim],
+    queryKey: boardKey,
+
     // O tempo real cobre a tabela de leads; a agenda chega pela recarga periódica.
     queryFn: () => fetchBoard({ data: { inicio: dataInicio, fim: dataFim } }),
     refetchInterval: 60_000,
