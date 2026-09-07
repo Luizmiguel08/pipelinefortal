@@ -196,6 +196,14 @@ function CardCorretor({
         </div>
       </header>
 
+      <Metas
+        c={c}
+        meta={meta}
+        gestor={gestor}
+        salvando={salvandoMeta}
+        onSalvar={(leads, valor) => onSalvarMeta(c.corretor_id, leads, valor)}
+      />
+
       {c.leads_total === 0 ? (
         <p className="mt-4 text-sm text-muted-foreground">Nenhum lead no período selecionado.</p>
       ) : (
