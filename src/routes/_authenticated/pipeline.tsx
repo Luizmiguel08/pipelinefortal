@@ -232,7 +232,7 @@ function PipelinePage() {
       if (timer) clearTimeout(timer);
       supabase.removeChannel(channel);
     };
-  }, [queryClient]);
+  }, [queryClient, boardKey]);
 
   // A sincronização com o C2S roda no servidor a cada minuto (rotina automática),
   // por isso o navegador de cada corretor/gestor não dispara mais sync sozinho.
