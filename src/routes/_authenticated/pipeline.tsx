@@ -122,7 +122,7 @@ function PipelinePage() {
     queryKey: boardKey,
 
     // O tempo real cobre a tabela de leads; a agenda chega pela recarga periódica.
-    queryFn: () => fetchBoard({ data: { inicio: dataInicio, fim: dataFim } }),
+    queryFn: () => fetchBoard({ data: { inicio: dataInicio || INICIO_PADRAO, fim: dataFim } }),
     refetchInterval: 60_000,
     refetchOnWindowFocus: true,
     staleTime: 30_000,
