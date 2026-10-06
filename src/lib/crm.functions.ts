@@ -56,7 +56,9 @@ export type Board = {
 export const getBoard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input?: { inicio?: string | undefined; fim?: string | undefined }) => ({
-    inicio: input?.inicio || undefined,
+    // Sem data inicial o servidor tentava carregar dezenas de milhares de contatos
+    // e estourava o tempo limite (erro 500). Usamos o início padrão do funil.
+    inicio: input?.inicio || "2026-08-01",
     fim: input?.fim || undefined,
   }))
   .handler(async ({ context, data: periodo }): Promise<Board> => {
