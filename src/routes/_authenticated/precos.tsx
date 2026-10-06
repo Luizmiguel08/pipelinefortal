@@ -34,7 +34,7 @@ export const Route = createFileRoute("/_authenticated/precos")({
   errorComponent: ({ error }) => (
     <main className="mx-auto max-w-3xl px-5 py-16 text-center">
       <h1 className="text-xl font-semibold">Não foi possível abrir os valores</h1>
-      <p className="mt-2 text-sm text-muted-foreground">{error.message}</p>
+      <p className="mt-2 text-sm text-muted-foreground">{error instanceof Error ? error.message : String(error)}</p>
       <Button className="mt-6" asChild>
         <Link to="/pipeline">Voltar ao funil</Link>
       </Button>
