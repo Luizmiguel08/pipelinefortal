@@ -12,6 +12,27 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { Toaster } from "@/components/ui/sonner";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { MANUTENCAO_ATIVA } from "../lib/maintenance";
+import fortalLogo from "@/assets/fortal-logo-light.png";
+
+function ManutencaoComponent() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+      <div className="max-w-md text-center">
+        <img
+          src={fortalLogo}
+          alt="Fortal Pipeline"
+          className="mx-auto mb-6 h-24 w-auto object-contain"
+        />
+        <h1 className="text-2xl font-semibold text-foreground">Em manutenção</h1>
+        <p className="mt-3 text-sm text-muted-foreground">
+          O Fortal Pipeline está temporariamente fora do ar para manutenção.
+          Voltamos em breve. Obrigado pela paciência.
+        </p>
+      </div>
+    </div>
+  );
+}
 
 
 function NotFoundComponent() {
@@ -141,7 +162,7 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      {MANUTENCAO_ATIVA ? <ManutencaoComponent /> : <Outlet />}
       <Toaster position="top-right" richColors />
     </QueryClientProvider>
   );
